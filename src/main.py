@@ -3,15 +3,6 @@ import os
 import pathlib
 import time
 import openpyxl
-"""
-home = pathlib.Path.home()
-existing_workbook_path = '/home/alien/Scripts/Git/GitHub/pythonexcel/planilha1.xlsx'
-
-excel_file = openpyxl.load_workbook(existing_workbook_path)
-
-# Get sheet names
-print(excel_file.sheetnames)
-"""
 
 from multiprocessing import TimeoutError
 from multiprocessing.pool import ThreadPool
