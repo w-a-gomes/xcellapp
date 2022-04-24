@@ -139,4 +139,6 @@ class View(QtWidgets.QMainWindow):
     def on_button_close(self):
         self.controller.on_button_close()
 
+# https://doc.qt.io/qtforpython/
+# https://doc.qt.io/qtforpython/api.html
 # https://docs.python-guide.org/shipping/freezing/
