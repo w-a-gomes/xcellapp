@@ -2,8 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-src/tests/calc/
-src/tests/data/
+*calc/
+*tdata/
 # C extensions
 *.so
 
