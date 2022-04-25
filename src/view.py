@@ -1,5 +1,7 @@
 #!/usr/bin env python3
 import os
+import pathlib
+import typing
 
 from BlurWindow.blurWindow import GlobalBlur
 from PySide6 import QtCore, QtWidgets, QtGui
@@ -63,40 +65,47 @@ class CloseButton(QtWidgets.QPushButton):
         self.setStyleSheet('background: transparent;')
 
 
+class CsvImport(QtWidgets.QWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # ___ Container ___
+        # Top level layout
+        self.layout = QtWidgets.QVBoxLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+        self.setLayout(self.layout)
+
+        # Get Filename
+        self.__filename = None
+        self.add_button = QtWidgets.QPushButton("Add")
+        self.add_button.clicked.connect(self.__on_add_button)
+        self.layout.addWidget(self.add_button, 0, QtCore.Qt.AlignVCenter)
+
+        self.label = QtWidgets.QLabel()
+        self.layout.addWidget(self.label, 0, QtCore.Qt.AlignVCenter)
+    
+    @property
+    def filename(self) -> typing.Optional[str]:
+        return self.__filename
+
+    def __on_add_button(self) -> None:
+        dialog = QtWidgets.QFileDialog.getOpenFileName(
+            self,
+            "Seletor de arquivos",
+            str(pathlib.Path.home()),
+            "Arquivos CSV (*.csv *.CSV)")
+
+        if dialog[0][-4:].lower() =='.csv':
+            self.__filename = dialog[0]
+            self.label.setText(self.__filename)
+
+
 class View(QtWidgets.QMainWindow):
     def __init__(self, controller,*args, **kwargs):
         super().__init__(*args, **kwargs)
         
         # Flag controller
         self.controller = controller
-
-        # ___ Screen info ___
-        self.screen = QtWidgets.QApplication.primaryScreen()
-        self.screen_size = self.screen.size()
-        
-        # ___ Window Style ___
-
-        # Fixed size
-        # self.setFixedSize(QSize(400, 300))
-
-        # Remove title bar
-        # self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-
-        # Window opacity
-        # self.setWindowOpacity(0.5)
-
-        # Transparent background
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-
-        # Background color
-        self.setStyleSheet(
-            'border: 0px;'
-            'background: transparent;'
-            'background-color: rgba(37, 37, 38, 0.5);')
-        
-        # Background blur
-        window_id = self.winId()
-        GlobalBlur(window_id, Dark=True, QWidget=self)  # blur(window_id)
 
         # ___ Container ___
         # Top level container
@@ -128,18 +137,12 @@ class View(QtWidgets.QMainWindow):
         # self.body_layout.setSpacing(10)
         self.top_level_layout.addLayout(self.body_layout)
 
-        self.hello = ["Hallo Welt", "Hei maailma", "Hola Mundo", "Привет мир"]
-
-        self.text = QtWidgets.QLabel('Hello', alignment=QtCore.Qt.AlignCenter)
-        self.body_layout.addWidget(self.text)
-
-        self.button = Button('Click me!')
-        self.button.clicked.connect(self.on_button_click)
-        self.body_layout.addWidget(self.button)
+        self.w = CsvImport()
+        self.body_layout.addWidget(self.w)
 
         # Full screen
         # self.showFullScreen()
-        self.showMaximized()
+        # self.showMaximized()
         # self.showMinimized()
 
     @QtCore.Slot()
