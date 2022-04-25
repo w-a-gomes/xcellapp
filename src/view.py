@@ -79,31 +79,27 @@ class CloseButton(QtWidgets.QPushButton):
 class CsvImport(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self.setStyleSheet('background-color: grey;')
-        self.setFixedWidth(300)
+        self.setFixedWidth(500)
         # ___ Container ___
         # Top level layout
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
-        # self.layout.setAlignment(
-        #     QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
         self.setLayout(self.layout)
 
         # Get Filename
         self.get_file_layout = QtWidgets.QHBoxLayout()
         self.get_file_layout.setContentsMargins(0, 0, 0, 0)
-        self.get_file_layout.setSpacing(0)
+        self.get_file_layout.setSpacing(6)
         self.layout.addLayout(self.get_file_layout)
 
         self.__filename = None
-        self.add_button = QtWidgets.QPushButton("Add")
+        self.add_button = QtWidgets.QPushButton("Selecionar")
         self.add_button.clicked.connect(self.__on_add_button)
-        # self.layout.addWidget(self.add_button, 0, QtCore.Qt.AlignVCenter)
         self.get_file_layout.addWidget(self.add_button, 0, QtCore.Qt.AlignLeft)
 
-        self.label = ElidedLabel(elide_side='middle')
-        self.get_file_layout.addWidget(self.label, 0, QtCore.Qt.AlignLeft)
+        self.label = ElidedLabel(elide_side='middle', text='. . .', )
+        self.get_file_layout.addWidget(self.label, 1, QtCore.Qt.AlignLeft)
     
     @property
     def filename(self) -> typing.Optional[str]:
@@ -153,9 +149,9 @@ class View(QtWidgets.QMainWindow):
 
         # ___ Body ___
         self.body_layout = QtWidgets.QVBoxLayout()
-        # self.body_layout.setAlignment(QtCore.Qt.AlignRight)
+        self.body_layout.setAlignment(
+            QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
         self.body_layout.setContentsMargins(10, 10, 10, 10)
-        # self.body_layout.setSpacing(10)
         self.top_level_layout.addLayout(self.body_layout)
 
         self.w = CsvImport()
