@@ -5,6 +5,17 @@ from BlurWindow.blurWindow import GlobalBlur
 from PySide6 import QtCore, QtWidgets, QtGui
 
 
+class ElidedLabel(QtWidgets.QLabel):
+    def paintEvent(self, event):
+        painter = QtGui.QPainter(self)
+
+        metrics = QtGui.QFontMetrics(self.font())
+        elided = metrics.elidedText(
+            self.text(), QtCore.Qt.ElideRight, self.width())
+
+        painter.drawText(self.rect(), self.alignment(), elided)
+
+
 class Button(QtWidgets.QPushButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -127,8 +138,8 @@ class View(QtWidgets.QMainWindow):
         self.body_layout.addWidget(self.button)
 
         # Full screen
-        self.showFullScreen()
-        # self.showMaximized()
+        # self.showFullScreen()
+        self.showMaximized()
         # self.showMinimized()
 
     @QtCore.Slot()
