@@ -23,7 +23,7 @@ class Controller(object):
         self.__app.quit()
     
     def main(self):
-        self.__view.resize(800, 600)
+        # self.__view.resize(800, 600)
         self.__view.show()
         sys.exit(self.__app.exec())
 

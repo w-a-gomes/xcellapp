@@ -8,12 +8,23 @@ from PySide6 import QtCore, QtWidgets, QtGui
 
 
 class ElidedLabel(QtWidgets.QLabel):
+    def __init__(self, elide_side: str = 'right', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__side = elide_side
+
     def paintEvent(self, event):
         painter = QtGui.QPainter(self)
 
         metrics = QtGui.QFontMetrics(self.font())
-        elided = metrics.elidedText(
-            self.text(), QtCore.Qt.ElideRight, self.width())
+        if self.__side == 'left':
+            elided = metrics.elidedText(
+                self.text(), QtCore.Qt.ElideLeft, self.width())
+        elif self.__side == 'middle':
+            elided = metrics.elidedText(
+                self.text(), QtCore.Qt.ElideMiddle, self.width())
+        else:
+            elided = metrics.elidedText(
+                self.text(), QtCore.Qt.ElideRight, self.width())
 
         painter.drawText(self.rect(), self.alignment(), elided)
 
@@ -68,21 +79,31 @@ class CloseButton(QtWidgets.QPushButton):
 class CsvImport(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # self.setStyleSheet('background-color: grey;')
+        self.setFixedWidth(300)
         # ___ Container ___
         # Top level layout
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
+        # self.layout.setAlignment(
+        #     QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
         self.setLayout(self.layout)
 
         # Get Filename
+        self.get_file_layout = QtWidgets.QHBoxLayout()
+        self.get_file_layout.setContentsMargins(0, 0, 0, 0)
+        self.get_file_layout.setSpacing(0)
+        self.layout.addLayout(self.get_file_layout)
+
         self.__filename = None
         self.add_button = QtWidgets.QPushButton("Add")
         self.add_button.clicked.connect(self.__on_add_button)
-        self.layout.addWidget(self.add_button, 0, QtCore.Qt.AlignVCenter)
+        # self.layout.addWidget(self.add_button, 0, QtCore.Qt.AlignVCenter)
+        self.get_file_layout.addWidget(self.add_button, 0, QtCore.Qt.AlignLeft)
 
-        self.label = QtWidgets.QLabel()
-        self.layout.addWidget(self.label, 0, QtCore.Qt.AlignVCenter)
+        self.label = ElidedLabel(elide_side='middle')
+        self.get_file_layout.addWidget(self.label, 0, QtCore.Qt.AlignLeft)
     
     @property
     def filename(self) -> typing.Optional[str]:
