@@ -2,10 +2,13 @@
 import random
 
 class Model(object):
+    """..."""
     def __init__(self):
+        """..."""
         pass
 
     def csv_file_processing(self, file_url: str, header: str) -> bool:
+        """..."""
         self.file_url = file_url
         self.header = header
 

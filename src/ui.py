@@ -7,11 +7,14 @@ from PySide6 import QtCore, QtWidgets, QtGui
 
 
 class ElidedLabel(QtWidgets.QLabel):
+    """..."""
     def __init__(self, elide_side: str = 'right', *args, **kwargs):
+        """..."""
         super().__init__(*args, **kwargs)
         self.__side = elide_side
 
     def paintEvent(self, event):
+        """..."""
         painter = QtGui.QPainter(self)
 
         metrics = QtGui.QFontMetrics(self.font())
@@ -28,74 +31,16 @@ class ElidedLabel(QtWidgets.QLabel):
         painter.drawText(self.rect(), self.alignment(), elided)
 
 
-class Button(QtWidgets.QPushButton):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.setFixedHeight(30)
-        self.normal_style = (
-            'background: transparent;'
-            'background-color: rgba(40, 40, 40, 0.5);'
-            'border: 1px solid rgba(100, 100, 100, 0.5);'
-            'border-radius: 3px;')
-        self.setStyleSheet(self.normal_style)
-    
-    def enterEvent(self, event):
-        self.setStyleSheet(
-            'background: transparent;'
-            'background-color: rgba(50, 50, 50, 0.5);'
-            'border: 1px solid rgba(150, 150, 150, 0.5);'
-            'border-radius: 3px;')
-
-    def leaveEvent(self, event):
-        self.setStyleSheet(self.normal_style)
-
-
-class CloseButton(QtWidgets.QPushButton):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.setStyleSheet('background: transparent;')
-        self.setFixedHeight(40)
-        self.setFixedWidth(60)
-
-        icon_url = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            'static', 'icons', 'close.svg')
-
-        self.setIcon(QtGui.QIcon(icon_url))
-        self.setIconSize(QtCore.QSize(24, 24))
-    
-    def enterEvent(self, event):
-        self.setStyleSheet(
-            'background: transparent;'
-            'background-color: rgba(60, 60, 60, 0.5);')
-
-    def leaveEvent(self, event):
-        self.setStyleSheet('background: transparent;')
-
-
-class ActionButton(QtWidgets.QPushButton):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.setStyleSheet('border: 0px;')
-        """
-        self.setAutoFillBackground(True)
-        palette = self.palette()
-        palette.setColor(QtGui.QPalette.Window, QtGui.QColor('red'))
-        self.setPalette(palette)
-        """
-
-
 class CsvImport(QtWidgets.QWidget):
-    def __init__(self, controller, *args, **kwargs):
+    """..."""
+    def __init__(self, *args, **kwargs):
+        """..."""
         super().__init__(*args, **kwargs)
         self.setFixedWidth(500)
         # self.setContentsMargins(20, 20, 20, 20)
         # self.shadow = QtWidgets.QGraphicsDropShadowEffect()
         # self.shadow.setBlurRadius(15)
         # self.setGraphicsEffect(self.shadow)
-        self.controller = controller
 
         # ___ Properties ___
         self.filename = None
@@ -128,12 +73,13 @@ class CsvImport(QtWidgets.QWidget):
             self.filename_button, 0, QtCore.Qt.AlignLeft)
 
         self.filename_url_label = ElidedLabel(elide_side='middle')
-        self.filename_url_label.setFixedWidth(265)
+        self.filename_url_label.setFixedWidth(250)
         self.filename_button_layout.addWidget(
             self.filename_url_label, 1, QtCore.Qt.AlignLeft)
 
-        self.filename_clear_button = ActionButton(
+        self.filename_clear_button = QtWidgets.QPushButton(
             icon=QtGui.QIcon.fromTheme('edit-clear'))
+        self.filename_clear_button.setFlat(True)
         self.filename_clear_button.setVisible(False)
         self.filename_button_layout.addWidget(
             self.filename_clear_button, 0, QtCore.Qt.AlignRight)
@@ -161,12 +107,19 @@ class CsvImport(QtWidgets.QWidget):
         self.layout.addWidget(self.end_button, 0, QtCore.Qt.AlignRight)
 
 
-class View(QtWidgets.QMainWindow):
-    def __init__(self, controller,*args, **kwargs):
+class MainWindow(QtWidgets.QMainWindow):
+    """..."""
+    def __init__(self, *args, **kwargs):
+        """..."""
         super().__init__(*args, **kwargs)
-        
-        # Flag controller
-        self.controller = controller
+        self.app_path = os.path.abspath(os.path.dirname(__file__))
+
+        self.app_icon = QtGui.QIcon(
+            QtGui.QPixmap(
+                os.path.join(self.app_path, 'static', 'icons', 'app_logo.svg')
+            )
+        )
+        self.setWindowIcon(self.app_icon)
 
         # ___ Container ___
         # Top level container
@@ -186,12 +139,20 @@ class View(QtWidgets.QMainWindow):
         self.header_layout.setSpacing(0)
         self.top_level_layout.addLayout(self.header_layout)
 
-        self.fullscreen_button = ActionButton(
+        self.fullscreen_button = QtWidgets.QPushButton(
             icon=QtGui.QIcon.fromTheme('zoom-fit-best'))
+        self.fullscreen_button.setFlat(True)
         self.fullscreen_button.setIconSize(QtCore.QSize(24, 24))
         self.fullscreen_button.setVisible(False)
-        # self.fullscreen_button.setFlat(True)
         self.header_layout.addWidget(self.fullscreen_button)
+
+        self.exit_button = QtWidgets.QPushButton(
+            icon=QtGui.QIcon.fromTheme('window-close'))
+        self.exit_button.setFlat(True)
+        self.exit_button.setToolTip('Fechar janela')
+        self.exit_button.setIconSize(QtCore.QSize(24, 24))
+        self.exit_button.setVisible(False)
+        self.header_layout.addWidget(self.exit_button)
 
         # ___ Body ___
         self.body_layout = QtWidgets.QVBoxLayout()
@@ -200,7 +161,7 @@ class View(QtWidgets.QMainWindow):
         self.body_layout.setContentsMargins(10, 10, 10, 10)
         self.top_level_layout.addLayout(self.body_layout)
 
-        self.csv_import = CsvImport(self.controller)
+        self.csv_import = CsvImport()
         self.body_layout.addWidget(
             self.csv_import, 0,
             QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
