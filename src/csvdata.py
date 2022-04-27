@@ -75,7 +75,7 @@ if __name__ == '__main__':
         '+---------------------------------------+'
     )
     print(s)
-    url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/data/csv/1-db-atualizado-geral.csv'
+    url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-geral.csv'
     headers = [
         'Código', 'Grupo', 'Descrição', 'Unid.', 'Largura', 'Comprimento',
         'Mt2', 'PesoM2', 'Preço', 'PreçoMt2', 'Chapa', 'Peso Kg m', 'Metragem',
@@ -120,7 +120,7 @@ if __name__ == '__main__':
         '+---------------------------------------+'
     )
     print(s)
-    url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/data/csv/1-db-atualizado-material.csv'
+    url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-material.csv'
     headers = ['Código', 'Grupo', 'Descrição', 'Peso Mt', 'Preço Final']
     csv_obj = CsvData(file_url=url, header_list=headers)
     pprint.pprint(csv_obj.csv_datas[4])
@@ -133,7 +133,7 @@ if __name__ == '__main__':
         '+---------------------------------------+'
     )
     print(s)
-    url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/data/csv/1-db-atualizado-cadastro.csv'
+    url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-cadastro.csv'
     headers = ['Funcionário', 'Cargo', 'Setor', 'Salário']
     csv_obj = CsvData(file_url=url, header_list=headers)
     pprint.pprint(csv_obj.csv_datas[4])
