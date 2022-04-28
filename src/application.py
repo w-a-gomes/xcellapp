@@ -14,7 +14,7 @@ class Application(object):
         self.__app = QtWidgets.QApplication([])
         self.__ui = MainWindow()
         self.__model = Model()
-
+        
         # CsvImport connections
         self.__ui.csv_import.filename_button.clicked.connect(
             self.on_csv_import_filename_button)

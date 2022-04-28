@@ -10,13 +10,21 @@ class NavigationButton(QtWidgets.QPushButton):
 
         self.leave_state = False
 
-    def enterEvent(self, event):
-        self.setAutoFillBackground(True)
+    def enterEvent(self, event) -> None:
+        """..."""
         palette = self.palette()
-        palette.setColor(QtGui.QPalette.Button, '#264f9d')
+        palette_color = QtGui.QColor(
+            QtGui.QPalette().color(
+                QtGui.QPalette.Active, QtGui.QPalette.Highlight))
+        
+        palette.setColor(
+            QtGui.QPalette.Button, palette_color)
+        
         self.setPalette(palette)
+        self.setAutoFillBackground(True)
 
-    def leaveEvent(self, event):
+    def leaveEvent(self, event) -> None:
+        """..."""
         self.setAutoFillBackground(self.leave_state)
     
     def setKeepEnterEvent(self, state: bool) -> None:
