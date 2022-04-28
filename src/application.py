@@ -7,7 +7,6 @@ from model import Model
 from ui import MainWindow, CsvImport
 from PySide6 import QtCore, QtWidgets, QtGui
 
-
 class Application(object):
     """..."""
     def __init__(self):
@@ -29,7 +28,20 @@ class Application(object):
         self.__ui.csv_import.end_button.clicked.connect(
             self.on_csv_import_end_button)
         
-        # View connetions
+        # 
+        self.nav_buttons = [
+            self.__ui.navigation_stack.nav_buttons_0,
+            self.__ui.navigation_stack.nav_buttons_1,
+            self.__ui.navigation_stack.nav_buttons_2,
+        ]
+        self.__ui.navigation_stack.nav_buttons_0.clicked.connect(
+            self.on_nav_buttons_0)
+        self.__ui.navigation_stack.nav_buttons_1.clicked.connect(
+            self.on_nav_buttons_1)
+        self.__ui.navigation_stack.nav_buttons_2.clicked.connect(
+            self.on_nav_buttons_2)
+        
+        # UI connetions
         self.__ui.fullscreen_button.clicked.connect(
             self.on_fullscreen_button)
         
@@ -74,6 +86,25 @@ class Application(object):
         self.__model.csv_file_processing(
             file_url=self.__ui.csv_import.filename,
             header=self.__ui.csv_import.header)
+    
+    @QtCore.Slot()
+    def on_nav_buttons_0(self):
+        self.restore_nav_buttons_enter_leave_state()
+        self.__ui.navigation_stack.nav_buttons_0.setKeepEnterEvent(True)
+    
+    @QtCore.Slot()
+    def on_nav_buttons_1(self):
+        self.restore_nav_buttons_enter_leave_state()
+        self.__ui.navigation_stack.nav_buttons_1.setKeepEnterEvent(True)
+    
+    @QtCore.Slot()
+    def on_nav_buttons_2(self):
+        self.restore_nav_buttons_enter_leave_state()
+        self.__ui.navigation_stack.nav_buttons_2.setKeepEnterEvent(True)
+    
+    def restore_nav_buttons_enter_leave_state(self) -> None:
+        for btn in self.nav_buttons:
+            btn.setKeepEnterEvent(False)
     
     @QtCore.Slot()
     def on_fullscreen_button(self) -> None:
