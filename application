@@ -1,4 +1,4 @@
 #!/bin/bash
 clear
 . venv/bin/activate
-python src/controller.py
+python src/main.py
