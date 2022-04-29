@@ -1,5 +1,7 @@
 #!/usr/bin env python3
 from PySide6 import QtCore, QtWidgets, QtGui
+
+from attachment.uisections.csvimport import CsvImport
 from attachment.uiwidgets.navigationbutton import NavigationButton
 
 class NavigationStack(QtWidgets.QWidget):
@@ -18,8 +20,9 @@ class NavigationStack(QtWidgets.QWidget):
         self.stack_body_layout = QtWidgets.QHBoxLayout()
         self.layout.addLayout(self.stack_body_layout)
 
-        # Nav
+        # Nav layout
         self.stack_nav_layout = QtWidgets.QVBoxLayout()
+        self.stack_nav_layout.setSpacing(0)
         self.stack_body_layout.addLayout(self.stack_nav_layout, 1)
         
         self.nav_buttons_0 = NavigationButton(text='Item index 0')
@@ -34,7 +37,11 @@ class NavigationStack(QtWidgets.QWidget):
         self.nav_buttons_2.setFlat(True)
         self.stack_nav_layout.addWidget(self.nav_buttons_2)
 
-        # Pages
+        self.nav_button_settings = NavigationButton(text='Configurações')
+        self.nav_button_settings.setFlat(True)
+        self.stack_nav_layout.addWidget(self.nav_button_settings)
+
+        # Pages layout
         self.stack_pages_layout = QtWidgets.QVBoxLayout()
         self.stack_body_layout.addLayout(self.stack_pages_layout, 9)
 
@@ -42,13 +49,19 @@ class NavigationStack(QtWidgets.QWidget):
         self.stacked_layout.setContentsMargins(0, 0, 0, 0)
         self.stacked_layout.setSpacing(0)
         self.stack_pages_layout.addLayout(self.stacked_layout)
-
+        
+        # Pages test
         self.stacked_layout.addWidget(
             QtWidgets.QLabel(text='Item index 0'))
         self.stacked_layout.addWidget(
             QtWidgets.QLabel(text='Item index 1'))
         self.stacked_layout.addWidget(
             QtWidgets.QLabel(text='Item index 2'))
+        
+        # Page settings
+        self.csv_import = CsvImport()
+        self.stacked_layout.addWidget(
+            self.csv_import)
             
 
 if __name__ == '__main__':

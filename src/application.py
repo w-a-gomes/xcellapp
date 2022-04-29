@@ -14,25 +14,27 @@ class Application(object):
         self.__app = QtWidgets.QApplication([])
         self.__ui = MainWindow()
         self.__model = Model()
-        
+
         # CsvImport connections
-        self.__ui.csv_import.filename_button.clicked.connect(
+        self.__ui.navigation_stack.csv_import.filename_button.clicked.connect(
             self.on_csv_import_filename_button)
         
-        self.__ui.csv_import.header_entry.textChanged.connect(
+        self.__ui.navigation_stack.csv_import.header_entry.textChanged.connect(
             self.on_csv_import_header_entry)
         
-        self.__ui.csv_import.filename_clear_button.clicked.connect(
-            self.on_csv_import_filename_clear_button)
+        (self.__ui.navigation_stack.csv_import.
+            filename_clear_button.clicked.connect(
+                self.on_csv_import_filename_clear_button))
         
-        self.__ui.csv_import.end_button.clicked.connect(
+        self.__ui.navigation_stack.csv_import.end_button.clicked.connect(
             self.on_csv_import_end_button)
         
-        # 
+        # Navigation stack
         self.nav_buttons = [
             self.__ui.navigation_stack.nav_buttons_0,
             self.__ui.navigation_stack.nav_buttons_1,
             self.__ui.navigation_stack.nav_buttons_2,
+            self.__ui.navigation_stack.nav_button_settings,
         ]
         self.__ui.navigation_stack.nav_buttons_0.clicked.connect(
             self.on_nav_buttons_0)
@@ -40,6 +42,8 @@ class Application(object):
             self.on_nav_buttons_1)
         self.__ui.navigation_stack.nav_buttons_2.clicked.connect(
             self.on_nav_buttons_2)
+        self.__ui.navigation_stack.nav_button_settings.clicked.connect(
+            self.on_nav_button_settings)
         
         # UI connetions
         self.__ui.fullscreen_button.clicked.connect(
@@ -52,55 +56,66 @@ class Application(object):
     def on_csv_import_filename_button(self) -> None:
         """..."""
         dialog = QtWidgets.QFileDialog.getOpenFileName(
-            self.__ui.csv_import,
+            self.__ui.navigation_stack.csv_import,
             "Seletor de arquivos",
             str(pathlib.Path.home()),
             "Arquivos CSV (*.csv *.CSV)")
 
         if dialog[0][-4:].lower() =='.csv':
             # Text
-            self.__ui.csv_import.filename = dialog[0]
+            self.__ui.navigation_stack.csv_import.filename = dialog[0]
 
-            txt = self.__ui.csv_import.filename
-            self.__ui.csv_import.filename_url_label.setText(
+            txt = self.__ui.navigation_stack.csv_import.filename
+            self.__ui.navigation_stack.csv_import.filename_url_label.setText(
                 txt.replace(os.path.dirname(txt) + '/', ''))
             
             # Clear Button
-            self.__ui.csv_import.filename_clear_button.setVisible(True)
+            (self.__ui.navigation_stack.csv_import.
+                filename_clear_button.setVisible(True))
     
     @QtCore.Slot()
     def on_csv_import_filename_clear_button(self) -> None:
         """..."""
-        self.__ui.csv_import.filename = ''
-        self.__ui.csv_import.filename_url_label.setText('')
-        self.__ui.csv_import.filename_clear_button.setVisible(False)
+        self.__ui.navigation_stack.csv_import.filename = ''
+        self.__ui.navigation_stack.csv_import.filename_url_label.setText('')
+        (self.__ui.navigation_stack.csv_import
+            .filename_clear_button.setVisible(False))
     
     @QtCore.Slot()
     def on_csv_import_header_entry(self, text) -> None:
         """..."""
-        self.__ui.csv_import.header = text
+        self.__ui.navigation_stack.csv_import.header = text
     
     @QtCore.Slot()
     def on_csv_import_end_button(self) -> None:
         """..."""
         self.__model.csv_file_processing(
-            file_url=self.__ui.csv_import.filename,
-            header=self.__ui.csv_import.header)
+            file_url=self.__ui.navigation_stack.csv_import.filename,
+            header=self.__ui.navigation_stack.csv_import.header)
     
     @QtCore.Slot()
     def on_nav_buttons_0(self):
         self.restore_nav_buttons_enter_leave_state()
         self.__ui.navigation_stack.nav_buttons_0.setKeepEnterEvent(True)
+        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(0)
     
     @QtCore.Slot()
     def on_nav_buttons_1(self):
         self.restore_nav_buttons_enter_leave_state()
         self.__ui.navigation_stack.nav_buttons_1.setKeepEnterEvent(True)
+        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(1)
     
     @QtCore.Slot()
     def on_nav_buttons_2(self):
         self.restore_nav_buttons_enter_leave_state()
         self.__ui.navigation_stack.nav_buttons_2.setKeepEnterEvent(True)
+        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(2)
+    
+    @QtCore.Slot()
+    def on_nav_button_settings(self):
+        self.restore_nav_buttons_enter_leave_state()
+        self.__ui.navigation_stack.nav_button_settings.setKeepEnterEvent(True)
+        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(3)
     
     def restore_nav_buttons_enter_leave_state(self) -> None:
         for btn in self.nav_buttons:
