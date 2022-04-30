@@ -55,6 +55,16 @@ class NavButton(QtWidgets.QPushButton):
             self.new_palette.setColor(
             QtGui.QPalette.Button, self.hover_color)
     
+    def set_active_color_unfocused(self, state: bool) -> None:
+        if state:
+            self.active_color = QtGui.QColor(
+                QtGui.QPalette().color(
+                    QtGui.QPalette.Active, QtGui.QPalette.Midlight))
+        else:
+            self.active_color = QtGui.QColor(
+                QtGui.QPalette().color(
+                    QtGui.QPalette.Active, QtGui.QPalette.Highlight))
+    
     def set_keep_ctive_state(self, state: bool) -> None:
         """..."""
         self.leave_state = state
@@ -138,21 +148,13 @@ class VerticalNav(QtWidgets.QWidget):
         self.all_buttons = []
 
         for btn_schm in self.buttons_schema:
-            if btn_schm['submenu-index'] != 0:
-                self.nav_button = SubNavButton(
-                    text=btn_schm['text'],
-                    button_index=btn_schm['index'],
-                    submenu_index=btn_schm['submenu-index'])
-                layout = QtWidgets.QHBoxLayout()
-                layout.setContentsMargins(20, 1, 3, 0)
-                self.layout.addLayout(layout) 
-                layout.addWidget(self.nav_button, 8)
-            else:
-                self.nav_button = NavButton(
-                    text=btn_schm['text'],
-                    button_index=btn_schm['index'],
-                    submenu_index=btn_schm['submenu-index'])
-                self.layout.addWidget(self.nav_button)
+            # SubNavButton example
+            # if btn_schm['submenu-index'] != 0: SubNavButton else NavButton
+            self.nav_button = NavButton(
+                text=btn_schm['text'],
+                button_index=btn_schm['index'],
+                submenu_index=btn_schm['submenu-index'])
+            self.layout.addWidget(self.nav_button)
             
             self.nav_button.clicked.connect(self.on_exec_func)
             self.all_buttons.append(
@@ -164,6 +166,9 @@ class VerticalNav(QtWidgets.QWidget):
     
     @QtCore.Slot()
     def on_exec_func(self):
+        self.sender().set_active_color_unfocused(False)
+        self.sender().set_keep_ctive_state(True)
+
         # Click/Marked
         if self.sender().marked_state:
             # Visibility off
@@ -181,10 +186,30 @@ class VerticalNav(QtWidgets.QWidget):
         else:
             # Visibility on
             if self.sender().submenu_index == 0:
+                self.anim_group = QtCore.QParallelAnimationGroup()
+                
                 for item_button in self.all_buttons:
                     if item_button['schema']['submenu-index'] != 0:
                         if item_button['schema']['index'] == self.sender().button_index:
                             item_button['widget'].setVisible(True)
+
+                            # Animate fade
+                            effect = QtWidgets.QGraphicsOpacityEffect(item_button['widget'])
+                            item_button['widget'].setGraphicsEffect(effect)
+
+                            anim = QtCore.QPropertyAnimation(effect, b"opacity")
+                            anim.setStartValue(0)
+                            anim.setEndValue(1)
+                            anim.setDuration(300)
+                            self.anim_group.addAnimation(anim)
+
+                            # Animate position
+                            anim_p = QtCore.QPropertyAnimation(item_button['widget'], b"pos")
+                            anim_p.setEndValue(QtCore.QPoint(20, item_button['widget'].pos().y()))
+                            anim_p.setDuration(100)
+                            self.anim_group.addAnimation(anim_p)
+                
+                self.anim_group.start()
             
             # Unmark
             for item_button in self.all_buttons:
@@ -202,6 +227,7 @@ class VerticalNav(QtWidgets.QWidget):
                         item_button['schema']['index'] == self.sender().button_index
                         and item_button['schema']['submenu-index'] == 0
                     ):
+                        item_button['widget'].set_active_color_unfocused(True)
                         item_button['widget'].marked_state = True
                         item_button['widget'].set_keep_ctive_state(True)
 
