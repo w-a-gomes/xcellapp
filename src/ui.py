@@ -41,15 +41,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.header_layout.setSpacing(0)
         self.top_level_layout.addLayout(self.header_layout)
 
-        self.fullscreen_button = QtWidgets.QPushButton(
-            icon=QtGui.QIcon.fromTheme('zoom-fit-best'))
+        self.pixmapi_fullscreen_button = getattr(
+            QtWidgets.QStyle, 'SP_TitleBarNormalButton')
+        self.icon_fullscreen_button = self.style().standardIcon(
+            self.pixmapi_fullscreen_button)
+
+        self.fullscreen_button = QtWidgets.QPushButton()
+        self.fullscreen_button.setIcon(self.icon_fullscreen_button)
         self.fullscreen_button.setFlat(True)
         self.fullscreen_button.setIconSize(QtCore.QSize(24, 24))
         self.fullscreen_button.setVisible(False)
         self.header_layout.addWidget(self.fullscreen_button)
 
-        self.exit_button = QtWidgets.QPushButton(
-            icon=QtGui.QIcon.fromTheme('window-close'))
+        self.pixmapi_exit_button = getattr(
+            QtWidgets.QStyle, 'SP_DialogCloseButton')
+        self.icon_exit_button = self.style().standardIcon(
+            self.pixmapi_exit_button)
+
+        self.exit_button = QtWidgets.QPushButton()
+        self.exit_button.setIcon(self.icon_exit_button)
         self.exit_button.setFlat(True)
         self.exit_button.setToolTip('Fechar janela')
         self.exit_button.setIconSize(QtCore.QSize(24, 24))

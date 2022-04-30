@@ -2,8 +2,8 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 
 from attachment.uisections.csvimport import CsvImport
-from attachment.uiwidgets.navbutton import NavButton, SubNavButton
 from attachment.uiwidgets.verticalnav import VerticalNav
+from attachment.uiwidgets.icons import Icons
 
 class NavigationStack(QtWidgets.QWidget):
     """..."""
@@ -56,7 +56,7 @@ class NavigationStack(QtWidgets.QWidget):
             {
                 'index': 2,
                 'submenu-index': 0,
-                'text': 'button 2',
+                'text': 'Icones',
             },
             {
                 'index': 3,
@@ -79,14 +79,13 @@ class NavigationStack(QtWidgets.QWidget):
             QtWidgets.QLabel(text='Item index 1'))
 
         # 2
-        self.stacked_layout.addWidget(
-            QtWidgets.QLabel(text='Item index 2'))
+        self.icons = Icons()
+        self.stacked_layout.addWidget(self.icons)
 
         # 3 Settings
         self.csv_import = CsvImport()
         self.csv_import.setContentsMargins(200, 20, 200, 0)
-        self.stacked_layout.addWidget(
-            self.csv_import)
+        self.stacked_layout.addWidget(self.csv_import)
 
 
 if __name__ == '__main__':

@@ -30,6 +30,9 @@ class Application(object):
             self.on_csv_import_end_button)
         
         # menu
+        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(2, 0)
+        .clicked.connect(self.on_nav_button_icons))
+
         (self.__ui.navigation_stack.vertical_nav.get_button_by_index(3, 0)
         .clicked.connect(self.on_nav_button_settings))
 
@@ -84,6 +87,10 @@ class Application(object):
     @QtCore.Slot()
     def on_nav_button_settings(self) -> None:
         self.__ui.navigation_stack.stacked_layout.setCurrentIndex(3)
+    
+    @QtCore.Slot()
+    def on_nav_button_icons(self) -> None:
+        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(2)
     
     @QtCore.Slot()
     def on_fullscreen_button(self) -> None:

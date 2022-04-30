@@ -24,6 +24,7 @@ class CsvImport(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(6)
+        self.layout.setAlignment(QtCore.Qt.AlignTop)
         self.setLayout(self.layout)
 
         # Filename
@@ -39,9 +40,13 @@ class CsvImport(QtWidgets.QWidget):
         self.filename_button_layout.setContentsMargins(0, 0, 0, 0)
         self.filename_layout.addLayout(self.filename_button_layout, 8)
         
-        self.filename_button = QtWidgets.QPushButton(
-            icon=QtGui.QIcon.fromTheme('document-open-folder'),
-            text='Selecionar')
+        self.pixmapi_filename_button = getattr(
+            QtWidgets.QStyle, 'SP_DialogOpenButton')
+        self.icon_filename_button = self.style().standardIcon(
+            self.pixmapi_filename_button)
+
+        self.filename_button = QtWidgets.QPushButton(text='Selecionar')
+        self.filename_button.setIcon(self.icon_filename_button)
         self.filename_button_layout.addWidget(
             self.filename_button, 0, QtCore.Qt.AlignLeft)
 
@@ -50,8 +55,13 @@ class CsvImport(QtWidgets.QWidget):
         self.filename_button_layout.addWidget(
             self.filename_url_label, 1, QtCore.Qt.AlignLeft)
 
-        self.filename_clear_button = QtWidgets.QPushButton(
-            icon=QtGui.QIcon.fromTheme('edit-clear'))
+        self.pixmapi_filename_clear = getattr(
+            QtWidgets.QStyle, 'SP_DialogResetButton')
+        self.icon_filename_clear = self.style().standardIcon(
+            self.pixmapi_filename_clear)
+
+        self.filename_clear_button = QtWidgets.QPushButton()
+        self.filename_clear_button.setIcon(self.icon_filename_clear)
         self.filename_clear_button.setFlat(True)
         self.filename_clear_button.setVisible(False)
         self.filename_button_layout.addWidget(
@@ -75,6 +85,11 @@ class CsvImport(QtWidgets.QWidget):
         self.header_entry_layout.addWidget(self.header_entry, 10)
 
         # End
-        self.end_button = QtWidgets.QPushButton(
-            text='Procesar', icon=QtGui.QIcon.fromTheme('view-refresh'))
+        self.pixmapi_end_button = getattr(
+            QtWidgets.QStyle, 'SP_BrowserReload')
+        self.icon_end_button = self.style().standardIcon(
+            self.pixmapi_end_button)
+
+        self.end_button = QtWidgets.QPushButton(text='Procesar')
+        self.end_button.setIcon(self.icon_end_button)
         self.layout.addWidget(self.end_button, 0, QtCore.Qt.AlignRight)
