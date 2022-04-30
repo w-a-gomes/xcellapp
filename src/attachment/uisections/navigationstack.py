@@ -30,52 +30,63 @@ class NavigationStack(QtWidgets.QWidget):
         self.stacked_layout.setContentsMargins(0, 0, 0, 0)
         self.stacked_layout.setSpacing(0)
         self.stack_pages_layout.addLayout(self.stacked_layout)
+
+        # Navigation menu
+        self.buttons_schema = [
+            {
+                'index': 0,
+                'submenu-index': 0,
+                'text': 'button 0',
+            },
+            {
+                'index': 1,
+                'submenu-index': 0,
+                'text': 'button 1',
+            },
+            {
+                'index': 1,
+                'submenu-index': 1,
+                'text': 'sub button 1',
+            },
+            {
+                'index': 1,
+                'submenu-index': 2,
+                'text': 'sub button 2',
+            },
+            {
+                'index': 2,
+                'submenu-index': 0,
+                'text': 'button 2',
+            },
+            {
+                'index': 3,
+                'submenu-index': 0,
+                'text': 'Configurações',
+            },
+        ]
+        self.vertical_nav = VerticalNav(self.buttons_schema)
+        self.stack_nav_layout.addWidget(
+            self.vertical_nav, 0, QtCore.Qt.AlignTop)
+        
+        # Stack pages
         
         # 0
-        self.nav_buttons_0 = NavButton(text='Item index 0')
-        self.stack_nav_layout.addWidget(self.nav_buttons_0)
-
         self.stacked_layout.addWidget(
             QtWidgets.QLabel(text='Item index 0'))
 
         # 1
-        self.nav_buttons_1 = NavButton(text='Item index 1')
-        self.stack_nav_layout.addWidget(self.nav_buttons_1)
-
         self.stacked_layout.addWidget(
             QtWidgets.QLabel(text='Item index 1'))
 
         # 2
-        self.nav_buttons_2 = NavButton(text='Item index 2')
-        self.stack_nav_layout.addWidget(self.nav_buttons_2)
-
         self.stacked_layout.addWidget(
             QtWidgets.QLabel(text='Item index 2'))
 
-        # Settings
-        self.nav_button_settings = NavButton(text='Configurações')
-        self.stack_nav_layout.addWidget(self.nav_button_settings)
-        
+        # 3 Settings
         self.csv_import = CsvImport()
         self.csv_import.setContentsMargins(200, 20, 200, 0)
         self.stacked_layout.addWidget(
             self.csv_import)
-        
-        self.nav_button_settings_sublay = QtWidgets.QVBoxLayout()
-        self.nav_button_settings_sublay.setContentsMargins(20, 1, 3, 0)
-        self.stack_nav_layout.addLayout(self.nav_button_settings_sublay)
-
-        self.nav_button_settings_0 = SubNavButton('Sub settings 0')
-        self.nav_button_settings_0.setVisible(False)
-        self.nav_button_settings_sublay.addWidget(self.nav_button_settings_0)
-        
-        self.nav_button_settings_1 = SubNavButton('Sub settings 1')
-        self.nav_button_settings_1.setVisible(False)
-        self.nav_button_settings_sublay.addWidget(self.nav_button_settings_1)
-
-        self.navigation_st = VerticalNav()
-        self.stack_nav_layout.addWidget(
-            self.navigation_st, 0, QtCore.Qt.AlignTop)
 
 
 if __name__ == '__main__':
