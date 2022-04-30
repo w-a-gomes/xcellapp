@@ -30,21 +30,42 @@ class Application(object):
             self.on_csv_import_end_button)
         
         # Navigation stack
-        self.nav_buttons = [
-            self.__ui.navigation_stack.nav_buttons_0,
-            self.__ui.navigation_stack.nav_buttons_1,
-            self.__ui.navigation_stack.nav_buttons_2,
-            self.__ui.navigation_stack.nav_button_settings,
-        ]
+        self.sub_buttons_visibility = False
+
+        # 0
+        self.nav_buttons = []
+
         self.__ui.navigation_stack.nav_buttons_0.clicked.connect(
             self.on_nav_buttons_0)
+        self.nav_buttons.append(self.__ui.navigation_stack.nav_buttons_0)
+
+        # 1
         self.__ui.navigation_stack.nav_buttons_1.clicked.connect(
             self.on_nav_buttons_1)
+        self.nav_buttons.append(self.__ui.navigation_stack.nav_buttons_1)
+
+        # 2
         self.__ui.navigation_stack.nav_buttons_2.clicked.connect(
             self.on_nav_buttons_2)
+        self.nav_buttons.append(self.__ui.navigation_stack.nav_buttons_2)
+
+        # 3
         self.__ui.navigation_stack.nav_button_settings.clicked.connect(
             self.on_nav_button_settings)
+        self.nav_buttons.append(self.__ui.navigation_stack.nav_button_settings)
+
+        self.nav_buttons_settings = []
+
+        self.__ui.navigation_stack.nav_button_settings_0.clicked.connect(
+            self.on_nav_button_settings_0)
+        self.nav_buttons_settings.append(
+            self.__ui.navigation_stack.nav_button_settings_0)
         
+        self.__ui.navigation_stack.nav_button_settings_1.clicked.connect(
+            self.on_nav_button_settings_1)
+        self.nav_buttons_settings.append(
+            self.__ui.navigation_stack.nav_button_settings_1)
+
         # UI connetions
         self.__ui.fullscreen_button.clicked.connect(
             self.on_fullscreen_button)
@@ -95,31 +116,79 @@ class Application(object):
     
     @QtCore.Slot()
     def on_nav_buttons_0(self):
-        self.restore_nav_buttons_enter_leave_state()
-        self.__ui.navigation_stack.nav_buttons_0.setKeepEnterEvent(True)
+        """..."""
+        # Behavior
+        self.set_nav_buttons_style(
+            self.nav_buttons,
+            self.__ui.navigation_stack.nav_buttons_0)
+
+        # Action
         self.__ui.navigation_stack.stacked_layout.setCurrentIndex(0)
     
     @QtCore.Slot()
     def on_nav_buttons_1(self):
-        self.restore_nav_buttons_enter_leave_state()
-        self.__ui.navigation_stack.nav_buttons_1.setKeepEnterEvent(True)
+        """..."""
+        # Behavior
+        self.set_nav_buttons_style(
+            self.nav_buttons,
+            self.__ui.navigation_stack.nav_buttons_1)
+
+        # Action
         self.__ui.navigation_stack.stacked_layout.setCurrentIndex(1)
     
     @QtCore.Slot()
     def on_nav_buttons_2(self):
-        self.restore_nav_buttons_enter_leave_state()
-        self.__ui.navigation_stack.nav_buttons_2.setKeepEnterEvent(True)
+        """..."""
+        # Behavior
+        self.set_nav_buttons_style(
+            self.nav_buttons,
+            self.__ui.navigation_stack.nav_buttons_2)
+
+        # Action
         self.__ui.navigation_stack.stacked_layout.setCurrentIndex(2)
     
     @QtCore.Slot()
-    def on_nav_button_settings(self):
-        self.restore_nav_buttons_enter_leave_state()
-        self.__ui.navigation_stack.nav_button_settings.setKeepEnterEvent(True)
+    def on_nav_button_settings(self) -> None:
+        """..."""
+        # Behavior
+        self.set_sub_buttons_visibility(self.nav_buttons_settings)
+        self.set_nav_buttons_style(
+            self.nav_buttons,
+            self.__ui.navigation_stack.nav_button_settings)
+        
+        # Action
         self.__ui.navigation_stack.stacked_layout.setCurrentIndex(3)
     
-    def restore_nav_buttons_enter_leave_state(self) -> None:
-        for btn in self.nav_buttons:
-            btn.setKeepEnterEvent(False)
+    @QtCore.Slot()
+    def on_nav_button_settings_0(self) -> None:
+        """..."""
+        # Behavior
+        self.set_nav_buttons_style(
+            self.nav_buttons_settings,
+            self.__ui.navigation_stack.nav_button_settings_0)
+    
+    @QtCore.Slot()
+    def on_nav_button_settings_1(self) -> None:
+        """..."""
+        # Behavior
+        self.set_nav_buttons_style(
+            self.nav_buttons_settings,
+            self.__ui.navigation_stack.nav_button_settings_1)
+    
+    def set_nav_buttons_style(self, list_buttons, button) -> None:
+        for btn in list_buttons:
+            btn.set_keep_ctive_state(False)
+        
+        button.set_keep_ctive_state(True)
+    
+    def set_sub_buttons_visibility(self, widgets: list):
+        if self.sub_buttons_visibility:
+            self.sub_buttons_visibility = False
+        else:
+            self.sub_buttons_visibility = True
+        
+        for btn in widgets:
+                btn.setVisible(self.sub_buttons_visibility)
     
     @QtCore.Slot()
     def on_fullscreen_button(self) -> None:

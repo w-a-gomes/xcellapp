@@ -8,8 +8,9 @@ class CsvImport(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
         """..."""
         super().__init__(*args, **kwargs)
-        self.setFixedWidth(500)
-        # self.setContentsMargins(20, 20, 20, 20)
+        # self.setFixedWidth(600)
+        # self.setMaximumWidth(600)
+        # self.setContentsMargins(200, 0, 200, 0)
         # self.shadow = QtWidgets.QGraphicsDropShadowEffect()
         # self.shadow.setBlurRadius(15)
         # self.setGraphicsEffect(self.shadow)

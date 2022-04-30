@@ -60,13 +60,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.body_layout = QtWidgets.QVBoxLayout()
         self.body_layout.setContentsMargins(10, 10, 10, 10)
         self.top_level_layout.addLayout(self.body_layout)
-
-        self.csv_import = CsvImport()
-        """
-        self.body_layout.addWidget(
-            self.csv_import, 0,
-            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        """
         
         self.navigation_stack = NavigationStack()
         self.body_layout.addWidget(
@@ -77,5 +70,6 @@ if __name__ == '__main__':
     # https://doc.qt.io/qtforpython/
     # https://doc.qt.io/qtforpython/api.html
     # https://www.pythonguis.com/tutorials/pyside-layouts/
+    # https://www.pythonguis.com/tutorials/pyside-animated-widgets/
     # https://docs.python-guide.org/shipping/freezing/
     pass
