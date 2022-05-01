@@ -2,7 +2,7 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 
 from attachment.uisections.csvimport import CsvImport
-from attachment.uiwidgets.verticalnav import VerticalNav, VerticalNavB
+from attachment.uiwidgets.verticalnav import VerticalNav
 from attachment.uiwidgets.icons import Icons
 
 class NavigationStack(QtWidgets.QWidget):
@@ -32,46 +32,34 @@ class NavigationStack(QtWidgets.QWidget):
         self.stacked_layout.setSpacing(0)
         self.stack_pages_layout.addLayout(self.stacked_layout)
 
-        # Navigation menu
+        # Navigation menu buttons
         self.buttons_schema = [
             {
-                'index': 0,
-                'submenu-index': 0,
-                'text': 'Início',
+                'id': 'inicio', 'text': 'Início'
             },
             {
-                'index': 1,
-                'submenu-index': 0,
-                'text': 'Configurações',
+                'id': 'config', 'text': 'Configurações', 'sub-buttons': [
+                    {'id': 'icones', 'text': 'Ícones'},
+                    {'id': 'csv', 'text': 'Importar CSV'},
+                ]
             },
             {
-                'index': 1,
-                'submenu-index': 1,
-                'text': 'Importar arquivos CSV',
+                'id': 'penultimo', 'text': 'Penúltimo'
             },
             {
-                'index': 1,
-                'submenu-index': 2,
-                'text': 'Ícones do sistema',
+                'id': 'ultimo', 'text': 'Último', 'sub-buttons': [
+                    {'id': 'test', 'text': 'Teste'},
+                    {'id': 'testa', 'text': 'Testa'},
+                ]
             },
             {
-                'index': 2,
-                'submenu-index': 0,
-                'text': 'Penultima pagina',
-            },
-            {
-                'index': 3,
-                'submenu-index': 0,
-                'text': 'Última pagina',
+                'id': 'pan', 'text': 'Paann'
             },
         ]
+        
         self.vertical_nav = VerticalNav(self.buttons_schema)
         self.stack_nav_layout.addWidget(
             self.vertical_nav, 0, QtCore.Qt.AlignTop)
-        
-        self.vertical_navb = VerticalNavB(self.buttons_schema)
-        self.stack_nav_layout.addWidget(
-            self.vertical_navb, 0, QtCore.Qt.AlignTop)
         
         # Stack pages
         

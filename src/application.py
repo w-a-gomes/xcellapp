@@ -29,22 +29,9 @@ class Application(object):
         self.__ui.navigation_stack.csv_import.end_button.clicked.connect(
             self.on_csv_import_end_button)
         
-        # Menu
-        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(0, 0)
-        .clicked.connect(self.on_nav_button_home))
-
-        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(1, 0)
-        .clicked.connect(self.on_nav_button_settings))
-
-        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(1, 1)
-        .clicked.connect(self.on_nav_button_csv_settings))
-
-        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(1, 2)
-        .clicked.connect(self.on_nav_button_icons))
-
-        # Menu pages
-        self.__ui.navigation_stack.stack_btn_set.clicked.connect(
-            self.on_nav_button_settings_menu)
+        # Menu buttons
+        (self.__ui.navigation_stack.vertical_nav.get_button_by_id('csv')
+            .clicked.connect(self.on_nav_button_csv_settings))
 
         # UI connetions
         self.__ui.fullscreen_button.clicked.connect(
@@ -53,6 +40,7 @@ class Application(object):
         self.__ui.exit_button.clicked.connect(
             self.on_exit_button)
     
+    # CSV import
     @QtCore.Slot()
     def on_csv_import_filename_button(self) -> None:
         """..."""
@@ -94,28 +82,12 @@ class Application(object):
             file_url=self.__ui.navigation_stack.csv_import.filename,
             header=self.__ui.navigation_stack.csv_import.header)
     
-    @QtCore.Slot()
-    def on_nav_button_home(self) -> None:
-        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(0)
-
-    @QtCore.Slot()
-    def on_nav_button_settings(self) -> None:
-        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(1)
-    
-    @QtCore.Slot()
-    def on_nav_button_settings_menu(self) -> None:
-        if not self.__ui.navigation_stack.vertical_nav.get_button_by_index(1, 1).isVisible():
-            self.__ui.navigation_stack.vertical_nav.get_button_by_index(1, 0).click()
-        self.__ui.navigation_stack.vertical_nav.get_button_by_index(1, 1).click()
-
+    # Menu pages
     @QtCore.Slot()
     def on_nav_button_csv_settings(self) -> None:
         self.__ui.navigation_stack.stacked_layout.setCurrentIndex(2)
     
-    @QtCore.Slot()
-    def on_nav_button_icons(self) -> None:
-        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(3)
-    
+    # Fullscreen
     @QtCore.Slot()
     def on_fullscreen_button(self) -> None:
         """..."""
