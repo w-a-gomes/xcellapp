@@ -21,3 +21,7 @@ ElidedLabel {
     height: 30px;
     padding: 0px;
 }
+
+NavButton {
+    border-radius: 5px;
+}

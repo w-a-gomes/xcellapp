@@ -2,7 +2,7 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 
 from attachment.uisections.csvimport import CsvImport
-from attachment.uiwidgets.verticalnav import VerticalNav
+from attachment.uiwidgets.verticalnav import VerticalNav, VerticalNavB
 from attachment.uiwidgets.icons import Icons
 
 class NavigationStack(QtWidgets.QWidget):
@@ -68,6 +68,10 @@ class NavigationStack(QtWidgets.QWidget):
         self.vertical_nav = VerticalNav(self.buttons_schema)
         self.stack_nav_layout.addWidget(
             self.vertical_nav, 0, QtCore.Qt.AlignTop)
+        
+        self.vertical_navb = VerticalNavB(self.buttons_schema)
+        self.stack_nav_layout.addWidget(
+            self.vertical_navb, 0, QtCore.Qt.AlignTop)
         
         # Stack pages
         

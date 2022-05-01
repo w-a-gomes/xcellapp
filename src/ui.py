@@ -79,7 +79,10 @@ class MainWindow(QtWidgets.QMainWindow):
 if __name__ == '__main__':
     # https://doc.qt.io/qtforpython/
     # https://doc.qt.io/qtforpython/api.html
+    
+    # https://www.pythonguis.com/pyside6-tutorial/
     # https://www.pythonguis.com/tutorials/pyside-layouts/
     # https://www.pythonguis.com/tutorials/pyside-animated-widgets/
+    
     # https://docs.python-guide.org/shipping/freezing/
     pass

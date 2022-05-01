@@ -33,7 +33,10 @@ class NavButton(QtWidgets.QPushButton):
         self.new_palette.setColor(
             QtGui.QPalette.Button, self.hover_color)
         
-        self.setStyleSheet('text-align: left; padding-right: 25px;')
+        self.setStyleSheet(
+            'text-align: left;'
+            'padding-right: 25px;'
+            'border-radius: 5px;')
 
     def enterEvent(self, event) -> None:
         """..."""
@@ -225,3 +228,254 @@ class VerticalNav(QtWidgets.QWidget):
                 and item_button['schema']['submenu-index'] == submenu_index
             ):
                 return item_button['widget']
+
+
+class NavButtonB(QtWidgets.QPushButton):
+    """..."""
+    def __init__(self, button_id, *args, **kwargs):
+        """..."""
+        super().__init__(*args, **kwargs)
+        # Flags
+        self.is_checked = False
+        self.is_active_state = False
+        self.is_sub_layouts_active = False
+
+        # Properties
+        self.button_id = button_id
+        self.sub_buttons_id = []
+        self.sub_layout_id = None
+
+        self.active_color = QtGui.QColor(
+            QtGui.QPalette().color(
+                QtGui.QPalette.Active, QtGui.QPalette.Highlight))
+        
+        self.active_color_unfocused = QtGui.QColor(
+            QtGui.QPalette().color(
+                QtGui.QPalette.Active, QtGui.QPalette.Midlight))
+        
+        self.hover_color = QtGui.QColor(
+            QtGui.QPalette().color(
+                QtGui.QPalette.Active, QtGui.QPalette.Button))
+        
+        # Settings
+        self.color_palette = self.palette()
+        self.color_palette.setColor(
+            QtGui.QPalette.Button, self.hover_color)
+        
+        self.setStyleSheet(
+            'text-align: left;'
+            'padding-right: 25px;'
+            'border-radius: 5px;')
+
+    def enterEvent(self, event) -> None:
+        """..."""
+        self.setAutoFillBackground(True)
+        self.setPalette(self.color_palette)
+        
+    def leaveEvent(self, event) -> None:
+        """..."""
+        if not self.is_checked:
+            self.setAutoFillBackground(False)
+    
+    def set_active_color(self) -> None:
+        """..."""
+        self.is_checked = True
+        self.setAutoFillBackground(True)
+        
+        self.color_palette.setColor(
+            QtGui.QPalette.Button, self.active_color)
+        
+        self.setPalette(self.color_palette)
+        
+    def unset_active_color(self) -> None:
+        """..."""
+        self.is_checked = False
+
+        self.color_palette.setColor(
+            QtGui.QPalette.Button, self.hover_color)
+
+        self.setAutoFillBackground(False)
+
+
+class SubLayoutWidget(QtWidgets.QWidget):
+    """..."""
+    def __init__(self, sub_layout_id: str = None, *args, **kwargs):
+        """..."""
+        super().__init__(*args, **kwargs)
+
+        # Properties
+        self.sub_layout_id = sub_layout_id
+        self.all_items = []
+
+        # Layout
+        self.layout = QtWidgets.QVBoxLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+        self.setLayout(self.layout)
+
+        # Style
+        self.normal_color = QtGui.QColor(
+            QtGui.QPalette().color(
+                QtGui.QPalette.Active, QtGui.QPalette.Midlight))
+
+        self.color_palette = self.palette()
+        self.color_palette.setColor(
+            QtGui.QPalette.Window, self.normal_color)
+        
+        self.setAutoFillBackground(True)
+        self.setPalette(self.color_palette)
+
+    def add_item(self, item):
+        self.layout.addWidget(item)
+    
+    def set_visible(self, visible: bool):
+        if self.all_items and visible:
+            for item in self.all_items:
+                item.setVisible(True)
+        elif not visible and self.all_items:
+            for item in self.all_items:
+                item.setVisible(False)
+    
+    def get_item_by_id(self, item_id):
+        if self.all_items:
+            for item in self.all_items:
+                if item.button_id == item_id:
+                    return item
+
+
+class VerticalNavB(QtWidgets.QWidget):
+    """..."""
+    def __init__(self, buttons_schema, *args, **kwargs):
+        """..."""
+        super().__init__(*args, **kwargs)
+        self.buttons_schema = [
+            {
+                'id': 'inicio', 'text': 'Início'
+            },
+            {
+                'id': 'config', 'text': 'Configurações', 'sub-buttons': [
+                    {'id': 'icones', 'text': 'Ícones'},
+                    {'id': 'csv', 'text': 'Importar CSV'},
+                ]
+            },
+            {
+                'id': 'penultimo', 'text': 'Penúltimo'
+            },
+            {
+                'id': 'ultimo', 'text': 'Último', 'sub-buttons': [
+                    {'id': 'test', 'text': 'Teste'},
+                    {'id': 'testa', 'text': 'Testa'},
+                ]
+            },
+            {
+                'id': 'pan', 'text': 'Paann'
+            },
+        ]
+        # Layout
+        self.layout = QtWidgets.QVBoxLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+        self.setLayout(self.layout)
+
+        self.all_top_buttons = []
+        self.all_sub_buttons = []
+        self.all_buttons = []
+        self.all_sub_layouts = []
+
+        for schema in self.buttons_schema:
+            # Top Buttons
+            button = NavButtonB(button_id=schema['id'])
+            button.setCheckable(True)
+            button.setFlat(True)
+            button.clicked.connect(self.on_button_click)
+
+            self.layout.addWidget(button)
+            self.all_buttons.append(button)
+            self.all_top_buttons.append(button)
+
+            if 'text' in schema.keys():
+                button.setText(schema['text'])
+                
+            if 'icon' in schema.keys():
+                button.setIcon(schema['icon'])
+
+            # Sub buttons
+            if 'sub-buttons' in schema.keys():
+                sub_layout = SubLayoutWidget(sub_layout_id=schema['id'])
+                self.layout.addWidget(sub_layout)
+                self.all_sub_layouts.append(sub_layout)
+
+                for sub_schema in schema['sub-buttons']:
+                    sub_button = NavButtonB(
+                        button_id=sub_schema['id'], text=sub_schema['text'])
+                    sub_button.setCheckable(True)
+                    sub_button.setFlat(True)
+                    sub_button.clicked.connect(self.on_sub_button_click)
+
+                    sub_layout.add_item(sub_button)
+                    self.all_buttons.append(sub_button)
+                    self.all_sub_buttons.append(sub_button)
+        
+        for sub_layout in self.all_sub_layouts:
+            sub_layout.setVisible(False)
+    
+    @QtCore.Slot()
+    def on_button_click(self):
+        # (Checked) -> Unchecked
+        if self.sender().is_checked:
+            self.sender().is_checked = False
+
+            # Sub layout not visible
+            for sub_layout in self.all_sub_layouts:
+                if sub_layout.sub_layout_id == self.sender().button_id:
+                    sub_layout.setVisible(False)
+        
+        # (Unchecked) -> Checked
+        else:
+            self.sender().set_active_color()
+
+            # Unset Colors
+            for button in self.all_buttons:
+                if button.button_id != self.sender().button_id:
+                    button.unset_active_color()
+
+                    # Fix click
+                    if button.is_sub_layouts_active:
+                        button.is_checked = True
+            
+            # Sub layout visible
+            for sub_layout in self.all_sub_layouts:
+                if sub_layout.sub_layout_id == self.sender().button_id:
+                    self.sender().is_sub_layouts_active =True
+                    sub_layout.setVisible(True)
+            
+            for sub_layout in self.all_sub_layouts:
+                if sub_layout.sub_layout_id == self.sender().button_id:
+                    vertical_size = (
+                        (len(sub_layout.all_items) * button.height())
+                        + sub_layout.height()
+                    )
+                    self.anim_group = QtCore.QSequentialAnimationGroup()
+                    anim = QtCore.QPropertyAnimation(sub_layout, b"size")
+                    anim.setStartValue(QtCore.QSize(sub_layout.width(), 0))
+                    anim.setEndValue(
+                        QtCore.QSize(sub_layout.width(), vertical_size))
+                    anim.setDuration(500)
+                    self.anim_group.addAnimation(anim)
+                    self.anim_group.start()
+                    
+
+    
+    @QtCore.Slot()
+    def on_sub_button_click(self):
+        # (Checked) -> Unchecked
+        if self.sender().is_checked:
+            pass
+        
+        # (Unchecked) -> Checked
+        else:
+            self.sender().set_active_color()
+
+            for button in self.all_buttons:
+                if button.button_id != self.sender().button_id:
+                    button.unset_active_color()
