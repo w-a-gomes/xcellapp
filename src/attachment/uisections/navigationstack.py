@@ -15,6 +15,7 @@ class NavigationStack(QtWidgets.QWidget):
         self.layout = QtWidgets.QHBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
+        self.setMinimumWidth(100)
         self.setLayout(self.layout)
 
         # Nav layout
@@ -36,32 +37,32 @@ class NavigationStack(QtWidgets.QWidget):
             {
                 'index': 0,
                 'submenu-index': 0,
-                'text': 'button 0',
+                'text': 'Início',
             },
             {
                 'index': 1,
                 'submenu-index': 0,
-                'text': 'button 1',
+                'text': 'Configurações',
             },
             {
                 'index': 1,
                 'submenu-index': 1,
-                'text': 'sub button 1',
+                'text': 'Importar arquivos CSV',
             },
             {
                 'index': 1,
                 'submenu-index': 2,
-                'text': 'sub button 2',
+                'text': 'Ícones do sistema',
             },
             {
                 'index': 2,
                 'submenu-index': 0,
-                'text': 'Icones',
+                'text': 'Penultima pagina',
             },
             {
                 'index': 3,
                 'submenu-index': 0,
-                'text': 'Configurações',
+                'text': 'Última pagina',
             },
         ]
         self.vertical_nav = VerticalNav(self.buttons_schema)
@@ -72,20 +73,16 @@ class NavigationStack(QtWidgets.QWidget):
         
         # 0
         self.stacked_layout.addWidget(
-            QtWidgets.QLabel(text='Item index 0'))
+            QtWidgets.QLabel(text='Página Inicial'))
 
-        # 1
-        self.stacked_layout.addWidget(
-            QtWidgets.QLabel(text='Item index 1'))
-
-        # 2
-        self.icons = Icons()
-        self.stacked_layout.addWidget(self.icons)
-
-        # 3 Settings
+        # 1 Settings
         self.csv_import = CsvImport()
         self.csv_import.setContentsMargins(200, 20, 200, 0)
         self.stacked_layout.addWidget(self.csv_import)
+
+        # 2 Icons
+        self.icons = Icons()
+        self.stacked_layout.addWidget(self.icons)
 
 
 if __name__ == '__main__':

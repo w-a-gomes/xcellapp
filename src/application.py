@@ -30,11 +30,17 @@ class Application(object):
             self.on_csv_import_end_button)
         
         # menu
-        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(2, 0)
-        .clicked.connect(self.on_nav_button_icons))
+        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(0, 0)
+        .clicked.connect(self.on_nav_button_home))
 
-        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(3, 0)
+        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(1, 0)
         .clicked.connect(self.on_nav_button_settings))
+
+        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(1, 1)
+        .clicked.connect(self.on_nav_button_csv_settings))
+
+        (self.__ui.navigation_stack.vertical_nav.get_button_by_index(1, 2)
+        .clicked.connect(self.on_nav_button_icons))
 
         # UI connetions
         self.__ui.fullscreen_button.clicked.connect(
@@ -85,8 +91,17 @@ class Application(object):
             header=self.__ui.navigation_stack.csv_import.header)
     
     @QtCore.Slot()
+    def on_nav_button_home(self) -> None:
+        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(0)
+
+    @QtCore.Slot()
     def on_nav_button_settings(self) -> None:
-        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(3)
+        # self.__ui.navigation_stack.vertical_nav.get_button_by_index(1, 1).click()
+        pass
+
+    @QtCore.Slot()
+    def on_nav_button_csv_settings(self) -> None:
+        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(1)
     
     @QtCore.Slot()
     def on_nav_button_icons(self) -> None:
@@ -111,11 +126,11 @@ class Application(object):
     
     def main(self) -> None:
         """..."""
-        self.__ui.showFullScreen()
+        self.__ui.showMaximized()
         self.__ui.fullscreen_button.setVisible(True)
         self.__ui.fullscreen_button.setToolTip('Sair da tela cheia')
         
-        self.__ui.exit_button.setVisible(True)
+        self.__ui.exit_button.setVisible(False)
 
         style_path = (
             os.path.join(

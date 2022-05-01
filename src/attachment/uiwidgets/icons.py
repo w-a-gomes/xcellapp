@@ -78,15 +78,25 @@ class Icons(QtWidgets.QWidget):
             'SP_TrashIcon',
             'SP_VistaShield',
         ]
-
+        self.setContentsMargins(0, 0, 0, 0)
         layout = QtWidgets.QGridLayout()
+        layout.setSpacing(0)
 
         for n, name in enumerate(icons):
-            btn = QtWidgets.QPushButton(name)
+            self.btn = QtWidgets.QPushButton(name)
+            self.btn.setStyleSheet('text-align: left;')
+            self.btn.setFlat(True)
 
             pixmapi = getattr(QtWidgets.QStyle, name) # SP_TitleBarNormalButton
             icon = self.style().standardIcon(pixmapi)
-            btn.setIcon(icon)
-            layout.addWidget(btn, n / 4, n % 4)
+            self.btn.setIcon(icon)
+            self.btn.clicked.connect(self.on_clip)
+            layout.addWidget(self.btn, n / 4, n % 4)
 
         self.setLayout(layout)
+
+        self.clip = QtWidgets.QApplication.clipboard()
+    
+    @QtCore.Slot()
+    def on_clip(self):
+        self.clip.setText(self.sender().text())

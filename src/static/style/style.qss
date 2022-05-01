@@ -16,3 +16,8 @@ QLineEdit {
     height: 30px;
     padding: 0px;
 }
+
+ElidedLabel {
+    height: 30px;
+    padding: 0px;
+}

@@ -33,7 +33,7 @@ class NavButton(QtWidgets.QPushButton):
         self.new_palette.setColor(
             QtGui.QPalette.Button, self.hover_color)
         
-        self.setStyleSheet('text-align: left;')
+        self.setStyleSheet('text-align: left; padding-right: 25px;')
 
     def enterEvent(self, event) -> None:
         """..."""
@@ -79,25 +79,6 @@ class NavButton(QtWidgets.QPushButton):
         self.setAutoFillBackground(self.leave_state)
 
 
-class SubNavButton(NavButton):
-    """..."""
-    def __init__(self, *args, **kwargs):
-        """..."""
-        super().__init__(*args, **kwargs)
-
-        self.new_palette = self.palette()
-        self.active_color = QtGui.QColor(
-            QtGui.QPalette().color(
-                QtGui.QPalette.Active, QtGui.QPalette.Mid))
-        
-        self.hover_color = QtGui.QColor(
-            QtGui.QPalette().color(
-                QtGui.QPalette.Active, QtGui.QPalette.Button))
-        
-        self.new_palette.setColor(
-            QtGui.QPalette.Button, self.hover_color)
-
-
 class VerticalNav(QtWidgets.QWidget):
     """..."""
     def __init__(self, buttons_schema, *args, **kwargs):
@@ -139,6 +120,11 @@ class VerticalNav(QtWidgets.QWidget):
         ]
         """
         super().__init__(*args, **kwargs)
+        self.marked_state = False
+        self.leave_state = False
+        self.state = 'hover'
+
+        # Layout
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
