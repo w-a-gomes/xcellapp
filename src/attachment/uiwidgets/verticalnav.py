@@ -237,7 +237,7 @@ class NavButtonB(QtWidgets.QPushButton):
         super().__init__(*args, **kwargs)
         # Flags
         self.is_checked = False
-        self.is_active_state = False
+        self.is_clicked = False
         self.is_sub_layouts_active = False
 
         # Properties
@@ -274,12 +274,20 @@ class NavButtonB(QtWidgets.QPushButton):
         
     def leaveEvent(self, event) -> None:
         """..."""
-        if not self.is_checked:
+        if not self.is_clicked:
             self.setAutoFillBackground(False)
     
     def set_active_color(self) -> None:
         """..."""
-        self.is_checked = True
+        self.setAutoFillBackground(True)
+        
+        self.color_palette.setColor(
+            QtGui.QPalette.Button, self.active_color)
+        
+        self.setPalette(self.color_palette)
+    
+    def set_active_color_for_unchecked_state(self) -> None:
+        """..."""
         self.setAutoFillBackground(True)
         
         self.color_palette.setColor(
@@ -289,8 +297,6 @@ class NavButtonB(QtWidgets.QPushButton):
         
     def unset_active_color(self) -> None:
         """..."""
-        self.is_checked = False
-
         self.color_palette.setColor(
             QtGui.QPalette.Button, self.hover_color)
 
@@ -423,46 +429,73 @@ class VerticalNavB(QtWidgets.QWidget):
     def on_button_click(self):
         # (Checked) -> Unchecked
         if self.sender().is_checked:
-            self.sender().is_checked = False
-
             # Sub layout not visible
             for sub_layout in self.all_sub_layouts:
                 if sub_layout.sub_layout_id == self.sender().button_id:
+                    self.sender().is_sub_layouts_active = False
                     sub_layout.setVisible(False)
+            
+            # Unset buttons
+            for button in self.all_buttons:
+                button.unset_active_color()
+                button.is_clicked = False
+                button.is_checked = False
+                
+                if button.is_sub_layouts_active:  # Fix: one click hide subs
+                    button.is_checked = True
+            
+            # End state
+            self.sender().set_active_color()
+            self.sender().is_checked = False
+            self.sender().is_clicked = True
         
         # (Unchecked) -> Checked
         else:
-            self.sender().set_active_color()
-
-            # Unset Colors
+            # Unset buttons
             for button in self.all_buttons:
-                if button.button_id != self.sender().button_id:
-                    button.unset_active_color()
+                button.unset_active_color()
+                button.is_checked = False
+                button.is_clicked = False
 
-                    # Fix click
-                    if button.is_sub_layouts_active:
-                        button.is_checked = True
+                if button.is_sub_layouts_active:  # Fix: one click hide subs
+                    button.is_checked = True
             
             # Sub layout visible
+            sub_layout_visible = False
             for sub_layout in self.all_sub_layouts:
                 if sub_layout.sub_layout_id == self.sender().button_id:
-                    self.sender().is_sub_layouts_active =True
-                    sub_layout.setVisible(True)
+                    if not self.sender().is_sub_layouts_active:
+                        self.sender().is_sub_layouts_active = True
+                        sub_layout.setVisible(True)
+                        sub_layout_visible = True
             
-            for sub_layout in self.all_sub_layouts:
-                if sub_layout.sub_layout_id == self.sender().button_id:
-                    vertical_size = (
-                        (len(sub_layout.all_items) * button.height())
-                        + sub_layout.height()
-                    )
-                    self.anim_group = QtCore.QSequentialAnimationGroup()
-                    anim = QtCore.QPropertyAnimation(sub_layout, b"size")
-                    anim.setStartValue(QtCore.QSize(sub_layout.width(), 0))
-                    anim.setEndValue(
-                        QtCore.QSize(sub_layout.width(), vertical_size))
-                    anim.setDuration(500)
-                    self.anim_group.addAnimation(anim)
-                    self.anim_group.start()
+            # Animate sub layout
+            if sub_layout_visible:
+                self.anim_group = QtCore.QSequentialAnimationGroup()
+
+                for sub_layout in self.all_sub_layouts:
+                    if sub_layout.sub_layout_id == self.sender().button_id:
+                        vertical_size = (
+                            (len(sub_layout.all_items) * button.height())
+                            + sub_layout.height()
+                        )
+                        
+                        anim = QtCore.QPropertyAnimation(sub_layout, b"size")
+                        anim.setStartValue(QtCore.QSize(sub_layout.width(), 0))
+                        anim.setEndValue(
+                            QtCore.QSize(sub_layout.width(), vertical_size))
+                        anim.setDuration(500)
+                        self.anim_group.addAnimation(anim)
+
+                self.anim_group.start()
+            
+            # Animate sub Buttons
+            #
+
+            # End state
+            self.sender().set_active_color()
+            self.sender().is_checked = True
+            self.sender().is_clicked = True
                     
 
     
