@@ -68,7 +68,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # ___ Body ___
         self.body_layout = QtWidgets.QVBoxLayout()
-        self.body_layout.setContentsMargins(10, 10, 10, 10)
+        # self.body_layout.setContentsMargins(10, 10, 10, 10)
         self.top_level_layout.addLayout(self.body_layout)
         
         self.navigation_stack = NavigationStack()
@@ -83,6 +83,6 @@ if __name__ == '__main__':
     # https://www.pythonguis.com/pyside6-tutorial/
     # https://www.pythonguis.com/tutorials/pyside-layouts/
     # https://www.pythonguis.com/tutorials/pyside-animated-widgets/
-    
+
     # https://docs.python-guide.org/shipping/freezing/
     pass

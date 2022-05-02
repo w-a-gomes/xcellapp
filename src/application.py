@@ -32,7 +32,7 @@ class Application(object):
         # Menu buttons
         (self.__ui.navigation_stack.vertical_nav.get_button_by_id('csv')
             .clicked.connect(self.on_nav_button_csv_settings))
-
+            
         # UI connetions
         self.__ui.fullscreen_button.clicked.connect(
             self.on_fullscreen_button)
@@ -107,7 +107,8 @@ class Application(object):
     
     def main(self) -> None:
         """..."""
-        self.__ui.showMaximized()
+        # self.__ui.showMaximized()
+        self.__ui.resize(1000, 500)
         self.__ui.fullscreen_button.setVisible(True)
         self.__ui.fullscreen_button.setToolTip('Sair da tela cheia')
         

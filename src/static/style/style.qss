@@ -6,6 +6,13 @@ QPushButton {
     height: 30px;
     padding-left: 5px;
     padding-right: 5px;
+    font-family: "Noto sans";
+}
+
+QToolButton {
+    height: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 QLabel {
@@ -20,8 +27,4 @@ QLineEdit {
 ElidedLabel {
     height: 30px;
     padding: 0px;
-}
-
-NavButton {
-    border-radius: 5px;
 }

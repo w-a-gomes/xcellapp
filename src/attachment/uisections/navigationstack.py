@@ -40,7 +40,7 @@ class NavigationStack(QtWidgets.QWidget):
             {
                 'id': 'config', 'text': 'Configurações', 'sub-buttons': [
                     {'id': 'icones', 'text': 'Ícones'},
-                    {'id': 'csv', 'text': 'Importar CSV'},
+                    {'id': 'csv', 'text': 'Importar arquivos CSV'},
                 ]
             },
             {
@@ -73,7 +73,7 @@ class NavigationStack(QtWidgets.QWidget):
 
         # 2 CSV
         self.csv_import = CsvImport()
-        self.csv_import.setContentsMargins(200, 20, 200, 0)
+        self.csv_import.setContentsMargins(100, 0, 100, 0)
         self.stacked_layout.addWidget(self.csv_import)
 
         # 3 Icons
