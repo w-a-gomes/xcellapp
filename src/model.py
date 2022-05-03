@@ -1,6 +1,9 @@
 #!/usr/bin env python3
 import random
 
+from attachment.workingoutlibs.csvdata import CsvData
+
+
 class Model(object):
     """..."""
     def __init__(self):
@@ -13,9 +16,8 @@ class Model(object):
         self.header = header
 
         if self.file_url and self.header:
-            print(file_url)
-            print(header)
-            return True
+            csv_obj = CsvData(file_url=self.file_url, header_list=self.header.split('\t'), exclude_row=None)
+            
+            return csv_obj
         
-        print("Nope")
         return False

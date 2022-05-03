@@ -1,4 +1,8 @@
 #!/usr/bin env python3
+import json
+import os
+from pathlib import Path
+
 from PySide6 import QtCore, QtWidgets, QtGui
 
 from attachment.uiwidgets.elidedlabel import ElidedLabel
@@ -8,25 +12,26 @@ class CsvImport(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
         """..."""
         super().__init__(*args, **kwargs)
-        # self.setFixedWidth(600)
-        # self.setMaximumWidth(600)
-        # self.setContentsMargins(200, 0, 200, 0)
-        # self.shadow = QtWidgets.QGraphicsDropShadowEffect()
-        # self.shadow.setBlurRadius(15)
-        # self.setGraphicsEffect(self.shadow)
-
+        # Settings
+        self.settings = self.settings()
+        
         # ___ Properties ___
         self.filename = None
         self.header = None
-        self.label_size = 100
+        self.label_size = 75
+        self.desktop_margin = (100, 150)
 
         # ___ Container ___
         # Top level layout
         self.layout = QtWidgets.QVBoxLayout()
+        self.layout.setAlignment(QtCore.Qt.AlignTop)
         self.setLayout(self.layout)
 
         # Filename
         self.filename_layout = QtWidgets.QHBoxLayout()
+        if self.settings['platform'] == 'desktop':
+            self.filename_layout.setContentsMargins(
+                self.desktop_margin[0], 0, self.desktop_margin[1], 0)
         self.layout.addLayout(self.filename_layout)
 
         self.filename_label = ElidedLabel(text='Arquivo scv', elide_side='right')
@@ -34,7 +39,6 @@ class CsvImport(QtWidgets.QWidget):
         self.filename_label.setEnabled(False)
         self.filename_label.setAlignment(
             QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-        # self.filename_label.setAlignment(QtCore.Qt.AlignTop)
         self.filename_layout.addWidget(
             self.filename_label, 0, QtCore.Qt.AlignLeft)
         
@@ -67,6 +71,9 @@ class CsvImport(QtWidgets.QWidget):
 
         # Header
         self.header_layout = QtWidgets.QHBoxLayout()
+        if self.settings['platform'] == 'desktop':
+            self.header_layout.setContentsMargins(
+                self.desktop_margin[0], 0, self.desktop_margin[1], 0)
         self.layout.addLayout(self.header_layout)
 
         self.header_label = ElidedLabel(text='Cabeçalho', elide_side='right')
@@ -81,14 +88,24 @@ class CsvImport(QtWidgets.QWidget):
         self.header_entry.setClearButtonEnabled(True)
         self.header_layout.addWidget(self.header_entry)
 
-        # End
-        self.pixmapi_end_button = getattr(
-            QtWidgets.QStyle, 'SP_BrowserReload')
-        self.icon_end_button = self.style().standardIcon(
-            self.pixmapi_end_button)
-        
-        self.layout.addWidget(QtWidgets.QWidget(), 9)
+        # Process
+        self.process_layout = QtWidgets.QHBoxLayout()
+        if self.settings['platform'] == 'desktop':
+            self.process_layout.setContentsMargins(
+                self.desktop_margin[0], 0, self.desktop_margin[1], 0)
+        self.layout.addLayout(self.process_layout)
 
-        self.end_button = QtWidgets.QPushButton(text='Procesar')
-        self.end_button.setIcon(self.icon_end_button)
-        self.layout.addWidget(self.end_button, 0, QtCore.Qt.AlignRight)
+        self.pixmapi_process_button = getattr(
+            QtWidgets.QStyle, 'SP_BrowserReload')
+        self.icon_process_button = self.style().standardIcon(
+            self.pixmapi_process_button)
+
+        self.process_button = QtWidgets.QPushButton(text='Procesar')
+        self.process_button.setIcon(self.icon_process_button)
+        self.process_layout.addWidget(self.process_button, 0, QtCore.Qt.AlignRight)
+
+    def settings(self):
+        root_path = Path(__file__).resolve().parent.parent.parent
+        f = os.path.join(root_path, 'static', 'settings', 'settings.json')
+        with open(f, 'r') as f:
+            return json.load(f)

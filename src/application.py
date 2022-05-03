@@ -1,16 +1,20 @@
 #!/usr/bin env python3
+import json
 import os
 import pathlib
 import sys
 
-from model import Model
-from ui import MainWindow, CsvImport
 from PySide6 import QtCore, QtWidgets, QtGui
+
+from model import Model
+from ui import MainWindow
+
 
 class Application(object):
     """..."""
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """..."""
+        self.__create_settings()
         self.__app = QtWidgets.QApplication([])
         self.__ui = MainWindow()
         self.__model = Model()
@@ -26,14 +30,25 @@ class Application(object):
             filename_clear_button.clicked.connect(
                 self.on_csv_import_filename_clear_button))
         
-        self.__ui.navigation_stack.csv_import.end_button.clicked.connect(
-            self.on_csv_import_end_button)
+        self.__ui.navigation_stack.csv_import.process_button.clicked.connect(
+            self.on_csv_import_process_button)
         
         # Menu buttons
-        (self.__ui.navigation_stack.vertical_nav.get_button_by_id('csv')
-            .clicked.connect(self.on_nav_button_csv_settings))
+        home_sender = (
+            self.__ui.navigation_stack.vertical_nav.get_button_by_id('inicio'))
+        home_sender.clicked.connect(lambda: self.on_nav_button(home_sender))
+
+        icons_sender = (
+            self.__ui.navigation_stack.vertical_nav.get_button_by_id('icones'))
+        icons_sender.clicked.connect(lambda: self.on_nav_button(icons_sender))
+
+        csv_sender = (
+            self.__ui.navigation_stack.vertical_nav.get_button_by_id('csv'))
+        csv_sender.clicked.connect(lambda: self.on_nav_button(csv_sender))
             
         # UI connetions
+        self.__ui.resize_control.connect(self.on_resize_control)
+
         self.__ui.fullscreen_button.clicked.connect(
             self.on_fullscreen_button)
         
@@ -76,18 +91,35 @@ class Application(object):
         self.__ui.navigation_stack.csv_import.header = text
     
     @QtCore.Slot()
-    def on_csv_import_end_button(self) -> None:
+    def on_csv_import_process_button(self) -> None:
         """..."""
-        self.__model.csv_file_processing(
+        csv = self.__model.csv_file_processing(
             file_url=self.__ui.navigation_stack.csv_import.filename,
             header=self.__ui.navigation_stack.csv_import.header)
+        if csv:
+            for item in csv.csv_datas:
+                print(item)
+        else:
+            print("Nope")
     
     # Menu pages
     @QtCore.Slot()
-    def on_nav_button_csv_settings(self) -> None:
-        self.__ui.navigation_stack.stacked_layout.setCurrentIndex(2)
+    def on_nav_button(self, sender):
+        if sender.button_id == 'icones':
+            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(3)
+        
+        elif sender.button_id == 'csv':
+            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(2)
+        
+        else:
+            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(0)
     
-    # Fullscreen
+    # Ui
+    @QtCore.Slot()
+    def on_resize_control(self, size):
+        """..."""
+        print(f'Width: {size["width"]}, Height: {size["height"]}')
+    
     @QtCore.Slot()
     def on_fullscreen_button(self) -> None:
         """..."""
@@ -105,6 +137,20 @@ class Application(object):
         """..."""
         self.__app.quit()
     
+    def __create_settings(self):
+        """..."""
+        # self.__ui.app_path is next
+        file_settings_path = os.path.join(
+            pathlib.Path(__file__).resolve().parent,
+            'static', 'settings', 'settings.json')
+        
+        if not os.path.isfile(file_settings_path):
+            data_settings = {
+                'platform': 'desktop',
+            }
+            with open(file_settings_path, 'w') as file_settings: 
+                json.dump(data_settings, file_settings)
+    
     def main(self) -> None:
         """..."""
         # self.__ui.showMaximized()
@@ -114,6 +160,7 @@ class Application(object):
         
         self.__ui.exit_button.setVisible(False)
 
+        # UI Style
         style_path = (
             os.path.join(
                 self.__ui.app_path,
@@ -124,6 +171,7 @@ class Application(object):
             _style = f.read()
             self.__ui.setStyleSheet(_style)
         
+        # UI Show
         self.__ui.show()
         sys.exit(self.__app.exec())
 

@@ -98,7 +98,7 @@ class NavButton(QtWidgets.QPushButton):
         
         self.color_palette.setColor(
             QtGui.QPalette.Button, self.active_color)
-        
+
         self.setPalette(self.color_palette)
     
     def set_active_color_for_unchecked_state(self) -> None:
@@ -136,7 +136,7 @@ class VerticalNav(QtWidgets.QWidget):
         ]
         """
         super().__init__(*args, **kwargs)
-        self.setMinimumWidth(170)
+        self.setMinimumWidth(190)
         self.buttons_schema = buttons_schema
         
         # Layout
@@ -161,7 +161,8 @@ class VerticalNav(QtWidgets.QWidget):
                 is_first_button = False
             else:
                 button.setStyleSheet(
-                    'border-top: 1px solid rgba(122, 122, 122, 0.3); text-align: left;')
+                    'border-top: 1px solid rgba(122, 122, 122, 0.3);'
+                    'text-align: left;')
                 """
                 sep = QtWidgets.QFrame()
                 sep.setFrameShape(QtWidgets.QFrame.HLine)
@@ -186,7 +187,7 @@ class VerticalNav(QtWidgets.QWidget):
                     button.setText(f'+  {schema["text"]}')  # (+  )
 
                 sub_layout = SubLayoutWidget(sub_layout_id=schema['id'])
-                # sub_layout.setContentsMargins(15, 1, 1, 1)
+                sub_layout.setContentsMargins(15, 5, 5, 5)
                 self.layout.addWidget(sub_layout)
                 self.all_sub_layouts.append(sub_layout)
 
@@ -272,14 +273,15 @@ class VerticalNav(QtWidgets.QWidget):
                             QtCore.QSize(sub_layout.width(), vertical_size))
                         anim.setDuration(40)
                         self.anim_group.addAnimation(anim)
+                        
                         """
                         anim_p = QtCore.QPropertyAnimation(sub_layout, b"pos")
-                        anim_p.setStartValue(QtCore.QPoint(sub_layout.x(), sub_layout.y()))
+                        anim_p.setStartValue(QtCore.QPoint(0, sub_layout.y()))
                         anim_p.setEndValue(QtCore.QPoint(20, sub_layout.y()))
                         anim_p.setDuration(40)
                         self.anim_group.addAnimation(anim_p)
                         """
-
+                
                 self.anim_group.start()
 
             # End state

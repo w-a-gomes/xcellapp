@@ -11,11 +11,13 @@ from attachment.uisections.navigationstack import NavigationStack
 
 class MainWindow(QtWidgets.QMainWindow):
     """..."""
+    resize_control = QtCore.Signal(object)
+
     def __init__(self, *args, **kwargs):
         """..."""
         super().__init__(*args, **kwargs)
+        # ___ Properties ___
         self.app_path = os.path.abspath(os.path.dirname(__file__))
-
         self.app_icon = QtGui.QIcon(
             QtGui.QPixmap(
                 os.path.join(self.app_path, 'static', 'icons', 'app_logo.svg')
@@ -74,6 +76,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.navigation_stack = NavigationStack()
         self.body_layout.addWidget(
             self.navigation_stack, 0, QtCore.Qt.AlignTop)
+    
+    @QtCore.Slot()
+    def resizeEvent(self, event):
+        self.resize_control.emit(
+            {'width': self.width(), 'height': self.height()}
+        )
 
 
 if __name__ == '__main__':

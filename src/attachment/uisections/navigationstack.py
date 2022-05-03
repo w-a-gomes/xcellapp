@@ -1,4 +1,6 @@
 #!/usr/bin env python3
+import sys
+
 from PySide6 import QtCore, QtWidgets, QtGui
 
 from attachment.uisections.csvimport import CsvImport
@@ -73,7 +75,6 @@ class NavigationStack(QtWidgets.QWidget):
 
         # 2 CSV
         self.csv_import = CsvImport()
-        self.csv_import.setContentsMargins(100, 0, 100, 0)
         self.stacked_layout.addWidget(self.csv_import)
 
         # 3 Icons
