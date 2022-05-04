@@ -60,14 +60,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.icon_exit_button = self.style().standardIcon(
             self.pixmapi_exit_button)
 
-        self.exit_button = QtWidgets.QPushButton()
-        self.exit_button.setIcon(self.icon_exit_button)
-        self.exit_button.setFlat(True)
-        self.exit_button.setToolTip('Fechar janela')
-        self.exit_button.setIconSize(QtCore.QSize(24, 24))
-        self.exit_button.setVisible(False)
-        self.header_layout.addWidget(self.exit_button)
-
         # ___ Body ___
         self.body_layout = QtWidgets.QVBoxLayout()
         # self.body_layout.setContentsMargins(10, 10, 10, 10)

@@ -36,24 +36,24 @@ class Application(object):
         # Menu buttons
         home_sender = (
             self.__ui.navigation_stack.vertical_nav.get_button_by_id('inicio'))
-        home_sender.clicked.connect(lambda: self.on_nav_button(home_sender))
+        home_sender.clicked.connect(lambda: self.on_nav_button(
+            home_sender, self.__ui.navigation_stack.home_page))
 
         icons_sender = (
             self.__ui.navigation_stack.vertical_nav.get_button_by_id('icones'))
-        icons_sender.clicked.connect(lambda: self.on_nav_button(icons_sender))
+        icons_sender.clicked.connect(lambda: self.on_nav_button(
+            icons_sender, self.__ui.navigation_stack.icons))
 
         csv_sender = (
             self.__ui.navigation_stack.vertical_nav.get_button_by_id('csv'))
-        csv_sender.clicked.connect(lambda: self.on_nav_button(csv_sender))
+        csv_sender.clicked.connect(lambda: self.on_nav_button(
+            csv_sender, self.__ui.navigation_stack.csv_import))
             
         # UI connetions
         self.__ui.resize_control.connect(self.on_resize_control)
 
         self.__ui.fullscreen_button.clicked.connect(
             self.on_fullscreen_button)
-        
-        self.__ui.exit_button.clicked.connect(
-            self.on_exit_button)
     
     # CSV import
     @QtCore.Slot()
@@ -104,15 +104,31 @@ class Application(object):
     
     # Menu pages
     @QtCore.Slot()
-    def on_nav_button(self, sender):
+    def on_nav_button(self, sender, widget = None):
+        current_index = self.__ui.navigation_stack.stacked_layout.currentIndex()
+        new_index = 0
+        
         if sender.button_id == 'icones':
-            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(3)
-        
+            new_index = 1
+            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
+
         elif sender.button_id == 'csv':
-            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(2)
+            new_index = 2
+            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
+
+        # Animation
+        self.anim_group = QtCore.QSequentialAnimationGroup()
         
-        else:
-            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(0)
+        x = widget.x()
+        y = 200 if new_index < current_index else -200
+
+        anim_p = QtCore.QPropertyAnimation(widget, b"pos")
+        anim_p.setStartValue(QtCore.QPoint(x, y))
+        anim_p.setEndValue(QtCore.QPoint(x, 0))
+        anim_p.setDuration(80)
+        self.anim_group.addAnimation(anim_p)
+
+        self.anim_group.start()
     
     # Ui
     @QtCore.Slot()
@@ -157,8 +173,6 @@ class Application(object):
         self.__ui.resize(1000, 500)
         self.__ui.fullscreen_button.setVisible(True)
         self.__ui.fullscreen_button.setToolTip('Sair da tela cheia')
-        
-        self.__ui.exit_button.setVisible(False)
 
         # UI Style
         style_path = (

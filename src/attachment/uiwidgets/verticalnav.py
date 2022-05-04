@@ -160,16 +160,12 @@ class VerticalNav(QtWidgets.QWidget):
             if is_first_button:
                 is_first_button = False
             else:
-                button.setStyleSheet(
-                    'border-top: 1px solid rgba(122, 122, 122, 0.3);'
-                    'text-align: left;')
-                """
                 sep = QtWidgets.QFrame()
+                sep.setObjectName('Separator')
                 sep.setFrameShape(QtWidgets.QFrame.HLine)
                 sep.setFrameShadow(QtWidgets.QFrame.Plain)
                 sep.setLineWidth(1)
                 self.layout.addWidget(sep)
-                """
 
             self.layout.addWidget(button)
             self.all_buttons.append(button)

@@ -66,20 +66,16 @@ class NavigationStack(QtWidgets.QWidget):
         # Stack pages
         
         # 0
-        self.stacked_layout.addWidget(
-            QtWidgets.QLabel(text='Página Inicial'))
+        self.home_page = QtWidgets.QLabel(text='Página Inicial')
+        self.stacked_layout.addWidget(self.home_page)
         
-        # 1 Settings
-        self.stack_btn_set = QtWidgets.QPushButton(text='Importar arquivos CSV')
-        self.stacked_layout.addWidget(self.stack_btn_set)
+        # 1 Icons
+        self.icons = Icons()
+        self.stacked_layout.addWidget(self.icons)
 
         # 2 CSV
         self.csv_import = CsvImport()
         self.stacked_layout.addWidget(self.csv_import)
-
-        # 3 Icons
-        self.icons = Icons()
-        self.stacked_layout.addWidget(self.icons)
 
 
 if __name__ == '__main__':

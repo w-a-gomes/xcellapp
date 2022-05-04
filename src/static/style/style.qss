@@ -25,6 +25,11 @@ QLineEdit {
     padding: 0px;
 }
 
+#Separator {
+    color: rgba(122, 122, 122, 0.3);
+    border-bottom: 0px;
+}
+
 ElidedLabel {
     height: 30px;
     padding: 0px;
