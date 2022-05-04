@@ -108,7 +108,11 @@ class Application(object):
         current_index = self.__ui.navigation_stack.stacked_layout.currentIndex()
         new_index = 0
         
-        if sender.button_id == 'icones':
+        if sender.button_id == 'inicio':
+            new_index = 0
+            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
+
+        elif sender.button_id == 'icones':
             new_index = 1
             self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
 
@@ -117,18 +121,19 @@ class Application(object):
             self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
 
         # Animation
-        self.anim_group = QtCore.QSequentialAnimationGroup()
-        
-        x = widget.x()
-        y = 200 if new_index < current_index else -200
+        if new_index != current_index:
+            self.anim_group = QtCore.QSequentialAnimationGroup()
+            
+            x = widget.x()
+            y = 600 if new_index < current_index else -600
 
-        anim_p = QtCore.QPropertyAnimation(widget, b"pos")
-        anim_p.setStartValue(QtCore.QPoint(x, y))
-        anim_p.setEndValue(QtCore.QPoint(x, 0))
-        anim_p.setDuration(80)
-        self.anim_group.addAnimation(anim_p)
+            anim_p = QtCore.QPropertyAnimation(widget, b"pos")
+            anim_p.setStartValue(QtCore.QPoint(x, y))
+            anim_p.setEndValue(QtCore.QPoint(x, 0))
+            anim_p.setDuration(150)
+            self.anim_group.addAnimation(anim_p)
 
-        self.anim_group.start()
+            self.anim_group.start()
     
     # Ui
     @QtCore.Slot()
