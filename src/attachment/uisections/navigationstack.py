@@ -37,25 +37,37 @@ class NavigationStack(QtWidgets.QWidget):
         # Navigation menu buttons
         self.buttons_schema = [
             {
-                'id': 'inicio', 'text': 'Início'
+                'id': 'db', 'text': 'Banco de Dados', 'sub-buttons': [
+                    {'id': 'db-insumos', 'text': 'Insumos'},
+                    {'id': 'db-colaboradores', 'text': 'Colaboradores'},
+                    {'id': 'db-relatorio', 'text': 'Relatório'},
+                ]
+            },
+            {
+                'id': 'fc', 'text': 'Formação Custo', 'sub-buttons': [
+                    {'id': 'fc-custo_producao', 'text': 'Custo Produção'},
+                    {'id': 'fc-resumo_producao', 'text': 'Resumo Produção'},
+                    {'id': 'fc-relatorio', 'text': 'Relatório'},
+                ]
+            },
+            {
+                'id': 'mk', 'text': 'Markup', 'sub-buttons': [
+                    {'id': 'mk-cadastro_markup', 'text': 'Cadastro Markup'},
+                    {'id': 'mk-produtos_markup', 'text': 'Produtos Markup'},
+                    {'id': 'mk-relatorio', 'text': 'Relatório'},
+                ]
+            },
+            {
+                'id': 'cpv', 'text': 'CPV', 'sub-buttons': [
+                    {'id': 'cpv-producao', 'text': 'Produção'},
+                    {'id': 'cpv-relatorio', 'text': 'Relatório'},
+                ]
             },
             {
                 'id': 'config', 'text': 'Configurações', 'sub-buttons': [
                     {'id': 'icones', 'text': 'Ícones'},
                     {'id': 'csv', 'text': 'Importar arquivos CSV'},
                 ]
-            },
-            {
-                'id': 'penultimo', 'text': 'Penúltimo'
-            },
-            {
-                'id': 'ultimo', 'text': 'Último', 'sub-buttons': [
-                    {'id': 'test', 'text': 'Teste'},
-                    {'id': 'testa', 'text': 'Testa'},
-                ]
-            },
-            {
-                'id': 'pan', 'text': 'Paann'
             },
         ]
         

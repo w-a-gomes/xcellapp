@@ -1,4 +1,7 @@
 #!/usr/bin env python3
+import os
+import pathlib
+
 from PySide6 import QtCore, QtWidgets, QtGui
 
 
@@ -154,6 +157,11 @@ class VerticalNav(QtWidgets.QWidget):
         for schema in self.buttons_schema:
             # Top Buttons
             button = NavButton(button_id=schema['id'])
+            icon_espace = QtGui.QIcon(
+                QtGui.QPixmap(
+                    os.path.join(pathlib.Path(__file__).resolve().parent,
+                    'icons', 'verticalnavspacing.svg')))
+            button.setIcon(icon_espace)
             button.setFlat(True)
             button.clicked.connect(self.on_button_click)
 
@@ -172,7 +180,7 @@ class VerticalNav(QtWidgets.QWidget):
             self.all_top_buttons.append(button)
 
             if 'text' in schema.keys():
-                button.setText(f'    {schema["text"]}')
+                button.setText(schema["text"])
                 
             if 'icon' in schema.keys():
                 button.setIcon(schema['icon'])
@@ -180,7 +188,12 @@ class VerticalNav(QtWidgets.QWidget):
             # Sub buttons
             if 'sub-buttons' in schema.keys():
                 if 'text' in schema.keys():
-                    button.setText(f'+  {schema["text"]}')  # (+  )
+                    # button.setText(f'+  {schema["text"]}')
+                    pixmapi_expand = getattr(
+                        QtWidgets.QStyle, 'SP_ArrowRight')
+                    icon_expand = self.style().standardIcon(pixmapi_expand)
+                    button.setIcon(icon_expand)
+                    button.setText(schema["text"])
 
                 sub_layout = SubLayoutWidget(sub_layout_id=schema['id'])
                 sub_layout.setContentsMargins(15, 5, 5, 5)
@@ -212,7 +225,11 @@ class VerticalNav(QtWidgets.QWidget):
             # Sub layout not visible
             for sub_layout in self.all_sub_layouts:
                 if sub_layout.sub_layout_id == self.sender().button_id:
-                    self.sender().setText(f'+  {self.sender().text()[3:]}')
+                    pixmapi_expand = getattr(
+                        QtWidgets.QStyle, 'SP_ArrowRight')
+                    icon_expand = self.style().standardIcon(pixmapi_expand)
+                    self.sender().setIcon(icon_expand)
+                    self.sender().setText(self.sender().text())
                     self.sender().is_sub_layouts_active = False
                     sub_layout.setVisible(False)
             
@@ -246,7 +263,11 @@ class VerticalNav(QtWidgets.QWidget):
             for sub_layout in self.all_sub_layouts:
                 if sub_layout.sub_layout_id == self.sender().button_id:
                     if not self.sender().is_sub_layouts_active:
-                        self.sender().setText(f'–  {self.sender().text()[3:]}')
+                        pixmapi_expand = getattr(
+                            QtWidgets.QStyle, 'SP_ArrowDown')
+                        icon_expand = self.style().standardIcon(pixmapi_expand)
+                        self.sender().setIcon(icon_expand)
+                        self.sender().setText(self.sender().text())
                         self.sender().is_sub_layouts_active = True
                         sub_layout.setVisible(True)
                         sub_layout_visible = True

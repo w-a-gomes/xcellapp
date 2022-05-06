@@ -52,13 +52,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fullscreen_button.setIcon(self.icon_fullscreen_button)
         self.fullscreen_button.setFlat(True)
         self.fullscreen_button.setIconSize(QtCore.QSize(24, 24))
-        self.fullscreen_button.setVisible(False)
+        self.fullscreen_button.setToolTip('Janela em tela cheia')
         self.header_layout.addWidget(self.fullscreen_button)
-
-        self.pixmapi_exit_button = getattr(
-            QtWidgets.QStyle, 'SP_DialogCloseButton')
-        self.icon_exit_button = self.style().standardIcon(
-            self.pixmapi_exit_button)
 
         # ___ Body ___
         self.body_layout = QtWidgets.QVBoxLayout()

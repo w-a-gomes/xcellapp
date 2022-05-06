@@ -34,11 +34,6 @@ class Application(object):
             self.on_csv_import_process_button)
         
         # Menu buttons
-        home_sender = (
-            self.__ui.navigation_stack.vertical_nav.get_button_by_id('inicio'))
-        home_sender.clicked.connect(lambda: self.on_nav_button(
-            home_sender, self.__ui.navigation_stack.home_page))
-
         icons_sender = (
             self.__ui.navigation_stack.vertical_nav.get_button_by_id('icones'))
         icons_sender.clicked.connect(lambda: self.on_nav_button(
@@ -107,12 +102,7 @@ class Application(object):
     def on_nav_button(self, sender, widget = None):
         current_index = self.__ui.navigation_stack.stacked_layout.currentIndex()
         new_index = 0
-        
-        if sender.button_id == 'inicio':
-            new_index = 0
-            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
-
-        elif sender.button_id == 'icones':
+        if sender.button_id == 'icones':
             new_index = 1
             self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
 
@@ -147,11 +137,9 @@ class Application(object):
         if self.__ui.isFullScreen():
             self.__ui.showMaximized()
             self.__ui.fullscreen_button.setToolTip('Janela em tela cheia')
-            self.__ui.exit_button.setVisible(False)
         else:
             self.__ui.showFullScreen()
             self.__ui.fullscreen_button.setToolTip('Sair da tela cheia')
-            self.__ui.exit_button.setVisible(True)
     
     @QtCore.Slot()
     def on_exit_button(self) -> None:
@@ -176,8 +164,6 @@ class Application(object):
         """..."""
         # self.__ui.showMaximized()
         self.__ui.resize(1000, 500)
-        self.__ui.fullscreen_button.setVisible(True)
-        self.__ui.fullscreen_button.setToolTip('Sair da tela cheia')
 
         # UI Style
         style_path = (
