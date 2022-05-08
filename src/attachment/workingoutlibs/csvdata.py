@@ -2,56 +2,189 @@
 import csv
 
 
+class RS(object):
+    def __init__(self, value):
+        self.__reais = 0
+        self.__centavos = 0
+        self.__valor_texto = '0,00'
+        self.__valor_float = 0.0
+
+        self.__set_value(value)
+    
+    def __set_value(self, value):
+        if isinstance(value, int):
+            self.__reais = value
+            self.__centavos = 0
+            self.__valor_texto = f'{value},00'
+            self.__valor_float = float(self.__valor_texto.replace(',', '.'))
+
+        elif isinstance(value, float):
+            self.__valor_float = value
+
+            value = str(value).split('.')
+            self.__reais = int(value[0])
+            self.__centavos = int(value[1])
+
+            if len(value[1]) == 1:
+                self.__valor_texto = f'{value[0]},{value[1]}0'
+            else:
+                self.__valor_texto = f'{value[0]},{value[1]}'
+
+        elif isinstance(value, str):
+            value = (
+                value.lower().replace('r$', '')
+                .replace('.', '').replace(',', '.')
+                .replace(' ', '')
+            )
+            
+            if '.' in value:
+                reais_cent = value.split('.')
+                self.__reais = int(reais_cent[0])
+                self.__centavos = int(reais_cent[1])
+                if len(reais_cent[1]) == 1:
+                    self.__valor_texto = f'{reais_cent[0]},{reais_cent[1]}0'
+                else:
+                    self.__valor_texto = f'{reais_cent[0]},{reais_cent[1]}'
+            else:
+                self.__reais = int(value)
+                self.__centavos = 0
+                self.__valor_texto = f'{self.__reais},00'
+            
+            self.__valor_float = float(self.__valor_texto.replace(',', '.'))
+    
+    @property
+    def reais(self):
+        return self.__reais
+    
+    @reais.setter
+    def reais(self, value):
+        self.__set_value(value)
+    
+    @property
+    def centavos(self):
+        return self.__centavos
+    
+    @centavos.setter
+    def centavos(self, value):
+        self.__set_value(value)
+    
+    @property
+    def valor_em_texto(self):
+        return self.__valor_texto
+    
+    @valor_em_texto.setter
+    def valor_em_texto(self, value):
+        self.__set_value(value)
+    
+    @property
+    def valor_em_float(self):
+        return self.__valor_float
+    
+    @valor_em_float.setter
+    def valor_em_float(self, value):
+        self.__set_value(value)
+    
+    def __repr__(self):
+        return f'<RS object: {self.__valor_texto}>'
+
+class Cell(object):
+    def __init__(self):
+        self.__filed = None
+        self.__value = None
+        self.__formula = None
+        
+    
+    @property
+    def value(self):
+        return self.__value
+    
+    @value.setter
+    def value(self, value):
+        return self.__value
+    
+    @property
+    def formula(self):
+        return self.__formula
+    
+    @formula.setter
+    def formula(self, value):
+        return self.__formula
+    
+    @property
+    def filed(self):
+        return self.__filed
+    
+    @filed.setter
+    def filed(self, value):
+        return self.__filed
+
+
 class CsvData(object):
     """CSV datas"""
-    def __init__(
-            self, file_url: str, header_list: list, exclude_row: dict = None
-            ) -> None:
+    def __init__(self, file_url: str) -> None:
         """Constructor"""
-        self.__header_list = header_list
         self.__file_url = file_url
-        self.__exclude_row = exclude_row
         self.__csv_datas = self.__load_data()
+        self.__header_found = False
         
     @property
     def csv_datas(self) -> dict:
         """csv_datas"""
         return self.__csv_datas
+    
+    @property
+    def header_found(self) -> bool:
+        return self.__header_found
 
     def __load_data(self) -> list:
         # ...
         csv_datas = []
 
         with open(self.__file_url, encoding='utf-8') as csv_file:
+            # worksheet = csv.DictReader(csv_file) newline=''
+
             worksheet = csv.reader(csv_file, delimiter=',')
             
+            header = None
+            header_found = False
+
             for row in worksheet:
-                if not self.__row_is_empty(row) and not self.__row_is_head(row):
-                    csv_datas_item = {}
-                    
-                    for field in enumerate(self.__header_list):
-                        csv_datas_item[field[1]] = row[field[0]]
-                    
-                    if csv_datas_item != self.__exclude_row:
-                        csv_datas.append(csv_datas_item)
+                if not self.__row_is_empty(row):
+
+                    if not header_found:
+                        header = row
+                        header_found = True
+
+                    else:
+                        items = []
+                        for field, item in zip(header, row):
+                            items.append(
+                                {
+                                    'field': field,
+                                    'value': {item: self.__item_type(item)}
+                                },
+                            )
+                        csv_datas.append(items)
         
         return csv_datas
     
-    def __row_is_head(self, row) -> bool:
-        # ...
-        row_is_head = False
+    def __item_type(self, item):
+        item_clean = (
+            item.lower().replace('r$', '')
+            .replace('.', '').replace(',', '.')
+            .replace(' ', ''))
+        
+        if item_clean.replace('.', '').isdigit():
+            new_item = RS(item)
 
-        found_count = 0
-        for item_row in row:
-            for item_head in self.__header_list:
-                if item_row.lower().strip() == item_head.lower().strip():
-                    found_count += 1
-                    continue
-            
-            if found_count == len(self.__header_list):
-                row_is_head = True
+            if 'R$' in item:
+                return new_item
+            elif '.' in item_clean:
+                return float(item_clean)
+            else:
+                return int(item_clean)
 
-        return row_is_head
+        return item
 
     def __row_is_empty(self, row) -> bool:
         # ...
@@ -66,8 +199,6 @@ class CsvData(object):
 
 
 if __name__ == '__main__':
-    import pprint
-
     s = (
         '+---------------------------------------+\n'
         '|    1 - BANCO DE DADOS - Atualizado    |\n'
@@ -76,43 +207,25 @@ if __name__ == '__main__':
     )
     print(s)
     url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-geral.csv'
-    headers = [
-        'Código', 'Grupo', 'Descrição', 'Unid.', 'Largura', 'Comprimento',
-        'Mt2', 'PesoM2', 'Preço', 'PreçoMt2', 'Chapa', 'Peso Kg m', 'Metragem',
-        'Preço Kg', 'Peso Mt', 'Preço mt', '% de aumento', 'Preço c/ Aumento',
-        'Imp. sob compra', 'Frete', 'Perda', 'Preço Final',
-    ]
-    con = {'% de aumento': '',
-        'Chapa': '',
-        'Comprimento': '',
-        'Código': '',
-        'Descrição': '',
-        'Frete': '',
-        'Grupo': '',
-        'Imp. sob compra': '',
-        'Largura': '',
-        'Metragem': '',
-        'Mt2': ' -   ',
-        'Perda': '',
-        'Peso Kg m': '',
-        'Peso Mt': '0,00',
-        'PesoM2': '',
-        'Preço': '',
-        'Preço Final': ' R$ -   ',
-        'Preço Kg': '',
-        'Preço c/ Aumento': ' R$ -   ',
-        'Preço mt': ' R$ -   ',
-        'PreçoMt2': ' -   ',
-        'Unid.': ''}
-    # csv_obj = CsvData(file_url=url, header_list=headers)
-    csv_obj = CsvData(file_url=url, header_list=headers, exclude_row=con)
-    pprint.pprint(csv_obj.csv_datas[0])
-    pprint.pprint(csv_obj.csv_datas[1])
-    pprint.pprint(csv_obj.csv_datas[2])
-    pprint.pprint(csv_obj.csv_datas[3])
-    pprint.pprint(csv_obj.csv_datas[4])
-    pprint.pprint(csv_obj.csv_datas[-1])
-
+    csv_obj = CsvData(file_url=url)
+    for x in csv_obj.csv_datas[0]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[1]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[2]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[3]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[4]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[-1]:
+        print(x)
+    
     s = (
         '+---------------------------------------+\n'
         '|    1 - BANCO DE DADOS - Atualizado    |\n'
@@ -121,10 +234,18 @@ if __name__ == '__main__':
     )
     print(s)
     url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-material.csv'
-    headers = ['Código', 'Grupo', 'Descrição', 'Peso Mt', 'Preço Final']
-    csv_obj = CsvData(file_url=url, header_list=headers)
-    pprint.pprint(csv_obj.csv_datas[4])
-    pprint.pprint(csv_obj.csv_datas[5])
+    csv_obj = CsvData(file_url=url)
+    for x in csv_obj.csv_datas[0]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[1]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[4]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[5]:
+        print(x)
 
     s = (
         '+---------------------------------------+\n'
@@ -134,7 +255,22 @@ if __name__ == '__main__':
     )
     print(s)
     url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-cadastro.csv'
-    headers = ['Funcionário', 'Cargo', 'Setor', 'Salário']
-    csv_obj = CsvData(file_url=url, header_list=headers)
-    pprint.pprint(csv_obj.csv_datas[4])
-    pprint.pprint(csv_obj.csv_datas[5])
+    csv_obj = CsvData(file_url=url)
+    for x in csv_obj.csv_datas[0]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[1]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[4]:
+        print(x)
+    print('---')
+    for x in csv_obj.csv_datas[5]:
+        print(x)
+
+    for i in ['1700', '1700.50', '1.700', '1.700,50', 1700, 1700.50]:
+        r = RS('1700')
+        print(r.reais, 'Reais e', r.centavos, 'centavos')
+        print(r.valor_em_float)
+        print(r.valor_em_texto)
+        print('----')

@@ -13,7 +13,7 @@ class CsvImport(QtWidgets.QWidget):
         """..."""
         super().__init__(*args, **kwargs)
         # Settings
-        self.settings = self.settings()
+        self.settings = self.__settings()
         
         # ___ Properties ___
         self.filename = None
@@ -27,12 +27,15 @@ class CsvImport(QtWidgets.QWidget):
         self.layout.setAlignment(QtCore.Qt.AlignTop)
         self.setLayout(self.layout)
 
+        self.top_layout = QtWidgets.QVBoxLayout()
+        if self.settings['platform'] == 'desktop':
+            self.top_layout.setContentsMargins(
+                self.desktop_margin[0], 0, self.desktop_margin[1], 0)
+        self.layout.addLayout(self.top_layout)
+
         # Filename
         self.filename_layout = QtWidgets.QHBoxLayout()
-        if self.settings['platform'] == 'desktop':
-            self.filename_layout.setContentsMargins(
-                self.desktop_margin[0], 0, self.desktop_margin[1], 0)
-        self.layout.addLayout(self.filename_layout)
+        self.top_layout.addLayout(self.filename_layout)
 
         self.filename_label = ElidedLabel(text='Arquivo scv', elide_side='right')
         self.filename_label.setFixedWidth(self.label_size)
@@ -71,10 +74,7 @@ class CsvImport(QtWidgets.QWidget):
 
         # Header
         self.header_layout = QtWidgets.QHBoxLayout()
-        if self.settings['platform'] == 'desktop':
-            self.header_layout.setContentsMargins(
-                self.desktop_margin[0], 0, self.desktop_margin[1], 0)
-        self.layout.addLayout(self.header_layout)
+        self.top_layout.addLayout(self.header_layout)
 
         self.header_label = ElidedLabel(text='Cabeçalho', elide_side='right')
         self.header_label.setFixedWidth(self.label_size)
@@ -90,10 +90,7 @@ class CsvImport(QtWidgets.QWidget):
 
         # Process
         self.process_layout = QtWidgets.QHBoxLayout()
-        if self.settings['platform'] == 'desktop':
-            self.process_layout.setContentsMargins(
-                self.desktop_margin[0], 0, self.desktop_margin[1], 0)
-        self.layout.addLayout(self.process_layout)
+        self.top_layout.addLayout(self.process_layout)
 
         self.pixmapi_process_button = getattr(
             QtWidgets.QStyle, 'SP_BrowserReload')
@@ -104,7 +101,7 @@ class CsvImport(QtWidgets.QWidget):
         self.process_button.setIcon(self.icon_process_button)
         self.process_layout.addWidget(self.process_button, 0, QtCore.Qt.AlignRight)
 
-    def settings(self):
+    def __settings(self):
         root_path = Path(__file__).resolve().parent.parent.parent
         f = os.path.join(root_path, 'static', 'settings', 'settings.json')
         with open(f, 'r') as f:

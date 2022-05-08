@@ -92,8 +92,14 @@ class Application(object):
             file_url=self.__ui.navigation_stack.csv_import.filename,
             header=self.__ui.navigation_stack.csv_import.header)
         if csv:
+            for k, v in csv.csv_datas[6].items():
+                print(k, v, end=' | ')
+                print(type(k), type(v))
+            """
             for item in csv.csv_datas:
                 print(item)
+            print(csv.header_found)
+            """
         else:
             print("Nope")
     
