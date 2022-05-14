@@ -15,6 +15,8 @@ class Application(object):
     """..."""
     def __init__(self, *args, **kwargs):
         """..."""
+        self.__app_name = 'XCellApp'
+        self.__app_id = 'xcellapp'
         self.__home_path = str(pathlib.Path.home())
         self.__settings_path = self.__get_settings_path()
         self.__settings_file = os.path.join(self.__settings_path, 'conf.json')
@@ -161,9 +163,9 @@ class Application(object):
     def __get_settings_path(self):
         if sys.platform == 'win32':
             # AppData\Roaming\
-            return os.path.join(self.__home_path, 'AppData', 'xcellapp')
+            return os.path.join(self.__home_path, 'AppData', self.__app_id)
         else:  # 'linux' 'darwin' 'cygwin' 'aix'
-            return os.path.join(self.__home_path, '.config', 'xcellapp')
+            return os.path.join(self.__home_path, '.config', self.__app_id)
 
     def __create_settings(self):
         """..."""
