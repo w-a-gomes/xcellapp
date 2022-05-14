@@ -16,14 +16,13 @@ class Application(object):
     def __init__(self, *args, **kwargs):
         """..."""
         self.__home_path = str(pathlib.Path.home())
-        self.__settings_path = os.path.join(self.__home_path, '.config', 'xcellapp')
-        self.__settings_file = os.path.join(self.__settings_path, 'xcellapp.json')
+        self.__settings_path = self.__get_settings_path()
+        self.__settings_file = os.path.join(self.__settings_path, 'conf.json')
         self.__create_settings()
         self.__settings = self.__load_settings()
         self.__app = QtWidgets.QApplication([])
         self.__ui = MainWindow()
         self.__model = Model()
-        
 
         # Import Tables connections
         self.__ui.navigation_stack.imp_tables.filename_button.clicked.connect(
@@ -159,6 +158,13 @@ class Application(object):
         self.__app.quit()
     
     # Settings
+    def __get_settings_path(self):
+        if sys.platform == 'win32':
+            # AppData\Roaming\
+            return os.path.join(self.__home_path, 'AppData', 'xcellapp')
+        else:  # 'linux' 'darwin' 'cygwin' 'aix'
+            return os.path.join(self.__home_path, '.config', 'xcellapp')
+
     def __create_settings(self):
         """..."""
         if not os.path.isdir(self.__settings_path):
