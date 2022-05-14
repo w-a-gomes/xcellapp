@@ -3,11 +3,12 @@ import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
 
-from attachment.uisections.csvimport import CsvImport
-from attachment.uiwidgets.verticalnav import VerticalNav
+from attachment.uisections.sectionimptables import SectionImpTables
+from attachment.uiwidgets.widgetverticalnav import WidgetVerticalNav
 from attachment.uiwidgets.icons import Icons
 
-class NavigationStack(QtWidgets.QWidget):
+
+class SectionNav(QtWidgets.QWidget):
     """..."""
     def __init__(self, *args, **kwargs):
         """..."""
@@ -65,13 +66,15 @@ class NavigationStack(QtWidgets.QWidget):
             },
             {
                 'id': 'config', 'text': 'Configurações', 'sub-buttons': [
-                    {'id': 'icones', 'text': 'Ícones'},
-                    {'id': 'csv', 'text': 'Importar arquivos CSV'},
+                    {'id': 'cfg_imp_tabelas', 'text': 'Importar tabelas'},
+                    {'id': 'cfg_icones', 'text': 'Ícones'},
+                    {'id': 'cfg_tabelas', 'text': 'Tabelas'},
+                    {'id': 'cfg_db', 'text': 'Bancos de dados'},
                 ]
             },
         ]
         
-        self.vertical_nav = VerticalNav(self.buttons_schema)
+        self.vertical_nav = WidgetVerticalNav(self.buttons_schema)
         self.stack_nav_layout.addWidget(
             self.vertical_nav, 0, QtCore.Qt.AlignTop)
         
@@ -81,13 +84,13 @@ class NavigationStack(QtWidgets.QWidget):
         self.home_page = QtWidgets.QLabel(text='Página Inicial')
         self.stacked_layout.addWidget(self.home_page)
         
-        # 1 Icons
+        # 1 xls
+        self.imp_tables = SectionImpTables()
+        self.stacked_layout.addWidget(self.imp_tables)
+
+        # 2 Icons
         self.icons = Icons()
         self.stacked_layout.addWidget(self.icons)
-
-        # 2 CSV
-        self.csv_import = CsvImport()
-        self.stacked_layout.addWidget(self.csv_import)
 
 
 if __name__ == '__main__':

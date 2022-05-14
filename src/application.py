@@ -1,5 +1,6 @@
 #!/usr/bin env python3
 import json
+import logging
 import os
 import pathlib
 import sys
@@ -14,35 +15,39 @@ class Application(object):
     """..."""
     def __init__(self, *args, **kwargs):
         """..."""
+        self.__home_path = str(pathlib.Path.home())
+        self.__settings_path = os.path.join(self.__home_path, '.config', 'xcellapp')
+        self.__settings_file = os.path.join(self.__settings_path, 'xcellapp.json')
         self.__create_settings()
+        self.__settings = self.__load_settings()
         self.__app = QtWidgets.QApplication([])
         self.__ui = MainWindow()
         self.__model = Model()
+        
 
-        # CsvImport connections
-        self.__ui.navigation_stack.csv_import.filename_button.clicked.connect(
-            self.on_csv_import_filename_button)
+        # Import Tables connections
+        self.__ui.navigation_stack.imp_tables.filename_button.clicked.connect(
+            self.on_imp_tables_filename_button)
         
-        self.__ui.navigation_stack.csv_import.header_entry.textChanged.connect(
-            self.on_csv_import_header_entry)
-        
-        (self.__ui.navigation_stack.csv_import.
+        (self.__ui.navigation_stack.imp_tables.
             filename_clear_button.clicked.connect(
-                self.on_csv_import_filename_clear_button))
+                self.on_imp_tables_filename_clear_button))
         
-        self.__ui.navigation_stack.csv_import.process_button.clicked.connect(
-            self.on_csv_import_process_button)
+        self.__ui.navigation_stack.imp_tables.process_button.clicked.connect(
+            self.on_imp_tables_process_button)
         
         # Menu buttons
         icons_sender = (
-            self.__ui.navigation_stack.vertical_nav.get_button_by_id('icones'))
+            self.__ui.navigation_stack.vertical_nav.get_button_by_id(
+                'cfg_icones'))
         icons_sender.clicked.connect(lambda: self.on_nav_button(
             icons_sender, self.__ui.navigation_stack.icons))
 
-        csv_sender = (
-            self.__ui.navigation_stack.vertical_nav.get_button_by_id('csv'))
-        csv_sender.clicked.connect(lambda: self.on_nav_button(
-            csv_sender, self.__ui.navigation_stack.csv_import))
+        imp_tables_sender = (
+            self.__ui.navigation_stack.vertical_nav.get_button_by_id(
+                'cfg_imp_tabelas'))
+        imp_tables_sender.clicked.connect(lambda: self.on_nav_button(
+            imp_tables_sender, self.__ui.navigation_stack.imp_tables))
             
         # UI connetions
         self.__ui.resize_control.connect(self.on_resize_control)
@@ -50,56 +55,56 @@ class Application(object):
         self.__ui.fullscreen_button.clicked.connect(
             self.on_fullscreen_button)
     
-    # CSV import
+    # Import Tables
     @QtCore.Slot()
-    def on_csv_import_filename_button(self) -> None:
+    def on_imp_tables_filename_button(self) -> None:
         """..."""
         dialog = QtWidgets.QFileDialog.getOpenFileName(
-            self.__ui.navigation_stack.csv_import,
+            self.__ui.navigation_stack.imp_tables,
             "Seletor de arquivos",
-            str(pathlib.Path.home()),
-            "Arquivos CSV (*.csv *.CSV)")
+            self.__settings['dialog-path'],
+            "Arquivos do Microsoft Excel (*.xlsx *.xls *.XLSX *.XLS)")
 
-        if dialog[0][-4:].lower() =='.csv':
-            # Text
-            self.__ui.navigation_stack.csv_import.filename = dialog[0]
-
-            txt = self.__ui.navigation_stack.csv_import.filename
-            self.__ui.navigation_stack.csv_import.filename_url_label.setText(
-                txt.replace(os.path.dirname(txt) + '/', ''))
+        if (
+            dialog[0][-5:].lower() == '.xlsx' or
+            dialog[0][-4:].lower() == '.xls'
+        ):
+            # Get text
+            txt_file = dialog[0]
+            txt_path = os.path.dirname(txt_file)
+            txt_filename = txt_file.replace(txt_path + '/', '')
+            
+            # Set text
+            self.__ui.navigation_stack.imp_tables.filename = txt_file
+            self.__ui.navigation_stack.imp_tables.filename_url_label.setText(
+                txt_filename)
+            
+            # Update dialog settings
+            self.__settings['dialog-path'] = txt_path
+            self.__save_settings()
             
             # Clear Button
-            (self.__ui.navigation_stack.csv_import.
+            (self.__ui.navigation_stack.imp_tables.
                 filename_clear_button.setVisible(True))
     
     @QtCore.Slot()
-    def on_csv_import_filename_clear_button(self) -> None:
+    def on_imp_tables_filename_clear_button(self) -> None:
         """..."""
-        self.__ui.navigation_stack.csv_import.filename = ''
-        self.__ui.navigation_stack.csv_import.filename_url_label.setText('')
-        (self.__ui.navigation_stack.csv_import
+        self.__ui.navigation_stack.imp_tables.filename = ''
+        self.__ui.navigation_stack.imp_tables.filename_url_label.setText('')
+        (self.__ui.navigation_stack.imp_tables
             .filename_clear_button.setVisible(False))
     
     @QtCore.Slot()
-    def on_csv_import_header_entry(self, text) -> None:
-        """..."""
-        self.__ui.navigation_stack.csv_import.header = text
-    
-    @QtCore.Slot()
-    def on_csv_import_process_button(self) -> None:
+    def on_imp_tables_process_button(self) -> None:
         """..."""
         csv = self.__model.csv_file_processing(
-            file_url=self.__ui.navigation_stack.csv_import.filename,
-            header=self.__ui.navigation_stack.csv_import.header)
+            file_url=self.__ui.navigation_stack.imp_tables.filename)
         if csv:
-            for k, v in csv.csv_datas[6].items():
-                print(k, v, end=' | ')
-                print(type(k), type(v))
-            """
-            for item in csv.csv_datas:
-                print(item)
-            print(csv.header_found)
-            """
+            for l in csv.csv_datas:
+                for i in l:
+                    print(i)
+                print('---')
         else:
             print("Nope")
     
@@ -108,11 +113,12 @@ class Application(object):
     def on_nav_button(self, sender, widget = None):
         current_index = self.__ui.navigation_stack.stacked_layout.currentIndex()
         new_index = 0
-        if sender.button_id == 'icones':
+
+        if sender.button_id == 'cfg_imp_tabelas':
             new_index = 1
             self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
 
-        elif sender.button_id == 'csv':
+        elif sender.button_id == 'cfg_icones':
             new_index = 2
             self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
 
@@ -152,19 +158,32 @@ class Application(object):
         """..."""
         self.__app.quit()
     
+    # Settings
     def __create_settings(self):
         """..."""
-        # self.__ui.app_path is next
-        file_settings_path = os.path.join(
-            pathlib.Path(__file__).resolve().parent,
-            'static', 'settings', 'settings.json')
+        if not os.path.isdir(self.__settings_path):
+            os.makedirs(self.__settings_path)
         
-        if not os.path.isfile(file_settings_path):
+        if not os.path.isfile(self.__settings_file):
             data_settings = {
                 'platform': 'desktop',
+                'dialog-path': self.__home_path,
             }
-            with open(file_settings_path, 'w') as file_settings: 
-                json.dump(data_settings, file_settings)
+            with open(self.__settings_file, 'w') as settings_file:
+                json.dump(data_settings, settings_file)
+    
+    def __load_settings(self):
+        if not os.path.isfile(self.__settings_file):
+            logging.error('Settings file not found! creating now...')
+            self.__create_settings()
+        
+        with open(self.__settings_file, 'r') as f:
+            return json.load(f)
+    
+    def __save_settings(self):
+        """..."""
+        with open(self.__settings_file, 'w') as settings_file:
+            json.dump(self.__settings, settings_file)
     
     def main(self) -> None:
         """..."""

@@ -121,7 +121,7 @@ class NavButton(QtWidgets.QPushButton):
         self.setAutoFillBackground(False)
 
 
-class VerticalNav(QtWidgets.QWidget):
+class WidgetVerticalNav(QtWidgets.QWidget):
     """..."""
     def __init__(self, buttons_schema, *args, **kwargs):
         """

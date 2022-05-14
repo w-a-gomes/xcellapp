@@ -5,8 +5,8 @@ import typing
 from BlurWindow.blurWindow import GlobalBlur
 from PySide6 import QtCore, QtWidgets, QtGui
 
-from attachment.uisections.csvimport import CsvImport
-from attachment.uisections.navigationstack import NavigationStack
+from attachment.uisections.sectionimptables import SectionImpTables
+from attachment.uisections.sectionnav import SectionNav
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -60,7 +60,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.body_layout.setContentsMargins(10, 10, 10, 10)
         self.top_level_layout.addLayout(self.body_layout)
         
-        self.navigation_stack = NavigationStack()
+        self.navigation_stack = SectionNav()
         self.body_layout.addWidget(
             self.navigation_stack, 0, QtCore.Qt.AlignTop)
     

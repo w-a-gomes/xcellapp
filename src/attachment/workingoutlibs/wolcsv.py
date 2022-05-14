@@ -87,39 +87,8 @@ class RS(object):
     def __repr__(self):
         return f'<RS object: {self.__valor_texto}>'
 
-class Cell(object):
-    def __init__(self):
-        self.__filed = None
-        self.__value = None
-        self.__formula = None
-        
-    
-    @property
-    def value(self):
-        return self.__value
-    
-    @value.setter
-    def value(self, value):
-        return self.__value
-    
-    @property
-    def formula(self):
-        return self.__formula
-    
-    @formula.setter
-    def formula(self, value):
-        return self.__formula
-    
-    @property
-    def filed(self):
-        return self.__filed
-    
-    @filed.setter
-    def filed(self, value):
-        return self.__filed
 
-
-class CsvData(object):
+class WolCsv(object):
     """CSV datas"""
     def __init__(self, file_url: str) -> None:
         """Constructor"""
@@ -142,29 +111,26 @@ class CsvData(object):
 
         with open(self.__file_url, encoding='utf-8') as csv_file:
             # worksheet = csv.DictReader(csv_file) newline=''
-
             worksheet = csv.reader(csv_file, delimiter=',')
             
             header = None
             header_found = False
-
             for row in worksheet:
-                if not self.__row_is_empty(row):
+                #if not self.__row_is_empty(row):
+                if not header_found:
+                    header = row
+                    header_found = True
 
-                    if not header_found:
-                        header = row
-                        header_found = True
-
-                    else:
-                        items = []
-                        for field, item in zip(header, row):
-                            items.append(
-                                {
-                                    'field': field,
-                                    'value': {item: self.__item_type(item)}
-                                },
-                            )
-                        csv_datas.append(items)
+                else:
+                    items = []
+                    for field, item in zip(header, row):
+                        items.append(
+                            {
+                                'field': field,
+                                'value': {item: self.__item_type(item)}
+                            },
+                        )
+                    csv_datas.append(items)
         
         return csv_datas
     

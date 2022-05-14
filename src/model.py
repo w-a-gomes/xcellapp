@@ -1,7 +1,7 @@
 #!/usr/bin env python3
 import random
 
-from attachment.workingoutlibs.csvdata import CsvData
+from attachment.workingoutlibs.wolcsv import WolCsv
 
 
 class Model(object):
@@ -10,17 +10,12 @@ class Model(object):
         """..."""
         pass
 
-    def csv_file_processing(self, file_url: str, header: str):
+    def csv_file_processing(self, file_url: str):
         """..."""
         self.file_url = file_url
-        self.header = header
 
-        if self.file_url and self.header:
-            csv_obj = CsvData(
-                file_url=self.file_url,
-                header_list=self.header.split('\t'),
-                exclude_row=None)
-            
+        if self.file_url:
+            csv_obj = WolCsv(file_url=self.file_url)
             return csv_obj
         
         return False
