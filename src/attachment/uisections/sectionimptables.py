@@ -1,7 +1,7 @@
 #!/usr/bin env python3
 import json
 import os
-from pathlib import Path
+import pathlib
 import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
