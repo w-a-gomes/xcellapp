@@ -33,9 +33,8 @@ class MainWindow(QtWidgets.QMainWindow):
                         self.app_path, 'static', 'icons', 'view-fullscreen.svg'
                     )))
         else:
-            fullscreen = getattr(
-                QtWidgets.QStyle, 'SP_TitleBarNormalButton')
-            self.icon_fullscreen = self.style().standardIcon(fullscreen)
+            # view-restore
+            self.icon_fullscreen = QtGui.QIcon.fromTheme('view-fullscreen')
 
         self.setWindowIcon(self.app_icon)
 

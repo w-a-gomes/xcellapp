@@ -31,13 +31,9 @@ class SectionImpTables(QtWidgets.QWidget):
                     os.path.join(pathlib.Path(__file__).resolve().parent,
                     'icons', 'edit-clear.svg')))
         else:
-            folder_open = getattr(
-                QtWidgets.QStyle, 'SP_DialogOpenButton')
-            self.icon_folder_open = self.style().standardIcon(folder_open)
-
-            erase = getattr(
-                QtWidgets.QStyle, 'SP_DialogResetButton')
-            self.icon_erase = self.style().standardIcon(erase)
+            self.icon_folder_open = QtGui.QIcon.fromTheme(
+                'document-open-folder')
+            self.icon_erase = QtGui.QIcon.fromTheme('edit-clear')
 
         # ___ Container ___
         # Top level layout

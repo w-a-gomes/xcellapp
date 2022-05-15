@@ -160,13 +160,8 @@ class WidgetVerticalNav(QtWidgets.QWidget):
                     os.path.join(pathlib.Path(__file__).resolve().parent,
                     'icons', 'go-down.svg')))
         else:
-            arrow_right = getattr(
-                QtWidgets.QStyle, 'SP_ArrowRight')
-            self.icon_arrow_right = self.style().standardIcon(arrow_right)
-
-            arrow_down = getattr(
-                QtWidgets.QStyle, 'SP_ArrowDown')
-            self.icon_arrow_down = self.style().standardIcon(arrow_down)
+            self.icon_arrow_right = QtGui.QIcon.fromTheme('go-next')
+            self.icon_arrow_down = QtGui.QIcon.fromTheme('go-down')
             
         # Layout
         self.layout = QtWidgets.QVBoxLayout()
