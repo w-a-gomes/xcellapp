@@ -25,6 +25,11 @@ class SectionImpTables(QtWidgets.QWidget):
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
                     'icons', 'document-open-folder.svg')))
+            
+            self.icon_document_open = QtGui.QIcon(
+                QtGui.QPixmap(
+                    os.path.join(pathlib.Path(__file__).resolve().parent,
+                    'icons', 'document-open.svg')))
 
             self.icon_erase = QtGui.QIcon(
                 QtGui.QPixmap(
@@ -33,6 +38,10 @@ class SectionImpTables(QtWidgets.QWidget):
         else:
             self.icon_folder_open = QtGui.QIcon.fromTheme(
                 'document-open-folder')
+            
+            self.icon_document_open = QtGui.QIcon.fromTheme(
+                'document-open')
+
             self.icon_erase = QtGui.QIcon.fromTheme('edit-clear')
 
         # ___ Container ___
@@ -64,7 +73,7 @@ class SectionImpTables(QtWidgets.QWidget):
             self.filename_label, 0, QtCore.Qt.AlignLeft)
 
         self.filename_button = QtWidgets.QPushButton(text='Selecionar')
-        self.filename_button.setIcon(self.icon_folder_open)
+        self.filename_button.setIcon(self.icon_document_open)
         self.filename_layout.addWidget(
             self.filename_button, 0, QtCore.Qt.AlignLeft)
 
