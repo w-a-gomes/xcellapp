@@ -20,9 +20,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      showgrid="false"
-     inkscape:zoom="10.24"
-     inkscape:cx="4.0039063"
-     inkscape:cy="12.353516"
+     inkscape:zoom="20.48"
+     inkscape:cx="5.3710938"
+     inkscape:cy="10.620117"
      inkscape:window-width="1366"
      inkscape:window-height="744"
      inkscape:window-x="0"
@@ -37,9 +37,7 @@
         }
     </style>
   <path
-     d="M8 11.707l-6-6L2.707 5 8 10.293 13.293 5l.707.707-6 6z"
-     class="ColorScheme-Text"
-     fill="currentColor"
-     id="path3"
-     style="fill:#b2b2b2;fill-opacity:1" />
+     id="rect1041"
+     style="fill:#999999;fill-opacity:1;stroke-width:1.45422;stroke-linecap:square;paint-order:markers stroke fill"
+     d="M 2.7070312 5 L 2 5.7070312 L 8 11.707031 L 14 5.7070312 L 13.292969 5 L 8 10.292969 L 2.7070312 5 z " />
 </svg>

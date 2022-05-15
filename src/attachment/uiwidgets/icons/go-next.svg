@@ -21,7 +21,7 @@
      inkscape:pagecheckerboard="0"
      showgrid="false"
      inkscape:zoom="30.4375"
-     inkscape:cx="7.3921971"
+     inkscape:cx="5.8809035"
      inkscape:cy="8"
      inkscape:window-width="1366"
      inkscape:window-height="744"
@@ -37,9 +37,7 @@
         }
     </style>
   <path
-     d="M11.707 8l-6 6L5 13.293 10.293 8 5 2.707 5.707 2l6 6z"
-     class="ColorScheme-Text"
-     fill="currentColor"
-     id="path3"
-     style="fill:#b2b2b2;fill-opacity:1" />
+     id="rect1017"
+     style="fill:#999999;fill-opacity:1;stroke-width:2.098;stroke-linecap:square;paint-order:markers stroke fill"
+     d="M 5.7070312 2 L 5 2.7070312 L 10.292969 8 L 5 13.292969 L 5.7070312 14 L 11.707031 8 L 5.7070312 2 z " />
 </svg>
