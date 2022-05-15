@@ -23,7 +23,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # ___ Icons ___
         self.app_icon = QtGui.QIcon(
             QtGui.QPixmap(
-                os.path.join(self.app_path, 'static', 'icons', 'app_logo.svg'))
+                os.path.join(self.app_path, 'static', 'icons', 'app_logo.ico'))
             )
 
         if sys.platform != 'linux':
