@@ -32,9 +32,16 @@ class MainWindow(QtWidgets.QMainWindow):
                     os.path.join(
                         self.app_path, 'static', 'icons', 'view-fullscreen.svg'
                     )))
+
+            self.icon_view_restore = QtGui.QIcon(
+                QtGui.QPixmap(
+                    os.path.join(
+                        self.app_path, 'static', 'icons', 'view-restore.svg'
+                    )))
         else:
             # view-restore
             self.icon_fullscreen = QtGui.QIcon.fromTheme('view-fullscreen')
+            self.icon_view_restore = QtGui.QIcon.fromTheme('view-restore')
 
         self.setWindowIcon(self.app_icon)
 

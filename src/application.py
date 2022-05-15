@@ -148,11 +148,13 @@ class Application(object):
     def on_fullscreen_button(self) -> None:
         """..."""
         if self.__ui.isFullScreen():
-            self.__ui.showMaximized()
+            self.__ui.showNormal()
             self.__ui.fullscreen_button.setToolTip('Janela em tela cheia')
+            self.__ui.fullscreen_button.setIcon(self.__ui.icon_fullscreen)
         else:
             self.__ui.showFullScreen()
             self.__ui.fullscreen_button.setToolTip('Sair da tela cheia')
+            self.__ui.fullscreen_button.setIcon(self.__ui.icon_view_restore)
     
     @QtCore.Slot()
     def on_exit_button(self) -> None:
