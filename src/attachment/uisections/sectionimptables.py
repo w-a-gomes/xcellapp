@@ -2,6 +2,7 @@
 import json
 import os
 from pathlib import Path
+import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
 
@@ -17,6 +18,26 @@ class SectionImpTables(QtWidgets.QWidget):
         self.header = None
         self.label_size = 75
         self.desktop_margin = (100, 150)
+
+        # ___ Icons ___
+        if sys.platform != 'linux':
+            self.icon_folder_open = QtGui.QIcon(
+                QtGui.QPixmap(
+                    os.path.join(pathlib.Path(__file__).resolve().parent,
+                    'icons', 'folder-open.png')))
+
+            self.icon_erase = QtGui.QIcon(
+                QtGui.QPixmap(
+                    os.path.join(pathlib.Path(__file__).resolve().parent,
+                    'icons', 'eraser.png')))
+        else:
+            folder_open = getattr(
+                QtWidgets.QStyle, 'SP_DialogOpenButton')
+            self.icon_folder_open = self.style().standardIcon(folder_open)
+
+            erase = getattr(
+                QtWidgets.QStyle, 'SP_DialogResetButton')
+            self.icon_erase = self.style().standardIcon(erase)
 
         # ___ Container ___
         # Top level layout
@@ -45,14 +66,9 @@ class SectionImpTables(QtWidgets.QWidget):
             QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.filename_layout.addWidget(
             self.filename_label, 0, QtCore.Qt.AlignLeft)
-        
-        self.pixmapi_filename_button = getattr(
-            QtWidgets.QStyle, 'SP_DialogOpenButton')
-        self.icon_filename_button = self.style().standardIcon(
-            self.pixmapi_filename_button)
 
         self.filename_button = QtWidgets.QPushButton(text='Selecionar')
-        self.filename_button.setIcon(self.icon_filename_button)
+        self.filename_button.setIcon(self.icon_folder_open)
         self.filename_layout.addWidget(
             self.filename_button, 0, QtCore.Qt.AlignLeft)
 
@@ -61,13 +77,8 @@ class SectionImpTables(QtWidgets.QWidget):
         self.filename_layout.addWidget(
             self.filename_url_label, 1, QtCore.Qt.AlignLeft)
 
-        self.pixmapi_filename_clear = getattr(
-            QtWidgets.QStyle, 'SP_DialogResetButton')
-        self.icon_filename_clear = self.style().standardIcon(
-            self.pixmapi_filename_clear)
-
         self.filename_clear_button = QtWidgets.QPushButton()
-        self.filename_clear_button.setIcon(self.icon_filename_clear)
+        self.filename_clear_button.setIcon(self.icon_erase)
         self.filename_clear_button.setFlat(True)
         self.filename_clear_button.setVisible(False)
         self.filename_layout.addWidget(

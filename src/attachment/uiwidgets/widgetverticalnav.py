@@ -1,6 +1,7 @@
 #!/usr/bin env python3
 import os
 import pathlib
+import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
 
@@ -141,7 +142,32 @@ class WidgetVerticalNav(QtWidgets.QWidget):
         super().__init__(*args, **kwargs)
         self.setMinimumWidth(190)
         self.buttons_schema = buttons_schema
-        
+
+        # Icons
+        self.icon_space = QtGui.QIcon(
+            QtGui.QPixmap(
+                os.path.join(pathlib.Path(__file__).resolve().parent,
+                'icons', 'verticalnavspacing.svg')))
+
+        if sys.platform != 'linux':
+            self.icon_arrow_right = QtGui.QIcon(
+                QtGui.QPixmap(
+                    os.path.join(pathlib.Path(__file__).resolve().parent,
+                    'icons', 'control.png')))
+            
+            self.icon_arrow_down = QtGui.QIcon(
+                QtGui.QPixmap(
+                    os.path.join(pathlib.Path(__file__).resolve().parent,
+                    'icons', 'control-270.png')))
+        else:
+            arrow_right = getattr(
+                QtWidgets.QStyle, 'SP_ArrowRight')
+            self.icon_arrow_right = self.style().standardIcon(arrow_right)
+
+            arrow_down = getattr(
+                QtWidgets.QStyle, 'SP_ArrowDown')
+            self.icon_arrow_down = self.style().standardIcon(arrow_down)
+            
         # Layout
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
@@ -157,11 +183,8 @@ class WidgetVerticalNav(QtWidgets.QWidget):
         for schema in self.buttons_schema:
             # Top Buttons
             button = NavButton(button_id=schema['id'])
-            icon_espace = QtGui.QIcon(
-                QtGui.QPixmap(
-                    os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', 'verticalnavspacing.svg')))
-            button.setIcon(icon_espace)
+            
+            button.setIcon(self.icon_space)
             button.setFlat(True)
             button.clicked.connect(self.on_button_click)
 
@@ -188,11 +211,7 @@ class WidgetVerticalNav(QtWidgets.QWidget):
             # Sub buttons
             if 'sub-buttons' in schema.keys():
                 if 'text' in schema.keys():
-                    # button.setText(f'+  {schema["text"]}')
-                    pixmapi_expand = getattr(
-                        QtWidgets.QStyle, 'SP_ArrowRight')
-                    icon_expand = self.style().standardIcon(pixmapi_expand)
-                    button.setIcon(icon_expand)
+                    button.setIcon(self.icon_arrow_right)
                     button.setText(schema["text"])
 
                 sub_layout = SubLayoutWidget(sub_layout_id=schema['id'])
@@ -225,10 +244,7 @@ class WidgetVerticalNav(QtWidgets.QWidget):
             # Sub layout not visible
             for sub_layout in self.all_sub_layouts:
                 if sub_layout.sub_layout_id == self.sender().button_id:
-                    pixmapi_expand = getattr(
-                        QtWidgets.QStyle, 'SP_ArrowRight')
-                    icon_expand = self.style().standardIcon(pixmapi_expand)
-                    self.sender().setIcon(icon_expand)
+                    self.sender().setIcon(self.icon_arrow_right)
                     self.sender().setText(self.sender().text())
                     self.sender().is_sub_layouts_active = False
                     sub_layout.setVisible(False)
@@ -263,10 +279,7 @@ class WidgetVerticalNav(QtWidgets.QWidget):
             for sub_layout in self.all_sub_layouts:
                 if sub_layout.sub_layout_id == self.sender().button_id:
                     if not self.sender().is_sub_layouts_active:
-                        pixmapi_expand = getattr(
-                            QtWidgets.QStyle, 'SP_ArrowDown')
-                        icon_expand = self.style().standardIcon(pixmapi_expand)
-                        self.sender().setIcon(icon_expand)
+                        self.sender().setIcon(self.icon_arrow_down)
                         self.sender().setText(self.sender().text())
                         self.sender().is_sub_layouts_active = True
                         sub_layout.setVisible(True)

@@ -1,5 +1,6 @@
 #!/usr/bin env python3
 import os
+import sys
 import typing
 
 from BlurWindow.blurWindow import GlobalBlur
@@ -18,11 +19,23 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__(*args, **kwargs)
         # ___ Properties ___
         self.app_path = os.path.abspath(os.path.dirname(__file__))
+
+        # ___ Icons ___
         self.app_icon = QtGui.QIcon(
             QtGui.QPixmap(
-                os.path.join(self.app_path, 'static', 'icons', 'app_logo.svg')
+                os.path.join(self.app_path, 'static', 'icons', 'app_logo.svg'))
             )
-        )
+
+        if sys.platform != 'linux':
+            self.icon_fullscreen = QtGui.QIcon(
+                QtGui.QPixmap(
+                    os.path.join(
+                        self.app_path, 'static', 'icons', 'fullscreen.png')))
+        else:
+            fullscreen = getattr(
+                QtWidgets.QStyle, 'SP_TitleBarNormalButton')
+            self.icon_fullscreen = self.style().standardIcon(fullscreen)
+
         self.setWindowIcon(self.app_icon)
 
         # ___ Container ___
@@ -43,13 +56,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.header_layout.setSpacing(0)
         self.top_level_layout.addLayout(self.header_layout)
 
-        self.pixmapi_fullscreen_button = getattr(
-            QtWidgets.QStyle, 'SP_TitleBarNormalButton')
-        self.icon_fullscreen_button = self.style().standardIcon(
-            self.pixmapi_fullscreen_button)
-
         self.fullscreen_button = QtWidgets.QPushButton()
-        self.fullscreen_button.setIcon(self.icon_fullscreen_button)
+        self.fullscreen_button.setIcon(self.icon_fullscreen)
         self.fullscreen_button.setFlat(True)
         self.fullscreen_button.setIconSize(QtCore.QSize(24, 24))
         self.fullscreen_button.setToolTip('Janela em tela cheia')

@@ -72,6 +72,9 @@ class SectionNav(QtWidgets.QWidget):
                     {'id': 'cfg_db', 'text': 'Bancos de dados'},
                 ]
             },
+            {
+                'id': 'about', 'text': 'Sobre',
+            },
         ]
         
         self.vertical_nav = WidgetVerticalNav(self.buttons_schema)
