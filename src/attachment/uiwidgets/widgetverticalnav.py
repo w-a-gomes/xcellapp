@@ -153,12 +153,12 @@ class WidgetVerticalNav(QtWidgets.QWidget):
             self.icon_arrow_right = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', 'control.png')))
+                    'icons', 'go-next.svg')))
             
             self.icon_arrow_down = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', 'control-270.png')))
+                    'icons', 'go-down.svg')))
         else:
             arrow_right = getattr(
                 QtWidgets.QStyle, 'SP_ArrowRight')

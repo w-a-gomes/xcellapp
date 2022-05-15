@@ -24,12 +24,12 @@ class SectionImpTables(QtWidgets.QWidget):
             self.icon_folder_open = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', 'folder-open.png')))
+                    'icons', 'document-open-folder.svg')))
 
             self.icon_erase = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', 'eraser.png')))
+                    'icons', 'edit-clear.svg')))
         else:
             folder_open = getattr(
                 QtWidgets.QStyle, 'SP_DialogOpenButton')
