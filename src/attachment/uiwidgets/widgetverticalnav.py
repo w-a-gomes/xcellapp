@@ -1,9 +1,23 @@
 #!/usr/bin env python3
+import math
 import os
 import pathlib
 import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
+
+
+def is_dark(widget) -> bool:
+    color = widget.palette().color(QtGui.QPalette.Window)
+    r, g, b = (color.red(), color.green(), color.blue())
+    hsp = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
+
+    # 'light'
+    if (hsp > 127.5):
+        return False
+    
+    # 'dark'
+    return True
 
 
 class SubLayoutWidget(QtWidgets.QWidget):
@@ -150,15 +164,19 @@ class WidgetVerticalNav(QtWidgets.QWidget):
                 'icons', 'verticalnavspacing.svg')))
 
         if sys.platform != 'linux':
+            icon_prefix = ''
+            if is_dark(self):
+                icon_prefix = 'symbolic-'
+
             self.icon_arrow_right = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', 'go-next.svg')))
+                    'icons', icon_prefix + 'go-next.svg')))
             
             self.icon_arrow_down = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', 'go-down.svg')))
+                    'icons', icon_prefix + 'go-down.svg')))
         else:
             self.icon_arrow_right = QtGui.QIcon.fromTheme('go-next')
             self.icon_arrow_down = QtGui.QIcon.fromTheme('go-down')

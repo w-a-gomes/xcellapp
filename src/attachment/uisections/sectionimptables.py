@@ -1,5 +1,6 @@
 #!/usr/bin env python3
 import json
+import math
 import os
 import pathlib
 import sys
@@ -7,6 +8,20 @@ import sys
 from PySide6 import QtCore, QtWidgets, QtGui
 
 from attachment.uiwidgets.widgetelidedlabel import WidgetElidedLabel
+
+
+def is_dark(widget) -> bool:
+    color = widget.palette().color(QtGui.QPalette.Window)
+    r, g, b = (color.red(), color.green(), color.blue())
+    hsp = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
+
+    # 'light'
+    if (hsp > 127.5):
+        return False
+    
+    # 'dark'
+    return True
+
 
 class SectionImpTables(QtWidgets.QWidget):
     """..."""
@@ -21,20 +36,24 @@ class SectionImpTables(QtWidgets.QWidget):
 
         # ___ Icons ___
         if sys.platform != 'linux':
+            icon_prefix = ''
+            if is_dark(self):
+                icon_prefix = 'symbolic-'
+
             self.icon_folder_open = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', 'document-open-folder.svg')))
+                    'icons', icon_prefix + 'document-open-folder.svg')))
             
             self.icon_document_open = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', 'document-open.svg')))
+                    'icons', icon_prefix + 'document-open.svg')))
 
             self.icon_erase = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', 'edit-clear.svg')))
+                    'icons', icon_prefix + 'edit-clear.svg')))
         else:
             self.icon_folder_open = QtGui.QIcon.fromTheme(
                 'document-open-folder')

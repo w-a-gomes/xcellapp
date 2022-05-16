@@ -194,7 +194,7 @@ class Application(object):
         """..."""
         with open(self.__settings_file, 'w') as settings_file:
             json.dump(self.__settings, settings_file)
-    
+
     def main(self) -> None:
         """..."""
         # self.__ui.showMaximized()

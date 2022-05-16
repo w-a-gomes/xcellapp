@@ -1,4 +1,5 @@
 #!/usr/bin env python3
+import math
 import os
 import sys
 import typing
@@ -8,6 +9,19 @@ from PySide6 import QtCore, QtWidgets, QtGui
 
 from attachment.uisections.sectionimptables import SectionImpTables
 from attachment.uisections.sectionnav import SectionNav
+
+
+def is_dark(widget) -> bool:
+    color = widget.palette().color(QtGui.QPalette.Window)
+    r, g, b = (color.red(), color.green(), color.blue())
+    hsp = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
+
+    # 'light'
+    if (hsp > 127.5):
+        return False
+    
+    # 'dark'
+    return True
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -23,20 +37,26 @@ class MainWindow(QtWidgets.QMainWindow):
         # ___ Icons ___
         self.app_icon = QtGui.QIcon(
             QtGui.QPixmap(
-                os.path.join(self.app_path, 'static', 'icons', 'app_logo.ico'))
+                os.path.join(self.app_path, 'static', 'icons', 'app_logo.png'))
             )
 
         if sys.platform != 'linux':
+            icon_prefix = ''
+            if is_dark(self):
+                icon_prefix = 'symbolic-'
+
             self.icon_fullscreen = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(
-                        self.app_path, 'static', 'icons', 'view-fullscreen.svg'
+                        self.app_path, 'static', 'icons',
+                        icon_prefix + 'view-fullscreen.svg'
                     )))
 
             self.icon_view_restore = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(
-                        self.app_path, 'static', 'icons', 'view-restore.svg'
+                        self.app_path, 'static', 'icons',
+                        icon_prefix + 'view-restore.svg'
                     )))
         else:
             # view-restore
