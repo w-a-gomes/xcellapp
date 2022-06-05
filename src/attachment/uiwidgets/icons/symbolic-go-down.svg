@@ -1,10 +1,49 @@
-<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-    <style
-        type="text/css"
-        id="current-color-scheme">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="symbolic-go-down.svg"
+   xml:space="preserve"
+   inkscape:version="1.2 (dc2aeda, 2022-05-15)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs9" /><sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="true"
+     inkscape:zoom="41.7193"
+     inkscape:cx="8.9886455"
+     inkscape:cy="9.6478129"
+     inkscape:window-width="1366"
+     inkscape:window-height="744"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg5"><inkscape:grid
+       type="xygrid"
+       id="grid253" /></sodipodi:namedview><style
+     type="text/css"
+     id="current-color-scheme">
         .ColorScheme-Text {
             color:#eff0f1;
         }
-    </style>
-    <path d="M8 11.707l-6-6L2.707 5 8 10.293 13.293 5l.707.707-6 6z" class="ColorScheme-Text" fill="currentColor"/>
-</svg>
+    </style><style
+     type="text/css"
+     id="current-color-scheme-5">
+        .ColorScheme-Text {
+            color:#eff0f1;
+        }
+    </style><path
+     id="path1086"
+     style="fill:#eff0f1;fill-opacity:1"
+     class="ColorScheme-Text"
+     d="M 12.5,6.3535152 11.292969,5.146484 7.9999998,8.4394527 4.7070311,5.146484 3.5000001,6.3535152 7.9999998,10.853516 Z" /></svg>

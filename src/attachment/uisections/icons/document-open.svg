@@ -1,13 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-  <defs id="defs3051">
-    <style type="text/css" id="current-color-scheme">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg2380"
+   sodipodi:docname="document-open.svg"
+   xml:space="preserve"
+   inkscape:version="1.2 (dc2aeda, 2022-05-15)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview2382"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="true"
+     inkscape:zoom="14.75"
+     inkscape:cx="7.4576271"
+     inkscape:cy="8.0338983"
+     inkscape:window-width="1366"
+     inkscape:window-height="744"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2380"><inkscape:grid
+       type="xygrid"
+       id="grid2975" /></sodipodi:namedview><defs
+     id="defs3051"><style
+       type="text/css"
+       id="current-color-scheme">
       .ColorScheme-Text {
         color:#232629;
       }
-      </style>
-  </defs>
- <path 
-     style="fill:currentColor;fill-opacity:1;stroke:none" 
-     d="M 3 2 L 3 14 L 6 14 L 6 13 L 4 13 L 4 3 L 9 3 L 9 6 L 12 6 L 12 8 L 13 8 L 13 5 L 10 2 L 9 2 L 3 2 z M 7 8 L 7 14 L 13 14 L 13 9 L 11 9 L 10 8 L 7 8 z M 8 10 L 12 10 L 12 13 L 8 13 L 8 10 z "
-     class="ColorScheme-Text"/>
-</svg>
+      </style><style
+       type="text/css"
+       id="current-color-scheme-6">
+      .ColorScheme-Text {
+        color:#eff0f1;
+      }
+      </style></defs><path
+     id="path1092"
+     style="fill:#232629;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 3,2 V 14 H 13 V 5 L 10,2 Z M 9.572191,2.9973276 12,5.4251363 l -2.427809,-3e-7 z"
+     sodipodi:nodetypes="cccccccccc" /></svg>

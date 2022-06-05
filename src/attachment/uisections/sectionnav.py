@@ -18,25 +18,23 @@ class SectionNav(QtWidgets.QWidget):
         self.layout = QtWidgets.QHBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
-        self.setMinimumWidth(100)
         self.setLayout(self.layout)
 
         # Nav layout
-        self.stack_nav_layout = QtWidgets.QVBoxLayout()
-        self.stack_nav_layout.setSpacing(0)
-        self.layout.addLayout(self.stack_nav_layout, 1)
-
-        # Pages layout
-        self.stack_pages_layout = QtWidgets.QVBoxLayout()
-        self.layout.addLayout(self.stack_pages_layout, 9)
-
-        self.stacked_layout = QtWidgets.QStackedLayout()
-        self.stacked_layout.setContentsMargins(0, 0, 0, 0)
-        self.stacked_layout.setSpacing(0)
-        self.stack_pages_layout.addLayout(self.stacked_layout)
-
+        """
+        self.nav_scroll = QtWidgets.QScrollArea()
+        self.nav_scroll.setFixedHeight(500)
+        self.nav_scroll.setFixedWidth(200)
+        self.nav_scroll.setVerticalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAsNeeded)
+        self.nav_scroll.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAlwaysOff)
+        self.nav_scroll.setWidgetResizable(True)
+        self.layout.addWidget(
+            self.nav_scroll, 2, QtCore.Qt.AlignTop)
+        """
         # Navigation menu buttons
-        self.buttons_schema = [
+        self.vertical_nav = WidgetVerticalNav([
             {
                 'id': 'db', 'text': 'Banco de Dados', 'sub-buttons': [
                     {'id': 'db-insumos', 'text': 'Insumos'},
@@ -67,22 +65,30 @@ class SectionNav(QtWidgets.QWidget):
             {
                 'id': 'config', 'text': 'Configurações', 'sub-buttons': [
                     {'id': 'cfg_imp_tabelas', 'text': 'Importar tabelas'},
-                    {'id': 'cfg_icones', 'text': 'Ícones'},
-                    {'id': 'cfg_tabelas', 'text': 'Tabelas'},
                     {'id': 'cfg_db', 'text': 'Bancos de dados'},
                 ]
             },
             {
                 'id': 'about', 'text': 'Sobre',
             },
-        ]
+        ])
+        """
+        ## self.vertical_nav.setFixedHeight(self.vertical_nav.expanded_height())
+        self.nav_scroll.setWidget(self.vertical_nav)
+        """
+        self.layout.addWidget(
+           self.vertical_nav, 1, QtCore.Qt.AlignTop)
         
-        self.vertical_nav = WidgetVerticalNav(self.buttons_schema)
-        self.stack_nav_layout.addWidget(
-            self.vertical_nav, 0, QtCore.Qt.AlignTop)
-        
-        # Stack pages
-        
+        # ___ Stack pages ___
+        # Pages layout
+        self.stack_pages_layout = QtWidgets.QVBoxLayout()
+        self.layout.addLayout(self.stack_pages_layout, 9)
+
+        self.stacked_layout = QtWidgets.QStackedLayout()
+        self.stacked_layout.setContentsMargins(0, 0, 0, 0)
+        self.stacked_layout.setSpacing(0)
+        self.stack_pages_layout.addLayout(self.stacked_layout)
+
         # 0
         self.home_page = QtWidgets.QLabel(text='Página Inicial')
         self.stacked_layout.addWidget(self.home_page)
@@ -92,8 +98,8 @@ class SectionNav(QtWidgets.QWidget):
         self.stacked_layout.addWidget(self.imp_tables)
 
         # 2 Icons
-        self.icons = Icons()
-        self.stacked_layout.addWidget(self.icons)
+        # self.icons = Icons()
+        # self.stacked_layout.addWidget(self.icons)
 
 
 if __name__ == '__main__':

@@ -95,6 +95,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.body_layout.setContentsMargins(10, 10, 10, 10)
         self.top_level_layout.addLayout(self.body_layout)
         
+        # Nav
         self.navigation_stack = SectionNav()
         self.body_layout.addWidget(
             self.navigation_stack, 0, QtCore.Qt.AlignTop)

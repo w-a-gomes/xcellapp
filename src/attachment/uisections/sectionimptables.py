@@ -103,6 +103,7 @@ class SectionImpTables(QtWidgets.QWidget):
 
         self.filename_clear_button = QtWidgets.QPushButton()
         self.filename_clear_button.setIcon(self.icon_erase)
+        self.filename_clear_button.setToolTip('Limpar o nome do arquivo')
         self.filename_clear_button.setFlat(True)
         self.filename_clear_button.setVisible(False)
         self.filename_layout.addWidget(

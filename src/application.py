@@ -38,11 +38,11 @@ class Application(object):
             self.on_imp_tables_process_button)
         
         # Menu buttons
-        icons_sender = (
-            self.__ui.navigation_stack.vertical_nav.get_button_by_id(
-                'cfg_icones'))
-        icons_sender.clicked.connect(lambda: self.on_nav_button(
-            icons_sender, self.__ui.navigation_stack.icons))
+        # icons_sender = (
+        #     self.__ui.navigation_stack.vertical_nav.get_button_by_id(
+        #         'cfg_icones'))
+        # icons_sender.clicked.connect(lambda: self.on_nav_button(
+        #     icons_sender, self.__ui.navigation_stack.icons))
 
         imp_tables_sender = (
             self.__ui.navigation_stack.vertical_nav.get_button_by_id(
@@ -119,9 +119,9 @@ class Application(object):
             new_index = 1
             self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
 
-        elif sender.button_id == 'cfg_icones':
-            new_index = 2
-            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
+        # elif sender.button_id == 'cfg_icones':
+        #     new_index = 2
+        #     self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
 
         # Animation
         if new_index != current_index:
@@ -148,7 +148,8 @@ class Application(object):
     def on_fullscreen_button(self) -> None:
         """..."""
         if self.__ui.isFullScreen():
-            self.__ui.showNormal()
+            # self.__ui.showNormal()
+            self.__ui.showMaximized()
             self.__ui.fullscreen_button.setToolTip('Janela em tela cheia')
             self.__ui.fullscreen_button.setIcon(self.__ui.icon_fullscreen)
         else:
@@ -197,8 +198,8 @@ class Application(object):
 
     def main(self) -> None:
         """..."""
-        # self.__ui.showMaximized()
-        self.__ui.resize(1000, 500)
+        self.__ui.showMaximized()
+        # self.__ui.resize(1000, 500)
 
         # UI Style
         style_path = (

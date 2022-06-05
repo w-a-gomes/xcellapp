@@ -1,0 +1,9 @@
+Use png file for icon.
+
+In app dir:
+    python -m nuitka --standalone --windows-disable-console --plugin-enable=pyside6 .\src\main.py
+
+cp all src folders with the static files for 'main.dist' dir
+
+Exec:
+    .\main.dist\main.exe

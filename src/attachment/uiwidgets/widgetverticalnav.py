@@ -155,6 +155,11 @@ class WidgetVerticalNav(QtWidgets.QWidget):
         """
         super().__init__(*args, **kwargs)
         self.setMinimumWidth(190)
+
+        # property
+        self.__expanded_height = 0
+
+        # Args
         self.buttons_schema = buttons_schema
 
         # Icons
@@ -185,6 +190,7 @@ class WidgetVerticalNav(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
+        self.layout.setAlignment(QtCore.Qt.AlignTop)
         self.setLayout(self.layout)
 
         self.all_top_buttons = []
@@ -214,6 +220,7 @@ class WidgetVerticalNav(QtWidgets.QWidget):
             self.layout.addWidget(button)
             self.all_buttons.append(button)
             self.all_top_buttons.append(button)
+            self.__expanded_height += button.height()
 
             if 'text' in schema.keys():
                 button.setText(schema["text"])
@@ -228,14 +235,16 @@ class WidgetVerticalNav(QtWidgets.QWidget):
                     button.setText(schema["text"])
 
                 sub_layout = SubLayoutWidget(sub_layout_id=schema['id'])
-                sub_layout.setContentsMargins(15, 5, 5, 5)
+                sub_layout.setContentsMargins(15, 1, 1, 0)
+                self.__expanded_height += 10
                 self.layout.addWidget(sub_layout)
                 self.all_sub_layouts.append(sub_layout)
 
                 for sub_schema in schema['sub-buttons']:
                     sub_button = NavButton(button_id=sub_schema['id'])
                     if 'text' in sub_schema.keys():
-                        sub_button.setText('•   ' + sub_schema['text'])
+                        # sub_button.setText('•   ' + sub_schema['text'])
+                        sub_button.setText(('  ') + sub_schema['text'])
                         
                     if 'icon' in sub_schema.keys():
                         sub_button.setIcon(sub_schema['icon'])
@@ -246,9 +255,13 @@ class WidgetVerticalNav(QtWidgets.QWidget):
                     sub_layout.add_item(sub_button)
                     self.all_buttons.append(sub_button)
                     self.all_sub_buttons.append(sub_button)
+                    self.__expanded_height += sub_button.height()
         
         for sub_layout in self.all_sub_layouts:
             sub_layout.setVisible(False)
+    
+    def expanded_height(self):
+        return self.__expanded_height
     
     @QtCore.Slot()
     def on_button_click(self):
