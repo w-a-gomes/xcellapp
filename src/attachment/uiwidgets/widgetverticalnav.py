@@ -75,6 +75,8 @@ class NavButton(QtWidgets.QPushButton):
         self.is_checked = False
         self.is_clicked = False
         self.is_sub_layouts_active = False
+        self.top_parent = None
+        self.is_sub_button = False
 
         # Properties
         self.button_id = button_id
@@ -119,13 +121,13 @@ class NavButton(QtWidgets.QPushButton):
 
         self.setPalette(self.color_palette)
     
-    def set_active_color_for_unchecked_state(self) -> None:
+    def set_hover_color(self) -> None:
         """..."""
         self.setAutoFillBackground(True)
         
         self.color_palette.setColor(
-            QtGui.QPalette.Button, self.active_color)
-        
+            QtGui.QPalette.Button, self.hover_color)
+
         self.setPalette(self.color_palette)
         
     def unset_active_color(self) -> None:
@@ -235,16 +237,20 @@ class WidgetVerticalNav(QtWidgets.QWidget):
                     button.setText(schema["text"])
 
                 sub_layout = SubLayoutWidget(sub_layout_id=schema['id'])
-                sub_layout.setContentsMargins(15, 1, 1, 0)
+                sub_layout.setContentsMargins(4, 4, 4, 4)
                 self.__expanded_height += 10
                 self.layout.addWidget(sub_layout)
                 self.all_sub_layouts.append(sub_layout)
 
                 for sub_schema in schema['sub-buttons']:
                     sub_button = NavButton(button_id=sub_schema['id'])
+                    sub_button.top_parent = schema['id'] ###
+                    sub_button.is_sub_button = True      ###
+                    sub_button.setIcon(self.icon_space)
                     if 'text' in sub_schema.keys():
                         # sub_button.setText('•   ' + sub_schema['text'])
-                        sub_button.setText(('  ') + sub_schema['text'])
+                        # sub_button.setText(('  ') + sub_schema['text'])
+                        sub_button.setText(sub_schema['text'])
                         
                     if 'icon' in sub_schema.keys():
                         sub_button.setIcon(sub_schema['icon'])
@@ -344,6 +350,12 @@ class WidgetVerticalNav(QtWidgets.QWidget):
             self.sender().set_active_color()
             self.sender().is_checked = True
             self.sender().is_clicked = True
+
+            # if self.sender().is_sub_button:
+            #     for button in self.all_buttons:
+            #         if button.button_id == self.sender().top_parent:
+            #             button.set_hover_color()
+
     
     def get_button_by_id(self, button_id):
         for button in self.all_buttons:
