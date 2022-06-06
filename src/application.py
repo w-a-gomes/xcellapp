@@ -64,37 +64,47 @@ class Application(object):
             title: str = '',
             path: str = '',
             filter_title: str = '',
-            filter_as_extension: str = '') -> str:
+            filter_extensions: list = []) -> str:
         """Dialog
         types: 'open-filename' is default
         """
         if dialog_type and dialog_type not in ['open-filename']:
             raise ValueError(f'Dialog type "{dialog_type}" not found!')
-            
-        if sys.platform == 'linux':
-             # Check mime cmd
+        
+        # Only kdialog linux
+        if sys.platform == 'linux' and dialog_type == 'open-filename':
+             # Check mimetype cmd
             if subprocess.run(
-                ["which", "mimetype"], capture_output=True).returncode == 0:
-                filter_as_mimetype = subprocess.getoutput(
-                    f'mimetype .{filter_as_extension}').split()[1]
+                ['which', 'mimetype'], capture_output=True).returncode == 0:
 
-                # Plasma dialog
+                # Check Plasma dialog
                 if subprocess.run(
-                    ["which", "kdialog"], capture_output=True).returncode == 0:
+                    ['which', 'kdialog'], capture_output=True).returncode == 0:
+
+                    # Extensions filter to mimetype filter
+                    mimetype_filters = ''
+                    if filter_extensions:
+                        mime_filters = ' '.join([
+                            subprocess.getoutput(f'mimetype .{ext}').split()[1]
+                            for ext in filter_extensions])
+                        mimetype_filters = f'"{mime_filters}"'
+                    
+                    # Run dialog
                     filename_url = subprocess.getoutput(
                         f'kdialog --title "{title}" --getopenfilename '
-                        f'"{path}" "{filter_as_mimetype}"')
+                        f'"{path}" {mimetype_filters}')
 
                     return filename_url
         
+        # Default
+        extension_filters = ' '.join([f'*.{x}' for x in filter_extensions])
         filename_url = QtWidgets.QFileDialog.getOpenFileName(
             parent,
             title,
-            path,  # (*.xlsx *.xls *.XLSX *.XLS)
-            f"{filter_title} (*.{filter_as_extension.strip('.')})")
+            path,
+            f"{filter_title} ({extension_filters})")  # (*.xlsx *.xls *.XLSX)
         
         return filename_url[0]
-
 
     # Import Tables
     @QtCore.Slot()
@@ -106,7 +116,7 @@ class Application(object):
             title='Seletor de arquivos',
             path=self.__settings['dialog-path'],
             filter_title='Arquivos do Microsoft Excel',
-            filter_as_extension='xlsx')
+            filter_extensions=['xlsx', 'xls'])
         
         if (
             filename_url[-5:].lower() == '.xlsx' or
