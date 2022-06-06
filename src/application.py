@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import pathlib
+import subprocess
 import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
@@ -56,27 +57,67 @@ class Application(object):
         self.__ui.fullscreen_button.clicked.connect(
             self.on_fullscreen_button)
     
+    def open_dialog(
+            self,
+            parent,
+            dialog_type: str = '',
+            title: str = '',
+            path: str = '',
+            filter_title: str = '',
+            filter_as_extension: str = '') -> str:
+        """Dialog
+        types: 'open-filename' is default
+        """
+        if dialog_type and dialog_type not in ['open-filename']:
+            raise ValueError(f'Dialog type "{dialog_type}" not found!')
+            
+        if sys.platform == 'linux':
+             # Check mime cmd
+            if subprocess.run(
+                ["which", "mimetype"], capture_output=True).returncode == 0:
+                filter_as_mimetype = subprocess.getoutput(
+                    f'mimetype .{filter_as_extension}').split()[1]
+
+                # Plasma dialog
+                if subprocess.run(
+                    ["which", "kdialog"], capture_output=True).returncode == 0:
+                    filename_url = subprocess.getoutput(
+                        f'kdialog --title "{title}" --getopenfilename '
+                        f'"{path}" "{filter_as_mimetype}"')
+
+                    return filename_url
+        
+        filename_url = QtWidgets.QFileDialog.getOpenFileName(
+            parent,
+            title,
+            path,  # (*.xlsx *.xls *.XLSX *.XLS)
+            f"{filter_title} (*.{filter_as_extension.strip('.')})")
+        
+        return filename_url[0]
+
+
     # Import Tables
     @QtCore.Slot()
     def on_imp_tables_filename_button(self) -> None:
         """..."""
-        dialog = QtWidgets.QFileDialog.getOpenFileName(
-            self.__ui.navigation_stack.imp_tables,
-            "Seletor de arquivos",
-            self.__settings['dialog-path'],
-            "Arquivos do Microsoft Excel (*.xlsx *.xls *.XLSX *.XLS)")
-
+        filename_url = self.open_dialog(
+            parent=self.__ui.navigation_stack.imp_tables,
+            dialog_type='open-filename',
+            title='Seletor de arquivos',
+            path=self.__settings['dialog-path'],
+            filter_title='Arquivos do Microsoft Excel',
+            filter_as_extension='xlsx')
+        
         if (
-            dialog[0][-5:].lower() == '.xlsx' or
-            dialog[0][-4:].lower() == '.xls'
+            filename_url[-5:].lower() == '.xlsx' or
+            filename_url[-4:].lower() == '.xls'
         ):
             # Get text
-            txt_file = dialog[0]
-            txt_path = os.path.dirname(txt_file)
-            txt_filename = txt_file.replace(txt_path + '/', '')
+            txt_path = os.path.dirname(filename_url)
+            txt_filename = filename_url.replace(txt_path + '/', '')
             
             # Set text
-            self.__ui.navigation_stack.imp_tables.filename = txt_file
+            self.__ui.navigation_stack.imp_tables.filename = filename_url
             self.__ui.navigation_stack.imp_tables.filename_url_label.setText(
                 txt_filename)
             
