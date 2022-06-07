@@ -28,15 +28,17 @@ class Application(object):
         self.__model = Model()
 
         # Import Tables connections
-        self.__ui.navigation_stack.imp_tables.filename_button.clicked.connect(
-            self.on_imp_tables_filename_button)
+        self.__ui.navigation_stack.imp_tables.add_tables_button.clicked.connect(
+            self.on_add_tables_button)
+        # self.__ui.navigation_stack.imp_tables.filename_button.clicked.connect(
+        #     self.on_imp_tables_filename_button)
         
-        (self.__ui.navigation_stack.imp_tables.
-            filename_clear_button.clicked.connect(
-                self.on_imp_tables_filename_clear_button))
+        # (self.__ui.navigation_stack.imp_tables.
+        #     filename_clear_button.clicked.connect(
+        #         self.on_imp_tables_filename_clear_button))
         
-        self.__ui.navigation_stack.imp_tables.process_button.clicked.connect(
-            self.on_imp_tables_process_button)
+        # self.__ui.navigation_stack.imp_tables.process_button.clicked.connect(
+        #     self.on_imp_tables_process_button)
         
         # Menu buttons
         # icons_sender = (
@@ -107,6 +109,11 @@ class Application(object):
         return filename_url[0]
 
     # Import Tables
+    @QtCore.Slot()
+    def on_add_tables_button(self) -> None:
+        # 0: Tables, 1: XLS, 2: CSV 
+        self.__ui.navigation_stack.imp_tables.stacked_layout.setCurrentIndex(2)
+
     @QtCore.Slot()
     def on_imp_tables_filename_button(self) -> None:
         """..."""

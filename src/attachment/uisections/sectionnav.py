@@ -64,7 +64,7 @@ class SectionNav(QtWidgets.QWidget):
             },
             {
                 'id': 'config', 'text': 'Configurações', 'sub-buttons': [
-                    {'id': 'cfg_imp_tabelas', 'text': 'Importar tabelas'},
+                    {'id': 'cfg_imp_tabelas', 'text': 'Tabelas'},
                     {'id': 'cfg_db', 'text': 'Bancos de dados'},
                 ]
             },
