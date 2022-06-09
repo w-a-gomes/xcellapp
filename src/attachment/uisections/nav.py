@@ -3,12 +3,12 @@ import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
 
-from attachment.uisections.sectionimptables import SectionImpTables
-from attachment.uiwidgets.widgetverticalnav import WidgetVerticalNav
+from attachment.uisections.importtables import ImportTables
+from attachment.uiwidgets.verticalnav import VerticalNav
 from attachment.uiwidgets.icons import Icons
 
 
-class SectionNav(QtWidgets.QWidget):
+class Nav(QtWidgets.QWidget):
     """..."""
     def __init__(self, *args, **kwargs):
         """..."""
@@ -34,7 +34,7 @@ class SectionNav(QtWidgets.QWidget):
             self.nav_scroll, 2, QtCore.Qt.AlignTop)
         """
         # Navigation menu buttons
-        self.vertical_nav = WidgetVerticalNav([
+        self.vertical_nav = VerticalNav([
             {
                 'id': 'db', 'text': 'Banco de Dados', 'sub-buttons': [
                     {'id': 'db-insumos', 'text': 'Insumos'},
@@ -94,7 +94,7 @@ class SectionNav(QtWidgets.QWidget):
         self.stacked_layout.addWidget(self.home_page)
         
         # 1 xls
-        self.imp_tables = SectionImpTables()
+        self.imp_tables = ImportTables()
         self.stacked_layout.addWidget(self.imp_tables)
 
         # 2 Icons

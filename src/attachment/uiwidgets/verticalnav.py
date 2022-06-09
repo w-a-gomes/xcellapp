@@ -6,18 +6,7 @@ import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
 
-
-def is_dark(widget) -> bool:
-    color = widget.palette().color(QtGui.QPalette.Window)
-    r, g, b = (color.red(), color.green(), color.blue())
-    hsp = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
-
-    # 'light'
-    if (hsp > 127.5):
-        return False
-    
-    # 'dark'
-    return True
+import attachment.uitools.qtwidgetinfo as widgetinfo
 
 
 class SubLayoutWidget(QtWidgets.QWidget):
@@ -138,7 +127,7 @@ class NavButton(QtWidgets.QPushButton):
         self.setAutoFillBackground(False)
 
 
-class WidgetVerticalNav(QtWidgets.QWidget):
+class VerticalNav(QtWidgets.QWidget):
     """..."""
     def __init__(self, buttons_schema, *args, **kwargs):
         """
@@ -172,7 +161,7 @@ class WidgetVerticalNav(QtWidgets.QWidget):
 
         if sys.platform != 'linux':
             icon_prefix = ''
-            if is_dark(self):
+            if widgetinfo.widget_is_dark(self):
                 icon_prefix = 'symbolic-'
 
             self.icon_arrow_right = QtGui.QIcon(

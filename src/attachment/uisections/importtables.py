@@ -7,23 +7,12 @@ import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
 
-from attachment.uiwidgets.widgetelidedlabel import WidgetElidedLabel
+from attachment.uiwidgets.elidedlabel import ElidedLabel
 from attachment.uiwidgets.importfile import ImportFile
-
-def is_dark(widget) -> bool:
-    color = widget.palette().color(QtGui.QPalette.Window)
-    r, g, b = (color.red(), color.green(), color.blue())
-    hsp = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
-
-    # 'light'
-    if (hsp > 127.5):
-        return False
-    
-    # 'dark'
-    return True
+import attachment.uitools.qtwidgetinfo as widgetinfo
 
 
-class SectionImpTables(QtWidgets.QWidget):
+class ImportTables(QtWidgets.QWidget):
     """..."""
     def __init__(self, *args, **kwargs):
         """..."""
@@ -37,7 +26,8 @@ class SectionImpTables(QtWidgets.QWidget):
         # ___ Icons ___
         if sys.platform != 'linux':
             icon_prefix = ''
-            if is_dark(self):
+
+            if widgetinfo.widget_is_dark(self):
                 icon_prefix = 'symbolic-'
 
             self.icon_folder_open = QtGui.QIcon(
@@ -50,7 +40,7 @@ class SectionImpTables(QtWidgets.QWidget):
                     os.path.join(pathlib.Path(__file__).resolve().parent,
                     'icons', icon_prefix + 'document-open.svg')))
 
-            self.icon_erase = QtGui.QIcon(
+            self.icon_edit_clear = QtGui.QIcon(
                 QtGui.QPixmap(
                     os.path.join(pathlib.Path(__file__).resolve().parent,
                     'icons', icon_prefix + 'edit-clear.svg')))
@@ -66,7 +56,7 @@ class SectionImpTables(QtWidgets.QWidget):
             self.icon_document_open = QtGui.QIcon.fromTheme(
                 'document-open')
 
-            self.icon_erase = QtGui.QIcon.fromTheme('edit-clear')
+            self.icon_edit_clear = QtGui.QIcon.fromTheme('edit-clear')
 
             self.icon_list_add = QtGui.QIcon.fromTheme('list-add')
 
@@ -113,7 +103,6 @@ class SectionImpTables(QtWidgets.QWidget):
         self.xls_import_layout.setAlignment(QtCore.Qt.AlignTop)
         self.xls_import_page.setLayout(self.xls_import_layout)
         
-        # self.import_xls_file = ImportFile()
         lbl = QtWidgets.QLabel('XLSX page')
         self.xls_import_layout.addWidget(lbl)
 
@@ -125,9 +114,17 @@ class SectionImpTables(QtWidgets.QWidget):
         self.csv_import_layout.setAlignment(QtCore.Qt.AlignTop)
         self.csv_import_page.setLayout(self.csv_import_layout)
         
-        # self.import_xls_file = ImportFile()
         lbl = QtWidgets.QLabel('CSV page')
         self.csv_import_layout.addWidget(lbl)
+
+        self.import_xls_file = ImportFile(
+            text='Selecione o arquivo CSV', 
+            text_width=200,
+            button_icon=self.icon_document_open,
+            button_text='Selecionar',
+            clear_icon=self.icon_edit_clear,
+            )
+        self.csv_import_layout.addWidget(self.import_xls_file)
         
         # self.filename_page_layout = QtWidgets.QWidget()
         # self.stacked_layout.addWidget(self.filename_page_layout)

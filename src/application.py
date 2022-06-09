@@ -11,7 +11,6 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from model import Model
 from ui import MainWindow
 
-
 class Application(object):
     """..."""
     def __init__(self, *args, **kwargs):
@@ -58,55 +57,6 @@ class Application(object):
 
         self.__ui.fullscreen_button.clicked.connect(
             self.on_fullscreen_button)
-    
-    def open_dialog(
-            self,
-            parent,
-            dialog_type: str = '',
-            title: str = '',
-            path: str = '',
-            filter_title: str = '',
-            filter_extensions: list = []) -> str:
-        """Dialog
-        types: 'open-filename' is default
-        """
-        if dialog_type and dialog_type not in ['open-filename']:
-            raise ValueError(f'Dialog type "{dialog_type}" not found!')
-        
-        # Only kdialog linux
-        if sys.platform == 'linux' and dialog_type == 'open-filename':
-             # Check mimetype cmd
-            if subprocess.run(
-                ['which', 'mimetype'], capture_output=True).returncode == 0:
-
-                # Check Plasma dialog
-                if subprocess.run(
-                    ['which', 'kdialog'], capture_output=True).returncode == 0:
-
-                    # Extensions filter to mimetype filter
-                    mimetype_filters = ''
-                    if filter_extensions:
-                        mime_filters = ' '.join([
-                            subprocess.getoutput(f'mimetype .{ext}').split()[1]
-                            for ext in filter_extensions])
-                        mimetype_filters = f'"{mime_filters}"'
-                    
-                    # Run dialog
-                    filename_url = subprocess.getoutput(
-                        f'kdialog --title "{title}" --getopenfilename '
-                        f'"{path}" {mimetype_filters}')
-
-                    return filename_url
-        
-        # Default
-        extension_filters = ' '.join([f'*.{x}' for x in filter_extensions])
-        filename_url = QtWidgets.QFileDialog.getOpenFileName(
-            parent,
-            title,
-            path,
-            f"{filter_title} ({extension_filters})")  # (*.xlsx *.xls *.XLSX)
-        
-        return filename_url[0]
 
     # Import Tables
     @QtCore.Slot()
@@ -114,37 +64,37 @@ class Application(object):
         # 0: Tables, 1: XLS, 2: CSV 
         self.__ui.navigation_stack.imp_tables.stacked_layout.setCurrentIndex(2)
 
-    @QtCore.Slot()
-    def on_imp_tables_filename_button(self) -> None:
-        """..."""
-        filename_url = self.open_dialog(
-            parent=self.__ui.navigation_stack.imp_tables,
-            dialog_type='open-filename',
-            title='Seletor de arquivos',
-            path=self.__settings['dialog-path'],
-            filter_title='Arquivos do Microsoft Excel',
-            filter_extensions=['xlsx', 'xls'])
+    # @QtCore.Slot()
+    # def on_imp_tables_filename_button(self) -> None:
+    #     """..."""
+    #     filename_url = self.open_dialog(
+    #         parent=self.__ui.navigation_stack.imp_tables,
+    #         dialog_type='open-filename',
+    #         title='Seletor de arquivos',
+    #         path=self.__settings['dialog-path'],
+    #         filter_title='Arquivos do Microsoft Excel',
+    #         filter_extensions=['xlsx', 'xls'])
         
-        if (
-            filename_url[-5:].lower() == '.xlsx' or
-            filename_url[-4:].lower() == '.xls'
-        ):
-            # Get text
-            txt_path = os.path.dirname(filename_url)
-            txt_filename = filename_url.replace(txt_path + '/', '')
+    #     if (
+    #         filename_url[-5:].lower() == '.xlsx' or
+    #         filename_url[-4:].lower() == '.xls'
+    #     ):
+    #         # Get text
+    #         txt_path = os.path.dirname(filename_url)
+    #         txt_filename = filename_url.replace(txt_path + '/', '')
             
-            # Set text
-            self.__ui.navigation_stack.imp_tables.filename = filename_url
-            self.__ui.navigation_stack.imp_tables.filename_url_label.setText(
-                txt_filename)
+    #         # Set text
+    #         self.__ui.navigation_stack.imp_tables.filename = filename_url
+    #         self.__ui.navigation_stack.imp_tables.filename_url_label.setText(
+    #             txt_filename)
             
-            # Update dialog settings
-            self.__settings['dialog-path'] = txt_path
-            self.__save_settings()
+    #         # Update dialog settings
+    #         self.__settings['dialog-path'] = txt_path
+    #         self.__save_settings()
             
-            # Clear Button
-            (self.__ui.navigation_stack.imp_tables.
-                filename_clear_button.setVisible(True))
+    #         # Clear Button
+    #         (self.__ui.navigation_stack.imp_tables.
+    #             filename_clear_button.setVisible(True))
     
     @QtCore.Slot()
     def on_imp_tables_filename_clear_button(self) -> None:

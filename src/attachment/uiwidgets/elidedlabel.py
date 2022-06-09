@@ -2,7 +2,7 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 
 
-class WidgetElidedLabel(QtWidgets.QLabel):
+class ElidedLabel(QtWidgets.QLabel):
     """..."""
     def __init__(self, elide_side: str = 'right', *args, **kwargs):
         """..."""
