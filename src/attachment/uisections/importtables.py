@@ -9,7 +9,7 @@ from PySide6 import QtCore, QtWidgets, QtGui
 
 from attachment.uiwidgets.elidedlabel import ElidedLabel
 from attachment.uiwidgets.importfile import ImportFile
-import attachment.uitools.qtwidgetinfo as widgetinfo
+import attachment.uitools.qticons as qticons
 
 
 class ImportTables(QtWidgets.QWidget):
@@ -24,41 +24,12 @@ class ImportTables(QtWidgets.QWidget):
         self.desktop_margin = (100, 150)
 
         # ___ Icons ___
-        if sys.platform != 'linux':
-            icon_prefix = ''
-
-            if widgetinfo.widget_is_dark(self):
-                icon_prefix = 'symbolic-'
-
-            self.icon_folder_open = QtGui.QIcon(
-                QtGui.QPixmap(
-                    os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', icon_prefix + 'document-open-folder.svg')))
-            
-            self.icon_document_open = QtGui.QIcon(
-                QtGui.QPixmap(
-                    os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', icon_prefix + 'document-open.svg')))
-
-            self.icon_edit_clear = QtGui.QIcon(
-                QtGui.QPixmap(
-                    os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', icon_prefix + 'edit-clear.svg')))
-            
-            self.icon_list_add = QtGui.QIcon(
-                QtGui.QPixmap(
-                    os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', icon_prefix + 'list-add.svg')))
-        else:
-            self.icon_folder_open = QtGui.QIcon.fromTheme(
-                'document-open-folder')
-            
-            self.icon_document_open = QtGui.QIcon.fromTheme(
-                'document-open')
-
-            self.icon_edit_clear = QtGui.QIcon.fromTheme('edit-clear')
-
-            self.icon_list_add = QtGui.QIcon.fromTheme('list-add')
+        self.icons = qticons.QtGuiIcon()
+        
+        self.icon_list_add = self.icons.fromSystem('list-add')
+        self.icon_edit_clear = self.icons.fromSystem('edit-clear')
+        self.icon_folder_open = self.icons.fromSystem('document-open-folder')
+        self.icon_document_open = self.icons.fromSystem('document-open')
 
         # ___ Container ___
         # Top level layout

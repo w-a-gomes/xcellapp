@@ -6,8 +6,7 @@ import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
 
-import attachment.uitools.qtwidgetinfo as widgetinfo
-
+import attachment.uitools.qticons as qticons
 
 class SubLayoutWidget(QtWidgets.QWidget):
     """..."""
@@ -154,29 +153,13 @@ class VerticalNav(QtWidgets.QWidget):
         self.buttons_schema = buttons_schema
 
         # Icons
-        self.icon_space = QtGui.QIcon(
-            QtGui.QPixmap(
-                os.path.join(pathlib.Path(__file__).resolve().parent,
-                'icons', 'verticalnavspacing.svg')))
-
-        if sys.platform != 'linux':
-            icon_prefix = ''
-            if widgetinfo.widget_is_dark(self):
-                icon_prefix = 'symbolic-'
-
-            self.icon_arrow_right = QtGui.QIcon(
-                QtGui.QPixmap(
-                    os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', icon_prefix + 'go-next.svg')))
-            
-            self.icon_arrow_down = QtGui.QIcon(
-                QtGui.QPixmap(
-                    os.path.join(pathlib.Path(__file__).resolve().parent,
-                    'icons', icon_prefix + 'go-down.svg')))
-        else:
-            self.icon_arrow_right = QtGui.QIcon.fromTheme('go-next')
-            self.icon_arrow_down = QtGui.QIcon.fromTheme('go-down')
-            
+        self.icons = qticons.QtGuiIcon()
+        
+        self.icon_arrow_right = self.icons.fromSystem(icon_name='go-next')
+        self.icon_arrow_down = self.icons.fromSystem(icon_name='go-down')
+        self.icon_space = self.icons.fromPath(icon_path=os.path.join(
+            pathlib.Path(__file__).resolve().parent, 'icons', 'spacing.svg'))
+        
         # Layout
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)

@@ -8,7 +8,7 @@ from BlurWindow.blurWindow import GlobalBlur
 from PySide6 import QtCore, QtWidgets, QtGui
 
 from attachment.uisections.nav import Nav
-import attachment.uitools.qtwidgetinfo as widgetinfo
+import attachment.uitools.qticons as qticons
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -22,33 +22,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.app_path = os.path.abspath(os.path.dirname(__file__))
 
         # ___ Icons ___
-        self.app_icon = QtGui.QIcon(
-            QtGui.QPixmap(
-                os.path.join(self.app_path, 'static', 'icons', 'app_logo.png'))
-            )
+        self.icons = qticons.QtGuiIcon()
 
-        if sys.platform != 'linux':
-            icon_prefix = ''
-            if widgetinfo.widget_is_dark(self):
-                icon_prefix = 'symbolic-'
-
-            self.icon_fullscreen = QtGui.QIcon(
-                QtGui.QPixmap(
-                    os.path.join(
-                        self.app_path, 'static', 'icons',
-                        icon_prefix + 'view-fullscreen.svg'
-                    )))
-
-            self.icon_view_restore = QtGui.QIcon(
-                QtGui.QPixmap(
-                    os.path.join(
-                        self.app_path, 'static', 'icons',
-                        icon_prefix + 'view-restore.svg'
-                    )))
-        else:
-            # view-restore
-            self.icon_fullscreen = QtGui.QIcon.fromTheme('view-fullscreen')
-            self.icon_view_restore = QtGui.QIcon.fromTheme('view-restore')
+        self.app_icon = self.icons.fromPath(
+            os.path.join(self.app_path, 'static', 'icons', 'app_logo.png'))
+        
+        self.icon_fullscreen = self.icons.fromSystem('view-fullscreen')
+        self.icon_view_restore = self.icons.fromSystem('view-restore')
 
         self.setWindowIcon(self.app_icon)
 
