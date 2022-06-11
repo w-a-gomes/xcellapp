@@ -1,12 +1,11 @@
 #!/usr/bin env python3
-import math
 import os
 import pathlib
-import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
 
 import attachment.uitools.qticons as qticons
+
 
 class SubLayoutWidget(QtWidgets.QWidget):
     """..."""
@@ -216,8 +215,8 @@ class VerticalNav(QtWidgets.QWidget):
 
                 for sub_schema in schema['sub-buttons']:
                     sub_button = NavButton(button_id=sub_schema['id'])
-                    sub_button.top_parent = schema['id'] ###
-                    sub_button.is_sub_button = True      ###
+                    sub_button.top_parent = schema['id']
+                    sub_button.is_sub_button = True
                     sub_button.setIcon(self.icon_space)
                     if 'text' in sub_schema.keys():
                         # sub_button.setText('•   ' + sub_schema['text'])
@@ -297,7 +296,7 @@ class VerticalNav(QtWidgets.QWidget):
                     if sub_layout.sub_layout_id == self.sender().button_id:
 
                         vertical_size = (
-                            (len(sub_layout.all_items) * button.height())
+                            (len(sub_layout.all_items) * self.all_buttons[0].height())
                             + sub_layout.height()
                         )
 
@@ -328,7 +327,6 @@ class VerticalNav(QtWidgets.QWidget):
             #         if button.button_id == self.sender().top_parent:
             #             button.set_hover_color()
 
-    
     def get_button_by_id(self, button_id):
         for button in self.all_buttons:
             if button.button_id == button_id:

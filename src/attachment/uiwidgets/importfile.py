@@ -1,8 +1,9 @@
 #!/usr/bin env python3
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets
 
 from attachment.uiwidgets.elidedlabel import ElidedLabel
 from attachment.uitools.opendialog import OpenDialog
+
 
 class ImportFile(QtWidgets.QWidget):
     """..."""
@@ -60,8 +61,8 @@ class ImportFile(QtWidgets.QWidget):
         title: str = None,
         path: str = None,
         filter_description: str = None,
-        filter_extensions: list = [],
-        ) -> None:
+        filter_extensions: list = None,
+    ) -> None:
 
         dialog = OpenDialog()
         filename_url = dialog.open_filename(

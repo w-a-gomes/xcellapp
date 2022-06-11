@@ -1,12 +1,14 @@
 #!/usr/bin env python3
-import pathlib, subprocess, sys
+import pathlib
+import subprocess
+import sys
 
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtWidgets
 
 
 class OpenDialog(object):
     def __init__(self):
-        pass
+        self.__home_path = str(pathlib.Path.home())
     
     def open_filename(
         self,
@@ -14,10 +16,8 @@ class OpenDialog(object):
         title: str = '',
         path: str = '',
         filter_description: str = '',
-        filter_extensions: list = []) -> str:
-
-        self.__home_path = str(pathlib.Path.home())
-
+        filter_extensions: list = None,
+    ) -> str:
         filename_url = self.__open_dialog(
             parent=parent,
             dialog_type='open-filename',
@@ -31,11 +31,12 @@ class OpenDialog(object):
     def __open_dialog(
         self,
         parent,
-        dialog_type: str ='open-filename',
+        dialog_type: str = 'open-filename',
         title: str = 'Open file',
         path: str = None,
         filter_description: str = ' ',
-        filter_extensions: list = []) -> str:
+        filter_extensions: list = None,
+    ) -> str:
         """Dialog
         types: 'open-filename' is default
         """
@@ -47,13 +48,13 @@ class OpenDialog(object):
         
         # Only kdialog linux
         if sys.platform == 'linux' and dialog_type == 'open-filename':
-             # Check mimetype cmd
+            # Check mimetype cmd
             if subprocess.run(
-                ['which', 'mimetype'], capture_output=True).returncode == 0:
+                    ['which', 'mimetype'], capture_output=True).returncode == 0:
 
                 # Check Plasma dialog
                 if subprocess.run(
-                    ['which', 'kdialog'], capture_output=True).returncode == 0:
+                        ['which', 'kdialog'], capture_output=True).returncode == 0:
 
                     # Extensions filter to mimetype filter
                     mimetype_filters = ''

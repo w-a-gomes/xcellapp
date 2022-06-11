@@ -1,11 +1,9 @@
 #!/usr/bin env python3
-import sys
-
 from PySide6 import QtCore, QtWidgets, QtGui
 
 from attachment.uisections.importtables import ImportTables
 from attachment.uiwidgets.verticalnav import VerticalNav
-from attachment.uiwidgets.icons import Icons
+# from attachment.uiwidgets.icons import Icons
 
 
 class Nav(QtWidgets.QWidget):

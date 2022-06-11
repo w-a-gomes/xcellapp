@@ -1,5 +1,5 @@
 #!/usr/bin env python3
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets
 
 
 class Icons(QtWidgets.QWidget):
@@ -91,7 +91,7 @@ class Icons(QtWidgets.QWidget):
             icon = self.style().standardIcon(pixmapi)
             self.btn.setIcon(icon)
             self.btn.clicked.connect(self.on_clip)
-            layout.addWidget(self.btn, n / 4, n % 4)
+            layout.addWidget(self.btn, int(n / 4), n % 4)
 
         self.setLayout(layout)
 

@@ -1,13 +1,6 @@
 #!/usr/bin env python3
-import json
-import math
-import os
-import pathlib
-import sys
+from PySide6 import QtCore, QtWidgets
 
-from PySide6 import QtCore, QtWidgets, QtGui
-
-from attachment.uiwidgets.elidedlabel import ElidedLabel
 from attachment.uiwidgets.importfile import ImportFile
 import attachment.uitools.qticons as qticons
 
@@ -60,7 +53,6 @@ class ImportTables(QtWidgets.QWidget):
         self.add_tables.addWidget(self.add_tables_label)
         self.add_tables_button = QtWidgets.QPushButton(icon=self.icon_list_add)
         self.add_tables.addWidget(self.add_tables_button)
-
 
         for i in range(10):
             lbl = QtWidgets.QLabel(f'{i}')

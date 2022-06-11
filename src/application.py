@@ -3,17 +3,17 @@ import json
 import logging
 import os
 import pathlib
-import subprocess
 import sys
 
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets
 
 from model import Model
 from ui import MainWindow
 
+
 class Application(object):
     """..."""
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         """..."""
         self.__app_name = 'XCellApp'
         self.__app_id = 'xcellapp'
@@ -52,7 +52,7 @@ class Application(object):
         imp_tables_sender.clicked.connect(lambda: self.on_nav_button(
             imp_tables_sender, self.__ui.navigation_stack.imp_tables))
             
-        # UI connetions
+        # UI connections
         self.__ui.resize_control.connect(self.on_resize_control)
 
         self.__ui.fullscreen_button.clicked.connect(
@@ -110,16 +110,16 @@ class Application(object):
         csv = self.__model.csv_file_processing(
             file_url=self.__ui.navigation_stack.imp_tables.filename)
         if csv:
-            for l in csv.csv_datas:
-                for i in l:
+            for data in csv.csv_datas:
+                for i in data:
                     print(i)
                 print('---')
         else:
-            print("Nope")
+            print('Nope')
     
     # Menu pages
     @QtCore.Slot()
-    def on_nav_button(self, sender, widget = None):
+    def on_nav_button(self, sender, widget=None):
         current_index = self.__ui.navigation_stack.stacked_layout.currentIndex()
         new_index = 0
 
@@ -133,7 +133,7 @@ class Application(object):
 
         # Animation
         if new_index != current_index:
-            self.anim_group = QtCore.QSequentialAnimationGroup()
+            anim_group = QtCore.QSequentialAnimationGroup()
             
             x = widget.x()
             y = 600 if new_index < current_index else -600
@@ -142,9 +142,9 @@ class Application(object):
             anim_p.setStartValue(QtCore.QPoint(x, y))
             anim_p.setEndValue(QtCore.QPoint(x, 0))
             anim_p.setDuration(150)
-            self.anim_group.addAnimation(anim_p)
+            anim_group.addAnimation(anim_p)
 
-            self.anim_group.start()
+            anim_group.start()
     
     # Ui
     @QtCore.Slot()

@@ -1,11 +1,8 @@
 #!/usr/bin env python3
-import math
 import os
-import sys
-import typing
 
-from BlurWindow.blurWindow import GlobalBlur
-from PySide6 import QtCore, QtWidgets, QtGui
+# from BlurWindow.blurWindow import GlobalBlur
+from PySide6 import QtCore, QtWidgets
 
 from attachment.uisections.nav import Nav
 import attachment.uitools.qticons as qticons

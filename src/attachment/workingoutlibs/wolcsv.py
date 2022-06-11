@@ -97,7 +97,7 @@ class WolCsv(object):
         self.__header_found = False
         
     @property
-    def csv_datas(self) -> dict:
+    def csv_datas(self) -> list:
         """csv_datas"""
         return self.__csv_datas
     
@@ -116,7 +116,7 @@ class WolCsv(object):
             header = None
             header_found = False
             for row in worksheet:
-                #if not self.__row_is_empty(row):
+                # if not self.__row_is_empty(row):
                 if not header_found:
                     header = row
                     header_found = True
@@ -134,7 +134,8 @@ class WolCsv(object):
         
         return csv_datas
     
-    def __item_type(self, item):
+    @staticmethod
+    def __item_type(item):
         item_clean = (
             item.lower().replace('r$', '')
             .replace('.', '').replace(',', '.')
@@ -152,7 +153,8 @@ class WolCsv(object):
 
         return item
 
-    def __row_is_empty(self, row) -> bool:
+    @staticmethod
+    def __row_is_empty(row) -> bool:
         # ...
         row_is_empty = True
 
@@ -173,7 +175,7 @@ if __name__ == '__main__':
     )
     print(s)
     url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-geral.csv'
-    csv_obj = CsvData(file_url=url)
+    csv_obj = WolCsv(file_url=url)
     for x in csv_obj.csv_datas[0]:
         print(x)
     print('---')
@@ -200,7 +202,7 @@ if __name__ == '__main__':
     )
     print(s)
     url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-material.csv'
-    csv_obj = CsvData(file_url=url)
+    csv_obj = WolCsv(file_url=url)
     for x in csv_obj.csv_datas[0]:
         print(x)
     print('---')
@@ -221,7 +223,7 @@ if __name__ == '__main__':
     )
     print(s)
     url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-cadastro.csv'
-    csv_obj = CsvData(file_url=url)
+    csv_obj = WolCsv(file_url=url)
     for x in csv_obj.csv_datas[0]:
         print(x)
     print('---')
