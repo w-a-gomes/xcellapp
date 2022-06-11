@@ -125,7 +125,7 @@ class NavButton(QtWidgets.QPushButton):
         self.setAutoFillBackground(False)
 
 
-class VerticalNav(QtWidgets.QWidget):
+class WidgetVerticalMenu(QtWidgets.QWidget):
     """..."""
     def __init__(self, buttons_schema, *args, **kwargs):
         """
@@ -147,6 +147,7 @@ class VerticalNav(QtWidgets.QWidget):
 
         # property
         self.__expanded_height = 0
+        self.__animation_group = None
 
         # Args
         self.buttons_schema = buttons_schema
@@ -163,7 +164,7 @@ class VerticalNav(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
-        self.layout.setAlignment(QtCore.Qt.AlignTop)
+        self.layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.setLayout(self.layout)
 
         self.all_top_buttons = []
@@ -178,7 +179,7 @@ class VerticalNav(QtWidgets.QWidget):
             
             button.setIcon(self.icon_space)
             button.setFlat(True)
-            button.clicked.connect(self.on_button_click)
+            button.clicked.connect(self.on_button_click)  # type: ignore
 
             if is_first_button:
                 is_first_button = False
@@ -227,7 +228,7 @@ class VerticalNav(QtWidgets.QWidget):
                         sub_button.setIcon(sub_schema['icon'])
                     
                     sub_button.setFlat(True)
-                    sub_button.clicked.connect(self.on_button_click)
+                    sub_button.clicked.connect(self.on_button_click)  # type: ignore
 
                     sub_layout.add_item(sub_button)
                     self.all_buttons.append(sub_button)
@@ -290,7 +291,7 @@ class VerticalNav(QtWidgets.QWidget):
             
             # Animate sub layout
             if sub_layout_visible:
-                self.anim_group = QtCore.QSequentialAnimationGroup()
+                self.__animation_group = QtCore.QSequentialAnimationGroup()
 
                 for sub_layout in self.all_sub_layouts:
                     if sub_layout.sub_layout_id == self.sender().button_id:
@@ -305,7 +306,7 @@ class VerticalNav(QtWidgets.QWidget):
                         anim.setEndValue(
                             QtCore.QSize(sub_layout.width(), vertical_size))
                         anim.setDuration(40)
-                        self.anim_group.addAnimation(anim)
+                        self.__animation_group.addAnimation(anim)
                         
                         """
                         anim_p = QtCore.QPropertyAnimation(sub_layout, b"pos")
@@ -315,7 +316,7 @@ class VerticalNav(QtWidgets.QWidget):
                         self.anim_group.addAnimation(anim_p)
                         """
                 
-                self.anim_group.start()
+                self.__animation_group.start()
 
             # End state
             self.sender().set_active_color()

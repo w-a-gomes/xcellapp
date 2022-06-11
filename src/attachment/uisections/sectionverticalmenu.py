@@ -1,12 +1,12 @@
 #!/usr/bin env python3
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets
 
-from attachment.uisections.importtables import ImportTables
-from attachment.uiwidgets.verticalnav import VerticalNav
+from attachment.uisections.sectionimporttables import SectionImportTables
+from attachment.uiwidgets.widgetverticalmenu import WidgetVerticalMenu
 # from attachment.uiwidgets.icons import Icons
 
 
-class Nav(QtWidgets.QWidget):
+class SectionVerticalMenu(QtWidgets.QWidget):
     """..."""
     def __init__(self, *args, **kwargs):
         """..."""
@@ -32,7 +32,7 @@ class Nav(QtWidgets.QWidget):
             self.nav_scroll, 2, QtCore.Qt.AlignTop)
         """
         # Navigation menu buttons
-        self.vertical_nav = VerticalNav([
+        self.vertical_nav = WidgetVerticalMenu([
             {
                 'id': 'db', 'text': 'Banco de Dados', 'sub-buttons': [
                     {'id': 'db-insumos', 'text': 'Insumos'},
@@ -75,7 +75,7 @@ class Nav(QtWidgets.QWidget):
         self.nav_scroll.setWidget(self.vertical_nav)
         """
         self.layout.addWidget(
-           self.vertical_nav, 1, QtCore.Qt.AlignTop)
+           self.vertical_nav, 1, QtCore.Qt.AlignTop)  # type: ignore
         
         # ___ Stack pages ___
         # Pages layout
@@ -92,7 +92,7 @@ class Nav(QtWidgets.QWidget):
         self.stacked_layout.addWidget(self.home_page)
         
         # 1 xls
-        self.imp_tables = ImportTables()
+        self.imp_tables = SectionImportTables()
         self.stacked_layout.addWidget(self.imp_tables)
 
         # 2 Icons

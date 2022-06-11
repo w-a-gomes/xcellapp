@@ -6,6 +6,7 @@ import sys
 from PySide6 import QtWidgets, QtGui
 
 
+# noinspection PyPep8Naming
 class QtGuiIcon(object):
     def __init__(self):
         self.icons_path = self.__icons_path()
@@ -42,5 +43,6 @@ class QtGuiIcon(object):
         else:
             return QtGui.QIcon.fromTheme(icon_name)
     
-    def fromPath(self, icon_path: str) -> QtGui.QIcon:
+    @staticmethod
+    def fromPath(icon_path: str) -> QtGui.QIcon:
         return QtGui.QIcon(QtGui.QPixmap(icon_path))

@@ -1,11 +1,11 @@
 #!/usr/bin env python3
 from PySide6 import QtCore, QtWidgets
 
-from attachment.uiwidgets.importfile import ImportFile
+from attachment.uiwidgets.widgetgetfilename import WidgetGetFilename
 import attachment.uitools.qticons as qticons
 
 
-class ImportTables(QtWidgets.QWidget):
+class SectionImportTables(QtWidgets.QWidget):
     """..."""
     def __init__(self, *args, **kwargs):
         """..."""
@@ -27,7 +27,7 @@ class ImportTables(QtWidgets.QWidget):
         # ___ Container ___
         # Top level layout
         self.layout = QtWidgets.QVBoxLayout()
-        self.layout.setAlignment(QtCore.Qt.AlignTop)
+        self.layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.setLayout(self.layout)
 
         # ___ Stacked layout ___
@@ -43,11 +43,11 @@ class ImportTables(QtWidgets.QWidget):
         self.stacked_layout.addWidget(self.tables_page)
 
         self.tables_page_layout = QtWidgets.QVBoxLayout()
-        self.tables_page_layout.setAlignment(QtCore.Qt.AlignTop)
+        self.tables_page_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.tables_page.setLayout(self.tables_page_layout)
 
         self.add_tables = QtWidgets.QHBoxLayout()
-        self.add_tables.setAlignment(QtCore.Qt.AlignCenter)
+        self.add_tables.setAlignment(QtCore.Qt.AlignCenter)  # type: ignore
         self.tables_page_layout.addLayout(self.add_tables)
         self.add_tables_label = QtWidgets.QLabel(text='Adicionar tabelas')
         self.add_tables.addWidget(self.add_tables_label)
@@ -63,7 +63,7 @@ class ImportTables(QtWidgets.QWidget):
         self.stacked_layout.addWidget(self.xls_import_page)
 
         self.xls_import_layout = QtWidgets.QVBoxLayout()
-        self.xls_import_layout.setAlignment(QtCore.Qt.AlignTop)
+        self.xls_import_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.xls_import_page.setLayout(self.xls_import_layout)
         
         lbl = QtWidgets.QLabel('XLSX page')
@@ -74,20 +74,24 @@ class ImportTables(QtWidgets.QWidget):
         self.stacked_layout.addWidget(self.csv_import_page)
 
         self.csv_import_layout = QtWidgets.QVBoxLayout()
-        self.csv_import_layout.setAlignment(QtCore.Qt.AlignTop)
+        self.csv_import_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.csv_import_page.setLayout(self.csv_import_layout)
         
         lbl = QtWidgets.QLabel('CSV page')
         self.csv_import_layout.addWidget(lbl)
 
-        self.import_xls_file = ImportFile(
-            text='Selecione o arquivo CSV', 
+        self.xls_get_filename = WidgetGetFilename(
+            description_text='Selecione o arquivo CSV',
             text_width=200,
             button_icon=self.icon_document_open,
             button_text='Selecionar',
             clear_icon=self.icon_edit_clear,
+            dialog_title='Selecione o arquivo CSV',
+            dialog_filter_description='Arquivos do Excel',
+            dialog_filter_extensions=['xlsx'],
+            # dialog_path is auto (os.environ)
             )
-        self.csv_import_layout.addWidget(self.import_xls_file)
+        self.csv_import_layout.addWidget(self.xls_get_filename)
         
         # self.filename_page_layout = QtWidgets.QWidget()
         # self.stacked_layout.addWidget(self.filename_page_layout)

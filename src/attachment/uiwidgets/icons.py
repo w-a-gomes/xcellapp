@@ -87,10 +87,10 @@ class Icons(QtWidgets.QWidget):
             self.btn.setStyleSheet('text-align: left;')
             self.btn.setFlat(True)
 
-            pixmapi = getattr(QtWidgets.QStyle, name) # SP_TitleBarNormalButton
+            pixmapi = getattr(QtWidgets.QStyle, name)  # SP_TitleBarNormalButton
             icon = self.style().standardIcon(pixmapi)
             self.btn.setIcon(icon)
-            self.btn.clicked.connect(self.on_clip)
+            self.btn.clicked.connect(self.on_clip)  # type: ignore
             layout.addWidget(self.btn, int(n / 4), n % 4)
 
         self.setLayout(layout)

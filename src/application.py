@@ -22,6 +22,7 @@ class Application(object):
         self.__settings_file = os.path.join(self.__settings_path, 'conf.json')
         self.__create_settings()
         self.__settings = self.__load_settings()
+        os.environ["DIALOG-GET-FILENAME-PATH"] = self.__settings['dialog-path']
         self.__app = QtWidgets.QApplication([])
         self.__ui = MainWindow()
         self.__model = Model()

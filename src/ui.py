@@ -4,7 +4,7 @@ import os
 # from BlurWindow.blurWindow import GlobalBlur
 from PySide6 import QtCore, QtWidgets
 
-from attachment.uisections.nav import Nav
+from attachment.uisections.sectionverticalmenu import SectionVerticalMenu
 import attachment.uitools.qticons as qticons
 
 
@@ -43,7 +43,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # ___ Header ___
         self.header_layout = QtWidgets.QHBoxLayout()
-        self.header_layout.setAlignment(QtCore.Qt.AlignRight)
+        self.header_layout.setAlignment(QtCore.Qt.AlignRight)  # type: ignore
         self.header_layout.setSpacing(0)
         self.top_level_layout.addLayout(self.header_layout)
 
@@ -60,9 +60,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.top_level_layout.addLayout(self.body_layout)
         
         # Nav
-        self.navigation_stack = Nav()
+        self.navigation_stack = SectionVerticalMenu()
         self.body_layout.addWidget(
-            self.navigation_stack, 0, QtCore.Qt.AlignTop)
+            self.navigation_stack, 0, QtCore.Qt.AlignTop)  # type: ignore
     
     @QtCore.Slot()
     def resizeEvent(self, event):

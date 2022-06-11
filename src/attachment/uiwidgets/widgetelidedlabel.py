@@ -2,7 +2,7 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 
 
-class ElidedLabel(QtWidgets.QLabel):
+class WidgetElidedLabel(QtWidgets.QLabel):
     """..."""
     def __init__(self, elide_side: str = 'right', *args, **kwargs):
         """..."""
@@ -24,7 +24,7 @@ class ElidedLabel(QtWidgets.QLabel):
             elided = metrics.elidedText(
                 self.text(), QtCore.Qt.ElideRight, self.width())
 
-        painter.drawText(self.rect(), self.alignment(), elided)
+        painter.drawText(self.rect(), self.alignment(), elided)  # type: ignore
 
 
 if __name__ == '__main__':
