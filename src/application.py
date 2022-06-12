@@ -15,6 +15,8 @@ class Application(object):
     """..."""
     def __init__(self):
         """..."""
+        self.__anim_group = None
+        self.__anim_duration = 150
         self.__app_name = 'XCellApp'
         self.__app_id = 'xcellapp'
         self.__home_path = str(pathlib.Path.home())
@@ -68,6 +70,17 @@ class Application(object):
         # 0: Tables, 1: XLS, 2: CSV 
         self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(1)
 
+        self.__anim_group = QtCore.QSequentialAnimationGroup()
+        y = self.__ui.lateral_menu.imp_tables.xls_import_page.y()
+        x = self.__ui.lateral_menu.imp_tables.xls_import_page.x()
+        anim_p = QtCore.QPropertyAnimation(
+            self.__ui.lateral_menu.imp_tables.xls_import_page, b"pos")
+        anim_p.setStartValue(QtCore.QPoint(600, y))
+        anim_p.setEndValue(QtCore.QPoint(x, y))
+        anim_p.setDuration(self.__anim_duration)
+        self.__anim_group.addAnimation(anim_p)
+        self.__anim_group.start()
+
     @QtCore.Slot()
     def on_xlsx_process_button(self) -> None:
         # 0: Tables, 1: XLS, 2: CSV
@@ -78,31 +91,44 @@ class Application(object):
 
             # Set filename title
             self.__ui.lateral_menu.imp_tables.csv_page_title.setText(
+                'Número de tabelas no seguinte arquivo:')
+            self.__ui.lateral_menu.imp_tables.csv_page_title_filename.setText(
                 self.__ui.lateral_menu.imp_tables.xls_get_filename.filename())
 
             # Switch to CSV page
             self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(2)
+
+            self.__anim_group = QtCore.QSequentialAnimationGroup()
+            y = self.__ui.lateral_menu.imp_tables.csv_import_page.y()
+            x = self.__ui.lateral_menu.imp_tables.csv_import_page.x()
+            anim_p = QtCore.QPropertyAnimation(
+                self.__ui.lateral_menu.imp_tables.csv_import_page, b"pos")
+            anim_p.setStartValue(QtCore.QPoint(600, y))
+            anim_p.setEndValue(QtCore.QPoint(x, y))
+            anim_p.setDuration(self.__anim_duration)
+            self.__anim_group.addAnimation(anim_p)
+            self.__anim_group.start()
     
-    @QtCore.Slot()
-    def on_imp_tables_filename_clear_button(self) -> None:
-        """..."""
-        self.__ui.lateral_menu.imp_tables.filename = ''
-        self.__ui.lateral_menu.imp_tables.filename_url_label.setText('')
-        (self.__ui.lateral_menu.imp_tables
-            .filename_clear_button.setVisible(False))
+    # @QtCore.Slot()
+    # def on_imp_tables_filename_clear_button(self) -> None:
+    #     """..."""
+    #     self.__ui.lateral_menu.imp_tables.filename = ''
+    #     self.__ui.lateral_menu.imp_tables.filename_url_label.setText('')
+    #     (self.__ui.lateral_menu.imp_tables
+    #         .filename_clear_button.setVisible(False))
     
-    @QtCore.Slot()
-    def on_imp_tables_process_button(self) -> None:
-        """..."""
-        csv = self.__model.csv_file_processing(
-            file_url=self.__ui.lateral_menu.imp_tables.filename)
-        if csv:
-            for data in csv.csv_datas:
-                for i in data:
-                    print(i)
-                print('---')
-        else:
-            print('Nope')
+    # @QtCore.Slot()
+    # def on_imp_tables_process_button(self) -> None:
+    #     """..."""
+    #     csv = self.__model.csv_file_processing(
+    #         file_url=self.__ui.lateral_menu.imp_tables.filename)
+    #     if csv:
+    #         for data in csv.csv_datas:
+    #             for i in data:
+    #                 print(i)
+    #             print('---')
+    #     else:
+    #         print('Nope')
     
     # Menu pages
     @QtCore.Slot()
@@ -114,6 +140,7 @@ class Application(object):
             new_index = 1
             self.__ui.lateral_menu.stacked_layout.setCurrentIndex(new_index)
             self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(0)
+            self.__ui.lateral_menu.imp_tables.xls_get_filename.clear_filename()
 
         # elif sender.button_id == 'cfg_icones':
         #     new_index = 2
@@ -121,18 +148,15 @@ class Application(object):
 
         # Animation
         if new_index != current_index:
-            anim_group = QtCore.QSequentialAnimationGroup()
-            
+            self.__anim_group = QtCore.QSequentialAnimationGroup()
             x = widget.x()
             y = 600 if new_index < current_index else -600
-
             anim_p = QtCore.QPropertyAnimation(widget, b"pos")
             anim_p.setStartValue(QtCore.QPoint(x, y))
             anim_p.setEndValue(QtCore.QPoint(x, 0))
-            anim_p.setDuration(150)
-            anim_group.addAnimation(anim_p)
-
-            anim_group.start()
+            anim_p.setDuration(self.__anim_duration)
+            self.__anim_group.addAnimation(anim_p)
+            self.__anim_group.start()
     
     # Ui
     @QtCore.Slot()

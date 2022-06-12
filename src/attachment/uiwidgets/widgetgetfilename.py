@@ -78,7 +78,7 @@ class WidgetGetFilename(QtWidgets.QWidget):
         self.__clear_button.setFlat(True)
         self.__clear_button.setVisible(False)
         # noinspection PyUnresolvedReferences
-        self.__clear_button.clicked.connect(self.__clear_filename)
+        self.__clear_button.clicked.connect(self.clear_filename)
         self.layout.addWidget(self.__clear_button)
 
     @QtCore.Slot()
@@ -122,7 +122,7 @@ class WidgetGetFilename(QtWidgets.QWidget):
             self.__clear_button.setVisible(True)
 
     @QtCore.Slot()
-    def __clear_filename(self):
+    def clear_filename(self):
         self.__filename = None
         self.__filename_url = None
         self.__filename_path = None

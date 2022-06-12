@@ -93,9 +93,20 @@ class SectionImportTables(QtWidgets.QWidget):
         self.csv_import_layout = QtWidgets.QVBoxLayout()
         self.csv_import_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.csv_import_page.setLayout(self.csv_import_layout)
-        
-        self.csv_page_title = QtWidgets.QLabel('CSV page')
-        self.csv_import_layout.addWidget(self.csv_page_title)
+
+        # CSV title
+        self.csv_page_title_layout = QtWidgets.QHBoxLayout()
+        self.csv_page_title_layout.setSpacing(6)
+        self.csv_page_title_layout.setAlignment(
+            QtCore.Qt.AlignLeft)  # type: ignore
+        self.csv_import_layout.addLayout(self.csv_page_title_layout)
+
+        self.csv_page_title = QtWidgets.QLabel()
+        self.csv_page_title_layout.addWidget(self.csv_page_title)
+
+        self.csv_page_title_filename = QtWidgets.QLabel()
+        self.csv_page_title_filename.setEnabled(False)
+        self.csv_page_title_layout.addWidget(self.csv_page_title_filename)
 
         self.csv_get_filename = WidgetGetFilename(
             description_text='Selecione o arquivo CSV',
