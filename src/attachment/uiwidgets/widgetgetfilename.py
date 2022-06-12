@@ -21,6 +21,7 @@ class WidgetGetFilename(QtWidgets.QWidget):
         dialog_path: str = None,
         dialog_filter_description: str = None,
         dialog_filter_extensions: list = None,
+        select_multiple: bool = False,
         *args, **kwargs
     ):
         """..."""
@@ -35,10 +36,14 @@ class WidgetGetFilename(QtWidgets.QWidget):
         self.__dialog_path = dialog_path
         self.__dialog_filter_description = dialog_filter_description
         self.__dialog_filter_extensions = dialog_filter_extensions
+        self.__select_multiple = select_multiple
 
         self.__filename = None
         self.__filename_path = None
         self.__filename_url = None
+        self.__filename_list = []
+        self.__filename_path_list = []
+        self.__filename_url_list = []
 
         # Layout
         self.layout = QtWidgets.QHBoxLayout()
@@ -97,7 +102,24 @@ class WidgetGetFilename(QtWidgets.QWidget):
         return self.__filename
 
     @QtCore.Slot()
+    def filenameUrlList(self) -> list:
+        """..."""
+        return self.__filename_url_list
+
+    @QtCore.Slot()
+    def filenamePathList(self) -> list:
+        """..."""
+        return self.__filename_path_list
+
+    @QtCore.Slot()
+    def filenameList(self) -> list:
+        """..."""
+        return self.__filename_list
+
+    @QtCore.Slot()
     def __open_dialog(self) -> None:
+        self.clear_filename()
+
         if 'DIALOG-PATH' in os.environ.keys():
             self.__dialog_path = os.environ["DIALOG-PATH"]
 
@@ -107,18 +129,50 @@ class WidgetGetFilename(QtWidgets.QWidget):
             title=self.__dialog_title,
             path=self.__dialog_path,
             filter_description=self.__dialog_filter_description,
-            filter_extensions=self.__dialog_filter_extensions)
+            filter_extensions=self.__dialog_filter_extensions,
+            select_multiple=self.__select_multiple)
         
         # Get text
-        if filename_url:
-            self.__filename_path = os.path.dirname(filename_url)
-            self.__filename = filename_url.replace(
-                self.__filename_path + '/', '')
-            self.__filename_url = filename_url
-            os.environ["DIALOG-PATH"] = self.__filename_path
+        if filename_url and isinstance(filename_url, str):
+            if self.__select_multiple:
+                for item in filename_url.split(' /'):
+                    item = f'/{item}' if item[0] != '/' else item
+
+                    item_path = os.path.dirname(item)
+                    self.__filename_path_list.append(item_path)
+
+                    item_filename = item.replace(item_path + '/', '')
+                    self.__filename_list.append(item_filename)
+
+                    self.__filename_url_list.append(item)
+
+                # Set text
+                self.__filename_label.setText(', '.join(self.__filename_list))
+                self.__clear_button.setVisible(True)
+
+            else:
+                self.__filename_path = os.path.dirname(filename_url)
+                self.__filename = filename_url.replace(
+                    self.__filename_path + '/', '')
+                self.__filename_url = filename_url
+                os.environ["DIALOG-PATH"] = self.__filename_path
+
+                # Set text
+                self.__filename_label.setText(self.__filename)
+                self.__clear_button.setVisible(True)
+
+        elif filename_url and isinstance(filename_url, list):
+            for item in filename_url:
+                item_path = os.path.dirname(item)
+                self.__filename_path_list.append(item_path)
+
+                item_filename = item.replace(item_path + '/', '')
+                self.__filename_list.append(item_filename)
+
+                self.__filename_url_list.append(item)
 
             # Set text
-            self.__filename_label.setText(self.__filename)
+            self.__filename_label.setText(', '.join(self.__filename_list))
             self.__clear_button.setVisible(True)
 
     @QtCore.Slot()
@@ -126,6 +180,9 @@ class WidgetGetFilename(QtWidgets.QWidget):
         self.__filename = None
         self.__filename_url = None
         self.__filename_path = None
+        self.__filename_list = []
+        self.__filename_path_list = []
+        self.__filename_url_list = []
 
         self.__filename_label.setText('')
         self.__clear_button.setVisible(False)

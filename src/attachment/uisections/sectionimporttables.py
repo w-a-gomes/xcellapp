@@ -94,31 +94,27 @@ class SectionImportTables(QtWidgets.QWidget):
         self.csv_import_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.csv_import_page.setLayout(self.csv_import_layout)
 
-        # CSV title
-        self.csv_page_title_layout = QtWidgets.QHBoxLayout()
-        self.csv_page_title_layout.setSpacing(6)
-        self.csv_page_title_layout.setAlignment(
-            QtCore.Qt.AlignLeft)  # type: ignore
-        self.csv_import_layout.addLayout(self.csv_page_title_layout)
-
-        self.csv_page_title = QtWidgets.QLabel()
-        self.csv_page_title_layout.addWidget(self.csv_page_title)
-
+        # CSV numbers title
         self.csv_page_title_filename = QtWidgets.QLabel()
         self.csv_page_title_filename.setEnabled(False)
-        self.csv_page_title_layout.addWidget(self.csv_page_title_filename)
+        self.csv_import_layout.addWidget(self.csv_page_title_filename)
+
+        self.csv_page_title = QtWidgets.QLabel()
+        self.csv_import_layout.addWidget(self.csv_page_title)
 
         self.csv_get_filename = WidgetGetFilename(
-            description_text='Selecione o arquivo CSV',
-            text_width=200,
+            description_text='Arquivos CSV',
+            # text_width=200,
             button_icon=self.icon_document_open,
             button_text='Selecionar',
             clear_icon=self.icon_edit_clear,
-            dialog_title='Selecione o arquivo CSV',
+            dialog_title='Selecionar os arquivos CSV',
             dialog_filter_description='Arquivos CSV',
             dialog_filter_extensions=['csv'],
+            select_multiple=True
             # dialog_path is auto (os.environ)
             )
+        self.csv_get_filename.setContentsMargins(10, 0, 0, 10)
         self.csv_import_layout.addWidget(self.csv_get_filename)
 
         # # Process

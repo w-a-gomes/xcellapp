@@ -32,9 +32,10 @@ class Application(object):
         # Import Tables connections
         self.__ui.lateral_menu.imp_tables.add_tables_button.clicked.connect(
             self.on_add_tables_button)
-        # xls_process_button
+        # XLSX process button
         self.__ui.lateral_menu.imp_tables.xls_process_button.clicked.connect(
             self.on_xlsx_process_button)
+
         # self.__ui.navigation_stack.imp_tables.filename_button.clicked.connect(
         #     self.on_imp_tables_filename_button)
         
@@ -90,10 +91,11 @@ class Application(object):
             self.__save_settings()
 
             # Set filename title
-            self.__ui.lateral_menu.imp_tables.csv_page_title.setText(
-                'Número de tabelas no seguinte arquivo:')
             self.__ui.lateral_menu.imp_tables.csv_page_title_filename.setText(
                 self.__ui.lateral_menu.imp_tables.xls_get_filename.filename())
+
+            self.__ui.lateral_menu.imp_tables.csv_page_title.setText(
+                'Selecione os arquivos CSV das tabelas:')
 
             # Switch to CSV page
             self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(2)

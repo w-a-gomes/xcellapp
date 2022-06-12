@@ -17,6 +17,7 @@ class OpenDialog(object):
         path: str = '',
         filter_description: str = '',
         filter_extensions: list = None,
+        select_multiple: bool = False,
     ) -> str:
         filename_url = self.__open_dialog(
             parent=parent,
@@ -24,7 +25,8 @@ class OpenDialog(object):
             title=title,
             path=path,
             filter_description=filter_description,
-            filter_extensions=filter_extensions)
+            filter_extensions=filter_extensions,
+            select_multiple=select_multiple)
         
         return filename_url
 
@@ -36,6 +38,7 @@ class OpenDialog(object):
         path: str = None,
         filter_description: str = ' ',
         filter_extensions: list = None,
+        select_multiple: bool = False,
     ) -> str:
         """Dialog
         types: 'open-filename' is default
@@ -63,21 +66,35 @@ class OpenDialog(object):
                             subprocess.getoutput(f'mimetype .{ext}').split()[1]
                             for ext in filter_extensions])
                         mimetype_filters = f'"{mime_filters}"'
+
+                    # Multiple
+                    select_multiple = '--multiple' if select_multiple else ''
                     
                     # Run dialog
                     filename_url = subprocess.getoutput(
-                        f'kdialog --title "{title}" --getopenfilename '
+                        f'kdialog {select_multiple} '
+                        f'--title "{title}" --getopenfilename '
                         f'"{path}" {mimetype_filters}')
 
                     return filename_url
         
         # Default
-        extension_filters = ' '.join([f'*.{x}' for x in filter_extensions])
-        filename_url = QtWidgets.QFileDialog.getOpenFileName(
-            parent,
-            title,
-            path,
-            f"{filter_description} ({extension_filters})")
-        # (*.xlsx *.xls *.XLSX)
-        
-        return filename_url[0] 
+        if select_multiple:
+            extension_filters = ' '.join([f'*.{x}' for x in filter_extensions])
+            filename_url = QtWidgets.QFileDialog.getOpenFileNames(
+                parent,
+                title,
+                path,
+                f"{filter_description} ({extension_filters})")
+            # (*.xlsx *.xls *.XLSX)
+            return filename_url[0]
+
+        else:
+            extension_filters = ' '.join([f'*.{x}' for x in filter_extensions])
+            filename_url = QtWidgets.QFileDialog.getOpenFileName(
+                parent,
+                title,
+                path,
+                f"{filter_description} ({extension_filters})")
+            # (*.xlsx *.xls *.XLSX)
+            return filename_url[0]
