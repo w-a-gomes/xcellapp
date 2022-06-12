@@ -22,14 +22,17 @@ class Application(object):
         self.__settings_file = os.path.join(self.__settings_path, 'conf.json')
         self.__create_settings()
         self.__settings = self.__load_settings()
-        os.environ["DIALOG-GET-FILENAME-PATH"] = self.__settings['dialog-path']
+        os.environ["DIALOG-PATH"] = self.__settings['dialog-path']
         self.__app = QtWidgets.QApplication([])
         self.__ui = MainWindow()
         self.__model = Model()
 
         # Import Tables connections
-        self.__ui.navigation_stack.imp_tables.add_tables_button.clicked.connect(
+        self.__ui.lateral_menu.imp_tables.add_tables_button.clicked.connect(
             self.on_add_tables_button)
+        # xls_process_button
+        self.__ui.lateral_menu.imp_tables.xls_process_button.clicked.connect(
+            self.on_xlsx_process_button)
         # self.__ui.navigation_stack.imp_tables.filename_button.clicked.connect(
         #     self.on_imp_tables_filename_button)
         
@@ -48,10 +51,10 @@ class Application(object):
         #     icons_sender, self.__ui.navigation_stack.icons))
 
         imp_tables_sender = (
-            self.__ui.navigation_stack.vertical_nav.get_button_by_id(
+            self.__ui.lateral_menu.vertical_nav.get_button_by_id(
                 'cfg_imp_tabelas'))
         imp_tables_sender.clicked.connect(lambda: self.on_nav_button(
-            imp_tables_sender, self.__ui.navigation_stack.imp_tables))
+            imp_tables_sender, self.__ui.lateral_menu.imp_tables))
             
         # UI connections
         self.__ui.resize_control.connect(self.on_resize_control)
@@ -63,53 +66,36 @@ class Application(object):
     @QtCore.Slot()
     def on_add_tables_button(self) -> None:
         # 0: Tables, 1: XLS, 2: CSV 
-        self.__ui.navigation_stack.imp_tables.stacked_layout.setCurrentIndex(2)
+        self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(1)
 
-    # @QtCore.Slot()
-    # def on_imp_tables_filename_button(self) -> None:
-    #     """..."""
-    #     filename_url = self.open_dialog(
-    #         parent=self.__ui.navigation_stack.imp_tables,
-    #         dialog_type='open-filename',
-    #         title='Seletor de arquivos',
-    #         path=self.__settings['dialog-path'],
-    #         filter_title='Arquivos do Microsoft Excel',
-    #         filter_extensions=['xlsx', 'xls'])
-        
-    #     if (
-    #         filename_url[-5:].lower() == '.xlsx' or
-    #         filename_url[-4:].lower() == '.xls'
-    #     ):
-    #         # Get text
-    #         txt_path = os.path.dirname(filename_url)
-    #         txt_filename = filename_url.replace(txt_path + '/', '')
-            
-    #         # Set text
-    #         self.__ui.navigation_stack.imp_tables.filename = filename_url
-    #         self.__ui.navigation_stack.imp_tables.filename_url_label.setText(
-    #             txt_filename)
-            
-    #         # Update dialog settings
-    #         self.__settings['dialog-path'] = txt_path
-    #         self.__save_settings()
-            
-    #         # Clear Button
-    #         (self.__ui.navigation_stack.imp_tables.
-    #             filename_clear_button.setVisible(True))
+    @QtCore.Slot()
+    def on_xlsx_process_button(self) -> None:
+        # 0: Tables, 1: XLS, 2: CSV
+        if self.__ui.lateral_menu.imp_tables.xls_get_filename.filenameUrl():
+            # Save dialog path
+            self.__settings['dialog-path'] = os.environ["DIALOG-PATH"]
+            self.__save_settings()
+
+            # Set filename title
+            self.__ui.lateral_menu.imp_tables.csv_page_title.setText(
+                self.__ui.lateral_menu.imp_tables.xls_get_filename.filename())
+
+            # Switch to CSV page
+            self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(2)
     
     @QtCore.Slot()
     def on_imp_tables_filename_clear_button(self) -> None:
         """..."""
-        self.__ui.navigation_stack.imp_tables.filename = ''
-        self.__ui.navigation_stack.imp_tables.filename_url_label.setText('')
-        (self.__ui.navigation_stack.imp_tables
+        self.__ui.lateral_menu.imp_tables.filename = ''
+        self.__ui.lateral_menu.imp_tables.filename_url_label.setText('')
+        (self.__ui.lateral_menu.imp_tables
             .filename_clear_button.setVisible(False))
     
     @QtCore.Slot()
     def on_imp_tables_process_button(self) -> None:
         """..."""
         csv = self.__model.csv_file_processing(
-            file_url=self.__ui.navigation_stack.imp_tables.filename)
+            file_url=self.__ui.lateral_menu.imp_tables.filename)
         if csv:
             for data in csv.csv_datas:
                 for i in data:
@@ -121,12 +107,13 @@ class Application(object):
     # Menu pages
     @QtCore.Slot()
     def on_nav_button(self, sender, widget=None):
-        current_index = self.__ui.navigation_stack.stacked_layout.currentIndex()
+        current_index = self.__ui.lateral_menu.stacked_layout.currentIndex()
         new_index = 0
 
         if sender.button_id == 'cfg_imp_tabelas':
             new_index = 1
-            self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
+            self.__ui.lateral_menu.stacked_layout.setCurrentIndex(new_index)
+            self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(0)
 
         # elif sender.button_id == 'cfg_icones':
         #     new_index = 2

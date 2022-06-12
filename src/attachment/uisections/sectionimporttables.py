@@ -43,7 +43,8 @@ class SectionImportTables(QtWidgets.QWidget):
         self.stacked_layout.addWidget(self.tables_page)
 
         self.tables_page_layout = QtWidgets.QVBoxLayout()
-        self.tables_page_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
+        self.tables_page_layout.setAlignment(
+            QtCore.Qt.AlignTop)  # type: ignore
         self.tables_page.setLayout(self.tables_page_layout)
 
         self.add_tables = QtWidgets.QHBoxLayout()
@@ -69,6 +70,22 @@ class SectionImportTables(QtWidgets.QWidget):
         lbl = QtWidgets.QLabel('XLSX page')
         self.xls_import_layout.addWidget(lbl)
 
+        self.xls_get_filename = WidgetGetFilename(
+            description_text='Selecione o arquivo XLSX',
+            text_width=200,
+            button_icon=self.icon_document_open,
+            button_text='Selecionar',
+            clear_icon=self.icon_edit_clear,
+            dialog_title='Selecione o arquivo XLSX',
+            dialog_filter_description='Arquivos XLSX',
+            dialog_filter_extensions=['xlsx'],
+            # dialog_path is auto (os.environ)
+        )
+        self.xls_import_layout.addWidget(self.xls_get_filename)
+
+        self.xls_process_button = QtWidgets.QPushButton('Processar')
+        self.xls_import_layout.addWidget(self.xls_process_button)
+
         # ___ CSV page ___
         self.csv_import_page = QtWidgets.QWidget()
         self.stacked_layout.addWidget(self.csv_import_page)
@@ -77,54 +94,21 @@ class SectionImportTables(QtWidgets.QWidget):
         self.csv_import_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.csv_import_page.setLayout(self.csv_import_layout)
         
-        lbl = QtWidgets.QLabel('CSV page')
-        self.csv_import_layout.addWidget(lbl)
+        self.csv_page_title = QtWidgets.QLabel('CSV page')
+        self.csv_import_layout.addWidget(self.csv_page_title)
 
-        self.xls_get_filename = WidgetGetFilename(
+        self.csv_get_filename = WidgetGetFilename(
             description_text='Selecione o arquivo CSV',
             text_width=200,
             button_icon=self.icon_document_open,
             button_text='Selecionar',
             clear_icon=self.icon_edit_clear,
             dialog_title='Selecione o arquivo CSV',
-            dialog_filter_description='Arquivos do Excel',
-            dialog_filter_extensions=['xlsx'],
+            dialog_filter_description='Arquivos CSV',
+            dialog_filter_extensions=['csv'],
             # dialog_path is auto (os.environ)
             )
-        self.csv_import_layout.addWidget(self.xls_get_filename)
-        
-        # self.filename_page_layout = QtWidgets.QWidget()
-        # self.stacked_layout.addWidget(self.filename_page_layout)
-
-        # self.filename_layout = QtWidgets.QHBoxLayout()
-        # self.filename_page_layout.setLayout(self.filename_layout)
-
-        # self.filename_label = WidgetElidedLabel(
-        #     text='Arquivo do Excell', elide_side='right')
-        # self.filename_label.setFixedWidth(self.label_size)
-        # self.filename_label.setEnabled(False)
-        # self.filename_label.setAlignment(
-        #     QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-        # self.filename_layout.addWidget(
-        #     self.filename_label, 0, QtCore.Qt.AlignLeft)
-
-        # self.filename_button = QtWidgets.QPushButton(text='Selecionar')
-        # self.filename_button.setIcon(self.icon_document_open)
-        # self.filename_layout.addWidget(
-        #     self.filename_button, 0, QtCore.Qt.AlignLeft)
-
-        # self.filename_url_label = WidgetElidedLabel(elide_side='middle')
-        # self.filename_url_label.setFixedWidth(250)
-        # self.filename_layout.addWidget(
-        #     self.filename_url_label, 1, QtCore.Qt.AlignLeft)
-
-        # self.filename_clear_button = QtWidgets.QPushButton()
-        # self.filename_clear_button.setIcon(self.icon_erase)
-        # self.filename_clear_button.setToolTip('Limpar o nome do arquivo')
-        # self.filename_clear_button.setFlat(True)
-        # self.filename_clear_button.setVisible(False)
-        # self.filename_layout.addWidget(
-        #     self.filename_clear_button, 0, QtCore.Qt.AlignRight)
+        self.csv_import_layout.addWidget(self.csv_get_filename)
 
         # # Process
         # self.process_page_layout = QtWidgets.QWidget()

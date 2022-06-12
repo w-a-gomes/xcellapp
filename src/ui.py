@@ -60,9 +60,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.top_level_layout.addLayout(self.body_layout)
         
         # Nav
-        self.navigation_stack = SectionVerticalMenu()
+        self.lateral_menu = SectionVerticalMenu()
         self.body_layout.addWidget(
-            self.navigation_stack, 0, QtCore.Qt.AlignTop)  # type: ignore
+            self.lateral_menu, 0, QtCore.Qt.AlignTop)  # type: ignore
     
     @QtCore.Slot()
     def resizeEvent(self, event):

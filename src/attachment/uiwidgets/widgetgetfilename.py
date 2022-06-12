@@ -58,7 +58,8 @@ class WidgetGetFilename(QtWidgets.QWidget):
                 self.__description_label.setFixedWidth(self.__text_width)
         
         self.__get_filename_button = QtWidgets.QPushButton()
-        self.__get_filename_button.clicked.connect(self.__open_dialog)  # type: ignore
+        self.__get_filename_button.clicked.connect(  # type: ignore
+            self.__open_dialog)
         self.layout.addWidget(self.__get_filename_button)
 
         if self.__button_text:
@@ -76,7 +77,8 @@ class WidgetGetFilename(QtWidgets.QWidget):
         self.__clear_button = QtWidgets.QPushButton(icon=self.__clear_icon)
         self.__clear_button.setFlat(True)
         self.__clear_button.setVisible(False)
-        self.__clear_button.clicked.connect(self.__clear_filename)  # type: ignore
+        # noinspection PyUnresolvedReferences
+        self.__clear_button.clicked.connect(self.__clear_filename)
         self.layout.addWidget(self.__clear_button)
 
     @QtCore.Slot()
@@ -85,9 +87,19 @@ class WidgetGetFilename(QtWidgets.QWidget):
         return self.__filename_url
 
     @QtCore.Slot()
+    def filenamePath(self) -> str:
+        """..."""
+        return self.__filename_path
+
+    @QtCore.Slot()
+    def filename(self) -> str:
+        """..."""
+        return self.__filename
+
+    @QtCore.Slot()
     def __open_dialog(self) -> None:
-        if 'DIALOG-GET-FILENAME-PATH' in os.environ.keys():
-            self.__dialog_path = os.environ["DIALOG-GET-FILENAME-PATH"]
+        if 'DIALOG-PATH' in os.environ.keys():
+            self.__dialog_path = os.environ["DIALOG-PATH"]
 
         dialog = OpenDialog()
         filename_url = dialog.open_filename(
@@ -100,8 +112,10 @@ class WidgetGetFilename(QtWidgets.QWidget):
         # Get text
         if filename_url:
             self.__filename_path = os.path.dirname(filename_url)
-            self.__filename = filename_url.replace(self.__filename_path + '/', '')
+            self.__filename = filename_url.replace(
+                self.__filename_path + '/', '')
             self.__filename_url = filename_url
+            os.environ["DIALOG-PATH"] = self.__filename_path
 
             # Set text
             self.__filename_label.setText(self.__filename)
