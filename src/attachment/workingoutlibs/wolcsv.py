@@ -1,5 +1,6 @@
 #!/usr/bin/ env python3
 import csv
+import os.path
 
 
 class RS(object):
@@ -93,8 +94,19 @@ class WolCsv(object):
     def __init__(self, file_url: str) -> None:
         """Constructor"""
         self.__file_url = file_url
+        self.__filename = file_url.replace(os.path.dirname(file_url) + '/', '')
         self.__csv_datas = self.__load_data()
         self.__header_found = False
+
+    @property
+    def file_url(self) -> str:
+        """..."""
+        return self.__file_url
+
+    @property
+    def filename(self) -> str:
+        """..."""
+        return self.__filename
         
     @property
     def csv_datas(self) -> list:
@@ -145,7 +157,8 @@ class WolCsv(object):
             new_item = RS(item)
 
             if 'R$' in item:
-                return new_item
+                # return new_item
+                return new_item.valor_em_float
             elif '.' in item_clean:
                 return float(item_clean)
             else:

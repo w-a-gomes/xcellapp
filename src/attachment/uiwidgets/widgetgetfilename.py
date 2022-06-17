@@ -88,6 +88,15 @@ class WidgetGetFilename(QtWidgets.QWidget):
         self.layout.addWidget(self.__clear_button)
 
     @QtCore.Slot()
+    def descriptionText(self) -> str:
+        """..."""
+        return self.__description_label.text()
+
+    def setDescriptionText(self, text: str) -> None:
+        """..."""
+        self.__description_label.setText(text)
+
+    @QtCore.Slot()
     def filenameUrl(self) -> str:
         """..."""
         return self.__filename_url
@@ -118,6 +127,7 @@ class WidgetGetFilename(QtWidgets.QWidget):
         return self.__filename_list
 
     def reset(self) -> None:
+        """..."""
         self.__filename = None
         self.__filename_path = None
         self.__filename_url = None
@@ -125,9 +135,6 @@ class WidgetGetFilename(QtWidgets.QWidget):
         self.__filename_path_list = []
         self.__filename_url_list = []
         self.clear_filename()
-
-    def setDescriptionText(self, text: str) -> None:
-        self.__description_label.setText(text)
 
     @QtCore.Slot()
     def __open_dialog(self) -> None:
@@ -149,12 +156,13 @@ class WidgetGetFilename(QtWidgets.QWidget):
 
             if self.__select_multiple:
                 for item in filename_url.split(' /'):
+                    item = item.strip()
                     item = f'/{item}' if item[0] != '/' else item
 
-                    item_path = os.path.dirname(item)
+                    item_path = os.path.dirname(item) + '/'
                     self.__filename_path_list.append(item_path)
 
-                    item_filename = item.replace(item_path + '/', '')
+                    item_filename = item.replace(item_path, '')
                     self.__filename_list.append(item_filename)
 
                     self.__filename_url_list.append(item)

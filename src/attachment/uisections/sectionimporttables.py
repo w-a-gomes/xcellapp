@@ -2,7 +2,7 @@
 from PySide6 import QtCore, QtWidgets
 
 from attachment.uiwidgets.widgetgetfilename import WidgetGetFilename
-from attachment.uiwidgets.widgetframecontainer import WidgetFrameContainer
+from attachment.uisections.sectiontablesscheme import SectionTablesScheme
 import attachment.uitools.qticons as qticons
 
 
@@ -134,12 +134,5 @@ class SectionImportTables(QtWidgets.QWidget):
         self.csv_action_buttons_layout.addWidget(self.csv_import_button)
 
         # The tables
-        self.tables_page = WidgetFrameContainer()
-        self.layout.addWidget(self.tables_page)
-
-        self.tables_layout = QtWidgets.QVBoxLayout()
-        self.tables_page.setLayout(self.tables_layout)
-
-        for i in range(10):
-            lbl = QtWidgets.QLabel(f'{i}')
-            self.tables_layout.addWidget(lbl)
+        self.tables_schema_page = SectionTablesScheme()
+        self.layout.addWidget(self.tables_schema_page)
