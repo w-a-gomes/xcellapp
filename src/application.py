@@ -1,4 +1,5 @@
 #!/usr/bin env python3
+import datetime
 import json
 import logging
 import os
@@ -125,10 +126,16 @@ class Application(object):
             self.__save_settings()
 
             # CSV schema
+            now = datetime.datetime.now()  # '%H:%M:%S on %A, %B the %dth, %Y'
+            print(now.strftime('%d-%m-%Y %H:%M'))
             csv_schema = {
                 'schema-name': (self.__ui.lateral_menu.imp_tables
                                 .csv_get_filename.descriptionText()),
-                'schema-datas': []
+                'schema-datas': [],
+                'date': now.strftime('%d-%m-%Y %H:%M'),
+                'edited': False,
+                'edited-date': None,
+                'edited-version': None,
             }
 
             # CSV schema items
@@ -142,9 +149,10 @@ class Application(object):
                 )
 
             # CSV schema path
+            n = str(len(os.listdir(self.__settings['tables-schema-path'])) + 1)
             xlsx_table_schema_path = os.path.join(
                 self.__settings['tables-schema-path'],
-                (
+                ('0000' + n)[-4:] + '_' + (
                     self.__ui.lateral_menu.imp_tables.csv_get_filename
                     .descriptionText()
                     .replace('.xlsx', '')
