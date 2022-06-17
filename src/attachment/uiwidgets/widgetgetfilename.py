@@ -57,6 +57,7 @@ class WidgetGetFilename(QtWidgets.QWidget):
                 text=self.__description_text, elide_side='right')
             self.__description_label.setAlignment(
                 QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)  # type: ignore
+            self.__description_label.setEnabled(False)
             self.layout.addWidget(self.__description_label)
             
             if self.__text_width:
@@ -116,10 +117,20 @@ class WidgetGetFilename(QtWidgets.QWidget):
         """..."""
         return self.__filename_list
 
-    @QtCore.Slot()
-    def __open_dialog(self) -> None:
+    def reset(self) -> None:
+        self.__filename = None
+        self.__filename_path = None
+        self.__filename_url = None
+        self.__filename_list = []
+        self.__filename_path_list = []
+        self.__filename_url_list = []
         self.clear_filename()
 
+    def setDescriptionText(self, text: str) -> None:
+        self.__description_label.setText(text)
+
+    @QtCore.Slot()
+    def __open_dialog(self) -> None:
         if 'DIALOG-PATH' in os.environ.keys():
             self.__dialog_path = os.environ["DIALOG-PATH"]
 
@@ -134,6 +145,8 @@ class WidgetGetFilename(QtWidgets.QWidget):
         
         # Get text
         if filename_url and isinstance(filename_url, str):
+            self.clear_filename()
+
             if self.__select_multiple:
                 for item in filename_url.split(' /'):
                     item = f'/{item}' if item[0] != '/' else item
@@ -162,6 +175,8 @@ class WidgetGetFilename(QtWidgets.QWidget):
                 self.__clear_button.setVisible(True)
 
         elif filename_url and isinstance(filename_url, list):
+            self.clear_filename()
+
             for item in filename_url:
                 item_path = os.path.dirname(item)
                 self.__filename_path_list.append(item_path)

@@ -16,7 +16,7 @@ class Application(object):
     def __init__(self):
         """..."""
         self.__anim_group = None
-        self.__anim_duration = 150
+        self.__table_anim_duration = 200
         self.__app_name = 'XCellApp'
         self.__app_id = 'xcellapp'
         self.__home_path = str(pathlib.Path.home())
@@ -33,7 +33,7 @@ class Application(object):
         self.__ui.lateral_menu.imp_tables.add_tables_button.clicked.connect(
             self.on_add_tables_button)
         # XLSX process button
-        self.__ui.lateral_menu.imp_tables.xls_process_button.clicked.connect(
+        self.__ui.lateral_menu.imp_tables.xls_import_button.clicked.connect(
             self.on_xlsx_process_button)
 
         # self.__ui.navigation_stack.imp_tables.filename_button.clicked.connect(
@@ -68,17 +68,19 @@ class Application(object):
     # Import Tables
     @QtCore.Slot()
     def on_add_tables_button(self) -> None:
-        # 0: Tables, 1: XLS, 2: CSV 
+        # 0: Tables, 1: XLS, 2: CSV
         self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(1)
 
         self.__anim_group = QtCore.QSequentialAnimationGroup()
+        w = self.__ui.lateral_menu.imp_tables.xls_import_page.width()
         y = self.__ui.lateral_menu.imp_tables.xls_import_page.y()
         x = self.__ui.lateral_menu.imp_tables.xls_import_page.x()
+
         anim_p = QtCore.QPropertyAnimation(
             self.__ui.lateral_menu.imp_tables.xls_import_page, b"pos")
-        anim_p.setStartValue(QtCore.QPoint(600, y))
+        anim_p.setStartValue(QtCore.QPoint(w, y))
         anim_p.setEndValue(QtCore.QPoint(x, y))
-        anim_p.setDuration(self.__anim_duration)
+        anim_p.setDuration(self.__table_anim_duration)
         self.__anim_group.addAnimation(anim_p)
         self.__anim_group.start()
 
@@ -90,48 +92,35 @@ class Application(object):
             self.__settings['dialog-path'] = os.environ["DIALOG-PATH"]
             self.__save_settings()
 
-            # Set filename title
-            self.__ui.lateral_menu.imp_tables.csv_page_title_filename.setText(
-                self.__ui.lateral_menu.imp_tables.xls_get_filename.filename())
+            # Reset CSV page infos
+            self.__ui.lateral_menu.imp_tables.csv_page_title.setText('')
+            self.__ui.lateral_menu.imp_tables.csv_get_filename.reset()
 
+            # Set CSV page infos
             self.__ui.lateral_menu.imp_tables.csv_page_title.setText(
                 'Selecione os arquivos CSV das tabelas:')
+
+            (self.__ui.lateral_menu.imp_tables.csv_get_filename
+                .setDescriptionText(
+                    self.__ui.lateral_menu.imp_tables.xls_get_filename
+                    .filename()))
 
             # Switch to CSV page
             self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(2)
 
+            # Animation
             self.__anim_group = QtCore.QSequentialAnimationGroup()
             y = self.__ui.lateral_menu.imp_tables.csv_import_page.y()
             x = self.__ui.lateral_menu.imp_tables.csv_import_page.x()
+            w = self.__ui.lateral_menu.imp_tables.csv_import_page.width()
             anim_p = QtCore.QPropertyAnimation(
                 self.__ui.lateral_menu.imp_tables.csv_import_page, b"pos")
-            anim_p.setStartValue(QtCore.QPoint(600, y))
+            anim_p.setStartValue(QtCore.QPoint(w, y))
             anim_p.setEndValue(QtCore.QPoint(x, y))
-            anim_p.setDuration(self.__anim_duration)
+            anim_p.setDuration(self.__table_anim_duration)
             self.__anim_group.addAnimation(anim_p)
             self.__anim_group.start()
-    
-    # @QtCore.Slot()
-    # def on_imp_tables_filename_clear_button(self) -> None:
-    #     """..."""
-    #     self.__ui.lateral_menu.imp_tables.filename = ''
-    #     self.__ui.lateral_menu.imp_tables.filename_url_label.setText('')
-    #     (self.__ui.lateral_menu.imp_tables
-    #         .filename_clear_button.setVisible(False))
-    
-    # @QtCore.Slot()
-    # def on_imp_tables_process_button(self) -> None:
-    #     """..."""
-    #     csv = self.__model.csv_file_processing(
-    #         file_url=self.__ui.lateral_menu.imp_tables.filename)
-    #     if csv:
-    #         for data in csv.csv_datas:
-    #             for i in data:
-    #                 print(i)
-    #             print('---')
-    #     else:
-    #         print('Nope')
-    
+
     # Menu pages
     @QtCore.Slot()
     def on_nav_button(self, sender, widget=None):
@@ -139,6 +128,22 @@ class Application(object):
         new_index = 0
 
         if sender.button_id == 'cfg_imp_tabelas':
+            # Go back to first table page
+            if (self.__ui.lateral_menu.imp_tables.stacked_layout
+                    .currentIndex()) != new_index:
+                self.__anim_group = QtCore.QSequentialAnimationGroup()
+                w = -self.__ui.lateral_menu.imp_tables.add_tables_page.width()
+                y = self.__ui.lateral_menu.imp_tables.add_tables_page.y()
+                x = self.__ui.lateral_menu.imp_tables.add_tables_page.x()
+
+                anim_p = QtCore.QPropertyAnimation(
+                    self.__ui.lateral_menu.imp_tables.add_tables_page, b"pos")
+                anim_p.setStartValue(QtCore.QPoint(w, y))
+                anim_p.setEndValue(QtCore.QPoint(x, y))
+                anim_p.setDuration(self.__table_anim_duration)
+                self.__anim_group.addAnimation(anim_p)
+                self.__anim_group.start()
+
             new_index = 1
             self.__ui.lateral_menu.stacked_layout.setCurrentIndex(new_index)
             self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(0)
@@ -152,11 +157,12 @@ class Application(object):
         if new_index != current_index:
             self.__anim_group = QtCore.QSequentialAnimationGroup()
             x = widget.x()
-            y = 600 if new_index < current_index else -600
+            h = widget.height()
+            y = h if new_index < current_index else -h
             anim_p = QtCore.QPropertyAnimation(widget, b"pos")
             anim_p.setStartValue(QtCore.QPoint(x, y))
             anim_p.setEndValue(QtCore.QPoint(x, 0))
-            anim_p.setDuration(self.__anim_duration)
+            anim_p.setDuration(self.__table_anim_duration)
             self.__anim_group.addAnimation(anim_p)
             self.__anim_group.start()
     

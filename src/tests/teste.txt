@@ -1,0 +1,31 @@
+ 
+import sys
+from PySide import QtCore, QtGui
+
+class Custom(QtGui.QWidget):
+    def __init__(self, *args, **kwargs):
+        QtGui.QWidget.__init__(self, *args, **kwargs)
+        self.setWindowOpacity(0.9)
+        self.setWindowFlags(QtCore.Qt.Popup|QtCore.Qt.FramelessWindowHint)
+        self.setWindowTitle('Custom')
+
+        radius = 40.0
+        path = QtGui.QPainterPath()
+        self.resize(440,220)
+        path.addRoundedRect(QtCore.QRectF(self.rect()), radius, radius)
+        mask = QtGui.QRegion(path.toFillPolygon().toPolygon())
+        self.setMask(mask)
+        self.move(QtGui.QCursor.pos())
+
+    def closeEvent(self, event):
+        event.accept()
+        sys.exit(app.exec_())
+
+    def mousePressEvent(self, event):
+        self.close()
+
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    w = Custom()
+    w.show()
+    sys.exit(app.exec_())

@@ -55,6 +55,8 @@ class SubLayoutWidget(QtWidgets.QWidget):
 
 class NavButton(QtWidgets.QPushButton):
     """..."""
+    clicked = QtCore.Signal(QtGui.QMouseEvent)
+
     def __init__(self, button_id, *args, **kwargs):
         """..."""
         super().__init__(*args, **kwargs)
@@ -228,7 +230,8 @@ class WidgetVerticalMenu(QtWidgets.QWidget):
                         sub_button.setIcon(sub_schema['icon'])
                     
                     sub_button.setFlat(True)
-                    sub_button.clicked.connect(self.on_button_click)  # type: ignore
+                    sub_button.clicked.connect(  # type: ignore
+                        self.on_button_click)
 
                     sub_layout.add_item(sub_button)
                     self.all_buttons.append(sub_button)
@@ -288,7 +291,7 @@ class WidgetVerticalMenu(QtWidgets.QWidget):
                         self.sender().is_sub_layouts_active = True
                         sub_layout.setVisible(True)
                         sub_layout_visible = True
-            
+
             # Animate sub layout
             if sub_layout_visible:
                 self.__animation_group = QtCore.QSequentialAnimationGroup()
@@ -297,7 +300,8 @@ class WidgetVerticalMenu(QtWidgets.QWidget):
                     if sub_layout.sub_layout_id == self.sender().button_id:
 
                         vertical_size = (
-                            (len(sub_layout.all_items) * self.all_buttons[0].height())
+                            (len(sub_layout.all_items)
+                             * self.all_buttons[0].height())
                             + sub_layout.height()
                         )
 
@@ -322,6 +326,12 @@ class WidgetVerticalMenu(QtWidgets.QWidget):
             self.sender().set_active_color()
             self.sender().is_checked = True
             self.sender().is_clicked = True
+
+            if sub_layout_visible:
+                for sub_layout in self.all_sub_layouts:
+                    if sub_layout.sub_layout_id == self.sender().button_id:
+                        # Get first widget of the layout
+                        sub_layout.layout.itemAt(0).widget().clicked.emit()
 
             # if self.sender().is_sub_button:
             #     for button in self.all_buttons:

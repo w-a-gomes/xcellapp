@@ -2,6 +2,7 @@
 from PySide6 import QtCore, QtWidgets
 
 from attachment.uiwidgets.widgetgetfilename import WidgetGetFilename
+from attachment.uiwidgets.widgetframecontainer import WidgetFrameContainer
 import attachment.uitools.qticons as qticons
 
 
@@ -38,26 +39,27 @@ class SectionImportTables(QtWidgets.QWidget):
         self.stacked_layout.setSpacing(0)
         self.layout.addLayout(self.stacked_layout)
 
-        # ___ Tables page ___
-        self.tables_page = QtWidgets.QWidget()
-        self.stacked_layout.addWidget(self.tables_page)
+        # ___ Add tables ___
+        self.add_tables_page = QtWidgets.QWidget()
+        self.stacked_layout.addWidget(self.add_tables_page)
 
-        self.tables_page_layout = QtWidgets.QVBoxLayout()
-        self.tables_page_layout.setAlignment(
+        self.add_tables_layout = QtWidgets.QVBoxLayout()
+        self.add_tables_layout.setAlignment(
             QtCore.Qt.AlignTop)  # type: ignore
-        self.tables_page.setLayout(self.tables_page_layout)
+        self.add_tables_page.setLayout(self.add_tables_layout)
 
-        self.add_tables = QtWidgets.QHBoxLayout()
-        self.add_tables.setAlignment(QtCore.Qt.AlignCenter)  # type: ignore
-        self.tables_page_layout.addLayout(self.add_tables)
+        self.add_tables_layout.addWidget(QtWidgets.QLabel(' '))
+
+        self.add_tables_h_layout = QtWidgets.QHBoxLayout()
+        self.add_tables_h_layout.setAlignment(
+            QtCore.Qt.AlignCenter)  # type: ignore
+        self.add_tables_layout.addLayout(self.add_tables_h_layout)
         self.add_tables_label = QtWidgets.QLabel(text='Adicionar tabelas')
-        self.add_tables.addWidget(self.add_tables_label)
+        self.add_tables_h_layout.addWidget(self.add_tables_label)
         self.add_tables_button = QtWidgets.QPushButton(icon=self.icon_list_add)
-        self.add_tables.addWidget(self.add_tables_button)
+        self.add_tables_h_layout.addWidget(self.add_tables_button)
 
-        for i in range(10):
-            lbl = QtWidgets.QLabel(f'{i}')
-            self.tables_page_layout.addWidget(lbl)
+        self.add_tables_layout.addWidget(QtWidgets.QLabel(' '))
 
         # ___ XLSX page ___
         self.xls_import_page = QtWidgets.QWidget()
@@ -67,12 +69,15 @@ class SectionImportTables(QtWidgets.QWidget):
         self.xls_import_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.xls_import_page.setLayout(self.xls_import_layout)
         
-        lbl = QtWidgets.QLabel('XLSX page')
-        self.xls_import_layout.addWidget(lbl)
+        self.xls_import_title = QtWidgets.QLabel(
+            'Importar as tabela apartir de um arquivo do Microsoft Excel')
+        self.xls_import_title.setAlignment(
+            QtCore.Qt.AlignCenter)  # type: ignore
+        self.xls_import_layout.addWidget(self.xls_import_title)
 
         self.xls_get_filename = WidgetGetFilename(
-            description_text='Selecione o arquivo XLSX',
-            text_width=200,
+            description_text='Arquivo XLSX',
+            # text_width=200,
             button_icon=self.icon_document_open,
             button_text='Selecionar',
             clear_icon=self.icon_edit_clear,
@@ -83,8 +88,14 @@ class SectionImportTables(QtWidgets.QWidget):
         )
         self.xls_import_layout.addWidget(self.xls_get_filename)
 
-        self.xls_process_button = QtWidgets.QPushButton('Processar')
-        self.xls_import_layout.addWidget(self.xls_process_button)
+        self.xls_action_buttons_layout = QtWidgets.QHBoxLayout()
+        self.xls_action_buttons_layout.setAlignment(
+            QtCore.Qt.AlignCenter)  # type: ignore
+        self.xls_import_layout.addLayout(self.xls_action_buttons_layout)
+
+        self.xls_import_button = QtWidgets.QPushButton('Importar')
+        self.xls_import_button.setFixedWidth(200)
+        self.xls_action_buttons_layout.addWidget(self.xls_import_button)
 
         # ___ CSV page ___
         self.csv_import_page = QtWidgets.QWidget()
@@ -94,16 +105,12 @@ class SectionImportTables(QtWidgets.QWidget):
         self.csv_import_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.csv_import_page.setLayout(self.csv_import_layout)
 
-        # CSV numbers title
-        self.csv_page_title_filename = QtWidgets.QLabel()
-        self.csv_page_title_filename.setEnabled(False)
-        self.csv_import_layout.addWidget(self.csv_page_title_filename)
-
         self.csv_page_title = QtWidgets.QLabel()
+        self.csv_page_title.setAlignment(QtCore.Qt.AlignCenter)  # type: ignore
         self.csv_import_layout.addWidget(self.csv_page_title)
 
         self.csv_get_filename = WidgetGetFilename(
-            description_text='Arquivos CSV',
+            description_text='Arquivo CSV',
             # text_width=200,
             button_icon=self.icon_document_open,
             button_text='Selecionar',
@@ -117,19 +124,22 @@ class SectionImportTables(QtWidgets.QWidget):
         self.csv_get_filename.setContentsMargins(10, 0, 0, 10)
         self.csv_import_layout.addWidget(self.csv_get_filename)
 
-        # # Process
-        # self.process_page_layout = QtWidgets.QWidget()
-        # self.stacked_layout.addWidget(self.process_page_layout)
+        self.csv_action_buttons_layout = QtWidgets.QHBoxLayout()
+        self.csv_action_buttons_layout.setAlignment(
+            QtCore.Qt.AlignCenter)  # type: ignore
+        self.csv_import_layout.addLayout(self.csv_action_buttons_layout)
 
-        # self.process_layout = QtWidgets.QHBoxLayout()
-        # self.process_page_layout.setLayout(self.process_layout)
+        self.csv_import_button = QtWidgets.QPushButton('Importar')
+        self.csv_import_button.setFixedWidth(200)
+        self.csv_action_buttons_layout.addWidget(self.csv_import_button)
 
-        # self.pixmapi_process_button = getattr(
-        #     QtWidgets.QStyle, 'SP_BrowserReload')
-        # self.icon_process_button = self.style().standardIcon(
-        #     self.pixmapi_process_button)
+        # The tables
+        self.tables_page = WidgetFrameContainer()
+        self.layout.addWidget(self.tables_page)
 
-        # self.process_button = QtWidgets.QPushButton(text='Procesar')
-        # self.process_button.setIcon(self.icon_process_button)
-        # self.process_layout.addWidget(
-        #     self.process_button, 0, QtCore.Qt.AlignRight)
+        self.tables_layout = QtWidgets.QVBoxLayout()
+        self.tables_page.setLayout(self.tables_layout)
+
+        for i in range(10):
+            lbl = QtWidgets.QLabel(f'{i}')
+            self.tables_layout.addWidget(lbl)
