@@ -189,6 +189,7 @@ class Application(object):
             new_index = 1
             self.__ui.stacked_layout.setCurrentIndex(new_index)
             self.__ui.imp_tables.stacked_layout.setCurrentIndex(0)
+            self.__ui.imp_tables.tables_schema_page.update_tables()
             self.__ui.imp_tables.xls_get_filename.clear_filename()
 
         # elif sender.button_id == 'cfg_icones':
