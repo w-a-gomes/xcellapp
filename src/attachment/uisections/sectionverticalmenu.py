@@ -1,7 +1,6 @@
 #!/usr/bin env python3
 from PySide6 import QtCore, QtWidgets
 
-from attachment.uisections.sectionimporttables import SectionImportTables
 from attachment.uiwidgets.widgetverticalmenu import WidgetVerticalMenu
 # from attachment.uiwidgets.icons import Icons
 
@@ -71,33 +70,11 @@ class SectionVerticalMenu(QtWidgets.QWidget):
             },
         ])
         """
-        ## self.vertical_nav.setFixedHeight(self.vertical_nav.expanded_height())
+        # self.vertical_nav.setFixedHeight(self.vertical_nav.expanded_height())
         self.nav_scroll.setWidget(self.vertical_nav)
         """
         self.layout.addWidget(
-           self.vertical_nav, 1, QtCore.Qt.AlignTop)  # type: ignore
-        
-        # ___ Stack pages ___
-        # Pages layout
-        self.stack_pages_layout = QtWidgets.QVBoxLayout()
-        self.layout.addLayout(self.stack_pages_layout, 9)
-
-        self.stacked_layout = QtWidgets.QStackedLayout()
-        self.stacked_layout.setContentsMargins(0, 0, 0, 0)
-        self.stacked_layout.setSpacing(0)
-        self.stack_pages_layout.addLayout(self.stacked_layout)
-
-        # 0
-        self.home_page = QtWidgets.QLabel(text='Página Inicial')
-        self.stacked_layout.addWidget(self.home_page)
-        
-        # 1 xls
-        self.imp_tables = SectionImportTables()
-        self.stacked_layout.addWidget(self.imp_tables)
-
-        # 2 Icons
-        # self.icons = Icons()
-        # self.stacked_layout.addWidget(self.icons)
+           self.vertical_nav, 0, QtCore.Qt.AlignTop)  # type: ignore
 
 
 if __name__ == '__main__':

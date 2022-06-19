@@ -28,7 +28,6 @@ class SectionImportTables(QtWidgets.QWidget):
         # ___ Container ___
         # Top level layout
         self.layout = QtWidgets.QVBoxLayout()
-        self.layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.setLayout(self.layout)
 
         # ___ Stacked layout ___
@@ -134,5 +133,5 @@ class SectionImportTables(QtWidgets.QWidget):
         self.csv_action_buttons_layout.addWidget(self.csv_import_button)
 
         # The tables
-        self.tables_schema_page = SectionTablesScheme()
+        self.tables_schema_page = SectionTablesScheme(self)
         self.layout.addWidget(self.tables_schema_page)

@@ -2,12 +2,16 @@
 from PySide6 import QtWidgets, QtGui, QtCore
 
 
-class SectionTablesScheme(QtWidgets.QWidget):
+class WidgetTablesScheme(QtWidgets.QWidget):
     """..."""
 
     def __init__(self, *args, **kwargs):
         """..."""
         super().__init__(*args, **kwargs)
+        # Border
+        # self.setFrameStyle(
+        #     QtWidgets.QFrame.StyledPanel |  # type: ignore
+        #     QtWidgets.QFrame.Plain)
 
         # Background color
         self.background_color = QtGui.QColor(
@@ -21,13 +25,45 @@ class SectionTablesScheme(QtWidgets.QWidget):
         self.setAutoFillBackground(True)
         self.setPalette(self.color_palette)
 
-        # ___ Container ___
+        # self.setObjectName('Lol')
+        # self.setStyleSheet(
+        # Border
+        #    '#Lol {border: 2px solid #2c633a; border-radius: 10px;}')
+        # Background
+        #    '#Lol {border-radius: 10px; background: rgba(0, 255, 50, 20);}')
+
+        # Layout
         self.layout = QtWidgets.QVBoxLayout()
-        self.layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.setLayout(self.layout)
 
-        self.layout.setAlignment(QtCore.Qt.AlignLeft)  # type: ignore
-
-        for i in range(10):
+        for i in range(200):
             lbl = QtWidgets.QLabel(f'{i}')
             self.layout.addWidget(lbl)
+
+
+class SectionTablesScheme(QtWidgets.QWidget):
+    """..."""
+
+    def __init__(self, *args, **kwargs):
+        """..."""
+        super().__init__(*args, **kwargs)
+        # ___ Container ___
+        self.layout = QtWidgets.QVBoxLayout()
+        self.setLayout(self.layout)
+
+        # Scroll Area
+        self.scroll_area = QtWidgets.QScrollArea()
+        # self.scroll_area.setMinimumHeight(400)
+        # self.scroll_area.setMaximumHeight(500)
+        # self.scroll_area.setFixedHeight(self.parent().height())
+        # self.scroll_area.setFixedWidth(500)
+        self.scroll_area.setVerticalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAsNeeded)
+        self.scroll_area.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAlwaysOff)
+        self.scroll_area.setWidgetResizable(True)
+
+        self.layout.addWidget(self.scroll_area)
+
+        self.scroll_widget = WidgetTablesScheme()
+        self.scroll_area.setWidget(self.scroll_widget)

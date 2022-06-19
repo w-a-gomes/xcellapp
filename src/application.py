@@ -31,13 +31,13 @@ class Application(object):
         self.__model = Model()
 
         # Import Tables connections
-        self.__ui.lateral_menu.imp_tables.add_tables_button.clicked.connect(
+        self.__ui.imp_tables.add_tables_button.clicked.connect(
             self.on_add_tables_button)
         # XLSX import button
-        self.__ui.lateral_menu.imp_tables.xls_import_button.clicked.connect(
+        self.__ui.imp_tables.xls_import_button.clicked.connect(
             self.on_xlsx_import_button)
         # CSV import button
-        self.__ui.lateral_menu.imp_tables.csv_import_button.clicked.connect(
+        self.__ui.imp_tables.csv_import_button.clicked.connect(
             self.on_csv_import_button)
 
         # Menu buttons
@@ -51,7 +51,7 @@ class Application(object):
             self.__ui.lateral_menu.vertical_nav.get_button_by_id(
                 'cfg_imp_tabelas'))
         imp_tables_sender.clicked.connect(lambda: self.on_nav_button(
-            imp_tables_sender, self.__ui.lateral_menu.imp_tables))
+            imp_tables_sender, self.__ui.imp_tables))
             
         # UI connections
         self.__ui.resize_control.connect(self.on_resize_control)
@@ -63,15 +63,15 @@ class Application(object):
     @QtCore.Slot()
     def on_add_tables_button(self) -> None:
         # 0: Tables, 1: XLS, 2: CSV
-        self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(1)
+        self.__ui.imp_tables.stacked_layout.setCurrentIndex(1)
 
         self.__anim_group = QtCore.QSequentialAnimationGroup()
-        w = self.__ui.lateral_menu.imp_tables.xls_import_page.width()
-        y = self.__ui.lateral_menu.imp_tables.xls_import_page.y()
-        x = self.__ui.lateral_menu.imp_tables.xls_import_page.x()
+        w = self.__ui.imp_tables.xls_import_page.width()
+        y = self.__ui.imp_tables.xls_import_page.y()
+        x = self.__ui.imp_tables.xls_import_page.x()
 
         anim_p = QtCore.QPropertyAnimation(
-            self.__ui.lateral_menu.imp_tables.xls_import_page, b"pos")
+            self.__ui.imp_tables.xls_import_page, b"pos")
         anim_p.setStartValue(QtCore.QPoint(w, y))
         anim_p.setEndValue(QtCore.QPoint(x, y))
         anim_p.setDuration(self.__table_anim_duration)
@@ -81,34 +81,34 @@ class Application(object):
     @QtCore.Slot()
     def on_xlsx_import_button(self) -> None:
         # 0: Tables, 1: XLS, 2: CSV
-        if self.__ui.lateral_menu.imp_tables.xls_get_filename.filenameUrl():
+        if self.__ui.imp_tables.xls_get_filename.filenameUrl():
             # Save dialog path
             self.__settings['dialog-path'] = os.environ["DIALOG-PATH"]
             self.__save_settings()
 
             # Reset CSV page infos
-            self.__ui.lateral_menu.imp_tables.csv_page_title.setText('')
-            self.__ui.lateral_menu.imp_tables.csv_get_filename.reset()
+            self.__ui.imp_tables.csv_page_title.setText('')
+            self.__ui.imp_tables.csv_get_filename.reset()
 
             # Set CSV page infos
-            self.__ui.lateral_menu.imp_tables.csv_page_title.setText(
+            self.__ui.imp_tables.csv_page_title.setText(
                 'Selecione os arquivos CSV das tabelas:')
 
-            (self.__ui.lateral_menu.imp_tables.csv_get_filename
+            (self.__ui.imp_tables.csv_get_filename
                 .setDescriptionText(
-                    self.__ui.lateral_menu.imp_tables.xls_get_filename
+                    self.__ui.imp_tables.xls_get_filename
                     .filename()))
 
             # Switch to CSV page
-            self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(2)
+            self.__ui.imp_tables.stacked_layout.setCurrentIndex(2)
 
             # Animation
             self.__anim_group = QtCore.QSequentialAnimationGroup()
-            y = self.__ui.lateral_menu.imp_tables.csv_import_page.y()
-            x = self.__ui.lateral_menu.imp_tables.csv_import_page.x()
-            w = self.__ui.lateral_menu.imp_tables.csv_import_page.width()
+            y = self.__ui.imp_tables.csv_import_page.y()
+            x = self.__ui.imp_tables.csv_import_page.x()
+            w = self.__ui.imp_tables.csv_import_page.width()
             anim_p = QtCore.QPropertyAnimation(
-                self.__ui.lateral_menu.imp_tables.csv_import_page, b"pos")
+                self.__ui.imp_tables.csv_import_page, b"pos")
             anim_p.setStartValue(QtCore.QPoint(w, y))
             anim_p.setEndValue(QtCore.QPoint(x, y))
             anim_p.setDuration(self.__table_anim_duration)
@@ -117,29 +117,28 @@ class Application(object):
 
     @QtCore.Slot()
     def on_csv_import_button(self):
-        if self.__ui.lateral_menu.imp_tables.csv_get_filename.filenameList():
+        if self.__ui.imp_tables.csv_get_filename.filenameList():
             # Save dialog path
             os.environ["DIALOG-PATH"] = (
-                self.__ui.lateral_menu.imp_tables.csv_get_filename
+                self.__ui.imp_tables.csv_get_filename
                 .filenamePathList()[0])
             self.__settings['dialog-path'] = os.environ["DIALOG-PATH"]
             self.__save_settings()
 
             # CSV schema
             now = datetime.datetime.now()  # '%H:%M:%S on %A, %B the %dth, %Y'
-            print(now.strftime('%d-%m-%Y %H:%M'))
             csv_schema = {
-                'schema-name': (self.__ui.lateral_menu.imp_tables
+                'schema-name': (self.__ui.imp_tables
                                 .csv_get_filename.descriptionText()),
-                'schema-datas': [],
                 'date': now.strftime('%d-%m-%Y %H:%M'),
                 'edited': False,
-                'edited-date': None,
                 'edited-version': None,
+                'edited-date': None,
+                'schema-datas': [],
             }
 
             # CSV schema items
-            csv_files_url_list = (self.__ui.lateral_menu.imp_tables
+            csv_files_url_list = (self.__ui.imp_tables
                                   .csv_get_filename.filenameUrlList())
             for csv_file_url in csv_files_url_list:
                 csv_obj = self.__model.csv_file_processing(csv_file_url)
@@ -153,7 +152,7 @@ class Application(object):
             xlsx_table_schema_path = os.path.join(
                 self.__settings['tables-schema-path'],
                 ('0000' + n)[-4:] + '_' + (
-                    self.__ui.lateral_menu.imp_tables.csv_get_filename
+                    self.__ui.imp_tables.csv_get_filename
                     .descriptionText()
                     .replace('.xlsx', '')
                     .replace('.xlsm', '')
@@ -167,20 +166,20 @@ class Application(object):
     # Menu pages
     @QtCore.Slot()
     def on_nav_button(self, sender, widget=None):
-        current_index = self.__ui.lateral_menu.stacked_layout.currentIndex()
+        current_index = self.__ui.stacked_layout.currentIndex()
         new_index = 0
 
         if sender.button_id == 'cfg_imp_tabelas':
             # Go back to first table page
-            if (self.__ui.lateral_menu.imp_tables.stacked_layout
+            if (self.__ui.imp_tables.stacked_layout
                     .currentIndex()) != new_index:
                 self.__anim_group = QtCore.QSequentialAnimationGroup()
-                w = -self.__ui.lateral_menu.imp_tables.add_tables_page.width()
-                y = self.__ui.lateral_menu.imp_tables.add_tables_page.y()
-                x = self.__ui.lateral_menu.imp_tables.add_tables_page.x()
+                w = -self.__ui.imp_tables.add_tables_page.width()
+                y = self.__ui.imp_tables.add_tables_page.y()
+                x = self.__ui.imp_tables.add_tables_page.x()
 
                 anim_p = QtCore.QPropertyAnimation(
-                    self.__ui.lateral_menu.imp_tables.add_tables_page, b"pos")
+                    self.__ui.imp_tables.add_tables_page, b"pos")
                 anim_p.setStartValue(QtCore.QPoint(w, y))
                 anim_p.setEndValue(QtCore.QPoint(x, y))
                 anim_p.setDuration(self.__table_anim_duration)
@@ -188,9 +187,9 @@ class Application(object):
                 self.__anim_group.start()
 
             new_index = 1
-            self.__ui.lateral_menu.stacked_layout.setCurrentIndex(new_index)
-            self.__ui.lateral_menu.imp_tables.stacked_layout.setCurrentIndex(0)
-            self.__ui.lateral_menu.imp_tables.xls_get_filename.clear_filename()
+            self.__ui.stacked_layout.setCurrentIndex(new_index)
+            self.__ui.imp_tables.stacked_layout.setCurrentIndex(0)
+            self.__ui.imp_tables.xls_get_filename.clear_filename()
 
         # elif sender.button_id == 'cfg_icones':
         #     new_index = 2

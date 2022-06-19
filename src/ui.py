@@ -5,6 +5,7 @@ import os
 from PySide6 import QtCore, QtWidgets
 
 from attachment.uisections.sectionverticalmenu import SectionVerticalMenu
+from attachment.uisections.sectionimporttables import SectionImportTables
 import attachment.uitools.qticons as qticons
 
 
@@ -55,7 +56,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.header_layout.addWidget(self.fullscreen_button)
 
         # ___ Body ___
-        self.body_layout = QtWidgets.QVBoxLayout()
+        self.body_layout = QtWidgets.QHBoxLayout()
         # self.body_layout.setContentsMargins(10, 10, 10, 10)
         self.top_level_layout.addLayout(self.body_layout)
         
@@ -63,6 +64,27 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lateral_menu = SectionVerticalMenu()
         self.body_layout.addWidget(
             self.lateral_menu, 0, QtCore.Qt.AlignTop)  # type: ignore
+
+        # Pages layout
+        self.stack_pages_layout = QtWidgets.QVBoxLayout()
+        self.body_layout.addLayout(self.stack_pages_layout)
+
+        self.stacked_layout = QtWidgets.QStackedLayout()
+        self.stacked_layout.setContentsMargins(0, 0, 0, 0)
+        self.stacked_layout.setSpacing(0)
+        self.stack_pages_layout.addLayout(self.stacked_layout)
+
+        # Page 0
+        self.home_page = QtWidgets.QLabel(text='Página Inicial')
+        self.stacked_layout.addWidget(self.home_page)
+
+        # Page 1 xls
+        self.imp_tables = SectionImportTables()
+        self.stacked_layout.addWidget(self.imp_tables)
+
+        # Page 2 Icons
+        # self.icons = Icons()
+        # self.stacked_layout.addWidget(self.icons)
     
     @QtCore.Slot()
     def resizeEvent(self, event):
