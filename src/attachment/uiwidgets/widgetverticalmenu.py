@@ -174,7 +174,7 @@ class WidgetVerticalMenu(QtWidgets.QWidget):
         self.all_buttons = []
         self.all_sub_layouts = []
         
-        is_first_button = True
+        # is_first_button = True
         for schema in self.buttons_schema:
             # Top Buttons
             button = NavButton(button_id=schema['id'])
@@ -183,15 +183,16 @@ class WidgetVerticalMenu(QtWidgets.QWidget):
             button.setFlat(True)
             button.clicked.connect(self.on_button_click)  # type: ignore
 
-            if is_first_button:
-                is_first_button = False
-            else:
-                sep = QtWidgets.QFrame()
-                sep.setObjectName('Separator')
-                sep.setFrameShape(QtWidgets.QFrame.HLine)
-                sep.setFrameShadow(QtWidgets.QFrame.Plain)
-                sep.setLineWidth(1)
-                self.layout.addWidget(sep)
+            # Separator
+            # if is_first_button:
+            #     is_first_button = False
+            # else:
+            #     sep = QtWidgets.QFrame()
+            #     sep.setObjectName('SeparatorVerticalMenu')
+            #     sep.setFrameShape(QtWidgets.QFrame.HLine)
+            #     sep.setFrameShadow(QtWidgets.QFrame.Plain)
+            #     sep.setLineWidth(1)
+            #     self.layout.addWidget(sep)
 
             self.layout.addWidget(button)
             self.all_buttons.append(button)
@@ -278,6 +279,12 @@ class WidgetVerticalMenu(QtWidgets.QWidget):
                 button.is_checked = False
                 button.is_clicked = False
 
+                # Top parent with hover color
+                # if self.sender().top_parent:
+                #     if button.button_id == self.sender().top_parent:
+                #         button.set_hover_color()
+                #         button.is_clicked = True
+
                 if button.is_sub_layouts_active:  # Fix: one click hide subs
                     button.is_checked = True
             
@@ -333,9 +340,16 @@ class WidgetVerticalMenu(QtWidgets.QWidget):
                         # Get first widget of the layout
                         sub_layout.layout.itemAt(0).widget().clicked.emit()
 
-            # if self.sender().is_sub_button:
+            # if self.sender().top_parent:
             #     for button in self.all_buttons:
             #         if button.button_id == self.sender().top_parent:
+            #             print(button.button_id, self.sender().top_parent)
+            #             button.set_hover_color()
+            #             break
+
+            # if self.sender().is_sub_button:
+            #     for button in self.all_buttons:
+            #         if button.top_parent == self.sender().button_id:
             #             button.set_hover_color()
 
     def get_button_by_id(self, button_id):

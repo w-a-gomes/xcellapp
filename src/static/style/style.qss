@@ -29,6 +29,10 @@ QLineEdit {
     color: rgba(122, 122, 122, 0.3);
     border-bottom: 0px;
 }
+#SeparatorVerticalMenu {
+    color: rgba(0, 0, 0, 0.0);
+    border-bottom: 0px;
+}
 
 ElidedLabel {
     height: 30px;

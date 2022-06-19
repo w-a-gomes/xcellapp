@@ -36,9 +36,9 @@ class WidgetTablesScheme(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
 
-        for i in range(200):
-            lbl = QtWidgets.QLabel(f'{i}')
-            self.layout.addWidget(lbl)
+        # for i in range(200):
+        #     lbl = QtWidgets.QLabel(f'{i}')
+        #     self.layout.addWidget(lbl)
 
 
 class SectionTablesScheme(QtWidgets.QWidget):
@@ -53,6 +53,7 @@ class SectionTablesScheme(QtWidgets.QWidget):
 
         # Scroll Area
         self.scroll_area = QtWidgets.QScrollArea()
+        self.scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
         # self.scroll_area.setMinimumHeight(400)
         # self.scroll_area.setMaximumHeight(500)
         # self.scroll_area.setFixedHeight(self.parent().height())
@@ -66,4 +67,5 @@ class SectionTablesScheme(QtWidgets.QWidget):
         self.layout.addWidget(self.scroll_area)
 
         self.scroll_widget = WidgetTablesScheme()
+        self.scroll_widget.setContentsMargins(0, 0, 0, 0)
         self.scroll_area.setWidget(self.scroll_widget)

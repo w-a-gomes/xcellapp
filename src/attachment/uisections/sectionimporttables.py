@@ -36,18 +36,16 @@ class SectionImportTables(QtWidgets.QWidget):
         self.stacked_layout = QtWidgets.QStackedLayout()
         self.stacked_layout.setContentsMargins(0, 0, 0, 0)
         self.stacked_layout.setSpacing(0)
-        self.layout.addLayout(self.stacked_layout)
+        self.stacked_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
+        self.layout.addLayout(self.stacked_layout, 1)
 
         # ___ Add tables ___
         self.add_tables_page = QtWidgets.QWidget()
         self.stacked_layout.addWidget(self.add_tables_page)
 
         self.add_tables_layout = QtWidgets.QVBoxLayout()
-        self.add_tables_layout.setAlignment(
-            QtCore.Qt.AlignTop)  # type: ignore
+        self.add_tables_layout.setContentsMargins(0, 0, 0, 0)
         self.add_tables_page.setLayout(self.add_tables_layout)
-
-        self.add_tables_layout.addWidget(QtWidgets.QLabel(' '))
 
         self.add_tables_h_layout = QtWidgets.QHBoxLayout()
         self.add_tables_h_layout.setAlignment(
@@ -58,20 +56,20 @@ class SectionImportTables(QtWidgets.QWidget):
         self.add_tables_button = QtWidgets.QPushButton(icon=self.icon_list_add)
         self.add_tables_h_layout.addWidget(self.add_tables_button)
 
-        self.add_tables_layout.addWidget(QtWidgets.QLabel(' '))
-
         # ___ XLSX page ___
         self.xls_import_page = QtWidgets.QWidget()
         self.stacked_layout.addWidget(self.xls_import_page)
 
         self.xls_import_layout = QtWidgets.QVBoxLayout()
         self.xls_import_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
+        self.xls_import_layout.setContentsMargins(0, 0, 0, 0)
         self.xls_import_page.setLayout(self.xls_import_layout)
         
         self.xls_import_title = QtWidgets.QLabel(
             'Importar as tabela apartir de um arquivo do Microsoft Excel')
         self.xls_import_title.setAlignment(
             QtCore.Qt.AlignCenter)  # type: ignore
+        # self.xls_import_title.setContentsMargins(0, 0, 0, 0)
         self.xls_import_layout.addWidget(self.xls_import_title)
 
         self.xls_get_filename = WidgetGetFilename(
@@ -85,6 +83,7 @@ class SectionImportTables(QtWidgets.QWidget):
             dialog_filter_extensions=['xlsx'],
             # dialog_path is auto (os.environ)
         )
+        # self.xls_get_filename.setContentsMargins(0, 0, 0, 0)
         self.xls_import_layout.addWidget(self.xls_get_filename)
 
         self.xls_action_buttons_layout = QtWidgets.QHBoxLayout()
@@ -102,6 +101,7 @@ class SectionImportTables(QtWidgets.QWidget):
 
         self.csv_import_layout = QtWidgets.QVBoxLayout()
         self.csv_import_layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
+        self.csv_import_layout.setContentsMargins(0, 0, 0, 0)
         self.csv_import_page.setLayout(self.csv_import_layout)
 
         self.csv_page_title = QtWidgets.QLabel()
@@ -129,9 +129,11 @@ class SectionImportTables(QtWidgets.QWidget):
         self.csv_import_layout.addLayout(self.csv_action_buttons_layout)
 
         self.csv_import_button = QtWidgets.QPushButton('Importar')
+        # self.csv_import_button.setContentsMargins(0, 0, 0, 0)
         self.csv_import_button.setFixedWidth(200)
         self.csv_action_buttons_layout.addWidget(self.csv_import_button)
 
         # The tables
         self.tables_schema_page = SectionTablesScheme(self)
-        self.layout.addWidget(self.tables_schema_page)
+        self.tables_schema_page.setContentsMargins(0, 0, 0, 0)
+        self.layout.addWidget(self.tables_schema_page, 9)

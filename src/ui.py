@@ -62,8 +62,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
         # Nav
         self.lateral_menu = SectionVerticalMenu()
-        self.body_layout.addWidget(
-            self.lateral_menu, 0, QtCore.Qt.AlignTop)  # type: ignore
+        self.body_layout.addWidget(self.lateral_menu)
 
         # Pages layout
         self.stack_pages_layout = QtWidgets.QVBoxLayout()
@@ -72,7 +71,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stacked_layout = QtWidgets.QStackedLayout()
         self.stacked_layout.setContentsMargins(0, 0, 0, 0)
         self.stacked_layout.setSpacing(0)
-        self.stack_pages_layout.addLayout(self.stacked_layout)
+        self.stack_pages_layout.addLayout(self.stacked_layout, 1)
 
         # Page 0
         self.home_page = QtWidgets.QLabel(text='Página Inicial')
