@@ -31,6 +31,7 @@ class Application(object):
         self.__model = Model()
 
         # Import Tables connections
+        self.can_update_tables = True
         self.__ui.imp_tables.add_tables_button.clicked.connect(
             self.on_add_tables_button)
         # XLSX import button
@@ -163,6 +164,26 @@ class Application(object):
             with open(xlsx_table_schema_path, 'w') as settings_file:
                 json.dump(csv_schema, settings_file)
 
+            # Update tables
+            self.__ui.imp_tables.tables_schema_page.update_tables()
+
+            # Go back to first table page
+            self.__ui.imp_tables.stacked_layout.setCurrentIndex(0)
+            self.__ui.imp_tables.xls_get_filename.clear_filename()
+
+            # Go back animation
+            self.__anim_group = QtCore.QSequentialAnimationGroup()
+            w = -self.__ui.imp_tables.add_tables_page.width()
+            y = self.__ui.imp_tables.add_tables_page.y()
+            x = self.__ui.imp_tables.add_tables_page.x()
+            anim_p = QtCore.QPropertyAnimation(
+                self.__ui.imp_tables.add_tables_page, b"pos")
+            anim_p.setStartValue(QtCore.QPoint(w, y))
+            anim_p.setEndValue(QtCore.QPoint(x, y))
+            anim_p.setDuration(self.__table_anim_duration)
+            self.__anim_group.addAnimation(anim_p)
+            self.__anim_group.start()
+
     # Menu pages
     @QtCore.Slot()
     def on_nav_button(self, sender, widget=None):
@@ -186,11 +207,16 @@ class Application(object):
                 self.__anim_group.addAnimation(anim_p)
                 self.__anim_group.start()
 
+            # Set stacked_layout index
             new_index = 1
             self.__ui.stacked_layout.setCurrentIndex(new_index)
             self.__ui.imp_tables.stacked_layout.setCurrentIndex(0)
-            self.__ui.imp_tables.tables_schema_page.update_tables()
             self.__ui.imp_tables.xls_get_filename.clear_filename()
+
+            # Update tables
+            if self.can_update_tables:
+                self.__ui.imp_tables.tables_schema_page.update_tables()
+                self.can_update_tables = False
 
         # elif sender.button_id == 'cfg_icones':
         #     new_index = 2

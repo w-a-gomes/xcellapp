@@ -72,7 +72,7 @@ class SectionTablesScheme(QtWidgets.QWidget):
         self.n = 200
 
     def update_tables(self):
-        self.thread_timer.setInterval(1000)
+        self.thread_timer.setInterval(500)
         self.thread_timer.timeout.connect(self.recurring_timer)  # type: ignore
         self.thread_timer.start()
 
@@ -86,5 +86,5 @@ class SectionTablesScheme(QtWidgets.QWidget):
             lbl = QtWidgets.QLabel(f'{i}')
             self.tables_widgets_list.append(lbl)
             self.scroll_widget_layout.addWidget(lbl)
-        self.n = 30
+        self.n -= 20
         self.thread_timer.stop()
