@@ -38,3 +38,32 @@ ElidedLabel {
     height: 30px;
     padding: 0px;
 }
+
+/* ---- */
+QScrollBar:vertical {
+background: rgba(0, 0, 0, 0.0);
+width: 8px;
+margin: 0px;
+}
+QScrollBar:vertical:hover {
+background: rgba(0, 0, 0, 0.2);
+}
+
+QScrollBar::handle:vertical {
+background: rgba(100, 100, 100, 0.2);
+border-radius: 4px;
+}
+QScrollBar::handle:vertical:hover {
+background: rgba(100, 100, 100, 0.5);
+}
+QScrollBar::add-line:vertical {
+height: 0px;
+}
+
+QScrollBar::sub-line:vertical {
+height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+height: 0px;
+}
