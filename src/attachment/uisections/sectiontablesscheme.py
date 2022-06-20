@@ -1,4 +1,6 @@
 #!/usr/bin env python3
+import os
+
 from PySide6 import QtWidgets, QtGui, QtCore
 
 
@@ -33,10 +35,6 @@ class SectionTablesScheme(QtWidgets.QWidget):
         # self.setAutoFillBackground(True)
         # self.setPalette(self.color_palette)
 
-        # Thread timer
-        self.thread_timer = QtCore.QTimer()
-        self.tables_widgets_list = []
-
         # ___ Container ___
         self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
@@ -69,22 +67,21 @@ class SectionTablesScheme(QtWidgets.QWidget):
         self.scroll_widget_layout = QtWidgets.QVBoxLayout()
         self.scroll_widget.setLayout(self.scroll_widget_layout)
 
-        self.n = 200
+        # Tables Widget
+        self.tables_widgets_list = []
 
-    def update_tables(self):
-        self.thread_timer.setInterval(500)
-        self.thread_timer.timeout.connect(self.recurring_timer)  # type: ignore
-        self.thread_timer.start()
-
-    def recurring_timer(self):
+    def update_tables(self, tables_schema_path: str) -> None:
+        # Remove old widgets
         if self.tables_widgets_list:
             for w in self.tables_widgets_list:
                 w.deleteLater()
             self.tables_widgets_list = []
 
-        for i in range(self.n):
-            lbl = QtWidgets.QLabel(f'{i}')
-            self.tables_widgets_list.append(lbl)
-            self.scroll_widget_layout.addWidget(lbl)
-        self.n -= 20
-        self.thread_timer.stop()
+        # Add new widgets
+        config_files_list = os.listdir(tables_schema_path)
+        if config_files_list:
+            for n, w in enumerate(config_files_list):
+                lbl = QtWidgets.QLabel(f'{n + 1} {w}')
+                self.tables_widgets_list.append(lbl)
+                self.scroll_widget_layout.addWidget(lbl)
+

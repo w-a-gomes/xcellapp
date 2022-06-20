@@ -31,7 +31,7 @@ class Application(object):
         self.__model = Model()
 
         # Import Tables connections
-        self.can_update_tables = True
+        self.can_generate_first_tables = True
         self.__ui.imp_tables.add_tables_button.clicked.connect(
             self.on_add_tables_button)
         # XLSX import button
@@ -165,7 +165,8 @@ class Application(object):
                 json.dump(csv_schema, settings_file)
 
             # Update tables
-            self.__ui.imp_tables.tables_schema_page.update_tables()
+            self.__ui.imp_tables.tables_schema_page.update_tables(
+                self.__settings['tables-schema-path'])
 
             # Go back to first table page
             self.__ui.imp_tables.stacked_layout.setCurrentIndex(0)
@@ -214,9 +215,10 @@ class Application(object):
             self.__ui.imp_tables.xls_get_filename.clear_filename()
 
             # Update tables
-            if self.can_update_tables:
-                self.__ui.imp_tables.tables_schema_page.update_tables()
-                self.can_update_tables = False
+            if self.can_generate_first_tables:
+                self.__ui.imp_tables.tables_schema_page.update_tables(
+                    self.__settings['tables-schema-path'])
+                self.can_generate_first_tables = False
 
         # elif sender.button_id == 'cfg_icones':
         #     new_index = 2
