@@ -5,15 +5,19 @@ import sys
 
 from PySide6 import QtWidgets, QtGui
 
+import attachment.uitools.qtcolor as qtcolor
+
 
 # noinspection PyPep8Naming
 class QtGuiIcon(object):
     def __init__(self):
         self.icons_path = self.__icons_path()
-    
-    def __icons_path(self):
+
+    @staticmethod
+    def __icons_path():
         dir_prefix = ''
-        if self.__widget_is_dark():
+        color = qtcolor.QtGuiColor()
+        if color.widget_is_dark():
             dir_prefix = 'symbolic-'
         
         return os.path.join(

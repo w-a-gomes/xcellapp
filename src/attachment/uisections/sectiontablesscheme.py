@@ -4,6 +4,8 @@ import json
 
 from PySide6 import QtWidgets, QtGui, QtCore
 
+import attachment.uitools.qtcolor as qtcolor
+
 
 class SectionTablesScheme(QtWidgets.QWidget):
     """..."""
@@ -97,7 +99,7 @@ class SectionTablesScheme(QtWidgets.QWidget):
                 self.scroll_widget_layout.addWidget(table_preview)
 
 
-class WidgetTablePreview(QtWidgets.QWidget):
+class WidgetTablePreview(QtWidgets.QFrame):
     """..."""
     def __init__(
             self,
@@ -105,6 +107,33 @@ class WidgetTablePreview(QtWidgets.QWidget):
             table_schema: dict,
             *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Frame border
+        # self.setFrameStyle(
+        #     QtWidgets.QFrame.StyledPanel |  # type: ignore
+        #     QtWidgets.QFrame.Plain)
+
+        # Border
+        self.setObjectName('TablePreview')
+
+        color = qtcolor.QtGuiColor()
+        if color.widget_is_dark():
+            self.setStyleSheet("""
+                #TablePreview {
+                    border: 1px solid rgba(58, 127, 74, 0.2);
+                    border-radius: 10px;
+                    background: rgba(58, 127, 74, 0.1);
+                }""")
+        else:
+            self.setStyleSheet("""
+                #TablePreview {
+                    border: 1px solid rgba(127, 30, 56, 0.2);
+                    border-radius: 10px;
+                    background: rgba(127, 30, 56, 0.1);
+                }""")
+        # Background
+        #    '#Lol {border-radius: 10px; background: rgba(0, 255, 50, 20);}')
+
+        # Args
         self.table_schema = table_schema
         self.filename = filename
 
@@ -112,9 +141,13 @@ class WidgetTablePreview(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
 
-        # Name
+        # __ info __
+        self.info_layout = QtWidgets.QVBoxLayout()
+        self.layout.addLayout(self.info_layout)
+
+        # id
         self.filename_id = QtWidgets.QLabel(self.table_schema['id'])
-        self.layout.addWidget(self.filename_id)
+        self.info_layout.addWidget(self.filename_id)
 
         self.schema_label = QtWidgets.QLabel(self.table_schema['filename'])
         self.layout.addWidget(self.schema_label)
