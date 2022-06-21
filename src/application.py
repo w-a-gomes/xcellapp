@@ -124,49 +124,57 @@ class Application(object):
                 self.__ui.imp_tables.csv_get_filename
                 .filenamePathList()[0])
             self.__settings['dialog-path'] = os.environ["DIALOG-PATH"]
-            self.__save_settings()
 
             # CSV schema
             now = datetime.datetime.now()  # '%H:%M:%S on %A, %B the %dth, %Y'
             csv_schema = {
-                'schema-name': (self.__ui.imp_tables
-                                .csv_get_filename.descriptionText()),
-                'date': now.strftime('%d-%m-%Y %H:%M'),
+                'id': '',
+                'filename': '',
+                'date': '',
                 'edited': False,
-                'edited-version': None,
                 'edited-date': None,
-                'schema-datas': [],
+                'datas': [],
             }
+            # Set id
+            schema_id = str(len(
+                os.listdir(self.__settings['tables-schema-path'])) + 1)
+            csv_schema['id'] = schema_id
 
-            # CSV schema items
-            csv_files_url_list = (self.__ui.imp_tables
-                                  .csv_get_filename.filenameUrlList())
-            for csv_file_url in csv_files_url_list:
+            # Set filename
+            schema_name = (
+                self.__ui.imp_tables.csv_get_filename.descriptionText()
+                .replace('.xlsx', '').replace('.xlsm', '').replace('.xls', ''))
+            csv_schema['filename'] = schema_name
+
+            # Set date
+            csv_schema['date'] = now.strftime('%d-%m-%Y %H:%M')
+
+            # Set datas
+            for csv_file_url in (
+                    self.__ui.imp_tables.csv_get_filename.filenameUrlList()):
                 csv_obj = self.__model.csv_file_processing(csv_file_url)
+                csv_schema['datas'].append(
+                    {f'{csv_obj.filename}': csv_obj.csv_datas})
 
-                csv_schema['schema-datas'].append(
-                    {f'{csv_obj.filename}': csv_obj.csv_datas}
-                )
-
-            # CSV schema path
-            n = str(len(os.listdir(self.__settings['tables-schema-path'])) + 1)
-            xlsx_table_schema_path = os.path.join(
-                self.__settings['tables-schema-path'],
-                ('0000' + n)[-4:] + '_' + (
-                    self.__ui.imp_tables.csv_get_filename
-                    .descriptionText()
-                    .replace('.xlsx', '')
-                    .replace('.xlsm', '')
-                    .replace('.xls', '')
-                ) + '.json'
-            )
             # Save CSV schema
-            with open(xlsx_table_schema_path, 'w') as settings_file:
+            name_to_save = schema_id + '_' + schema_name + '.json'
+            with open(
+                os.path.join(
+                    self.__settings['tables-schema-path'], name_to_save),
+                'w'
+            ) as settings_file:
                 json.dump(csv_schema, settings_file)
+
+            # Update filename list
+            self.__settings['tables-schema-filenames'].insert(0, name_to_save)
 
             # Update tables
             self.__ui.imp_tables.tables_schema_page.update_tables(
-                self.__settings['tables-schema-path'])
+                self.__settings['tables-schema-path'],
+                self.__settings['tables-schema-filenames'])
+
+            # Save
+            self.__save_settings()
 
             # Go back to first table page
             self.__ui.imp_tables.stacked_layout.setCurrentIndex(0)
@@ -217,7 +225,8 @@ class Application(object):
             # Update tables
             if self.can_generate_first_tables:
                 self.__ui.imp_tables.tables_schema_page.update_tables(
-                    self.__settings['tables-schema-path'])
+                    self.__settings['tables-schema-path'],
+                    self.__settings['tables-schema-filenames'])
                 self.can_generate_first_tables = False
 
         # elif sender.button_id == 'cfg_icones':
@@ -282,6 +291,7 @@ class Application(object):
                 'settings-path': self.__settings_path,
                 'tables-schema-path': os.path.join(
                     self.__settings_path, 'tables-schema'),
+                'tables-schema-filenames': [],
             }
             with open(self.__settings_file, 'w') as settings_file:
                 json.dump(data_settings, settings_file)

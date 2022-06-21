@@ -1,5 +1,6 @@
 #!/usr/bin env python3
 import os
+import json
 
 from PySide6 import QtWidgets, QtGui, QtCore
 
@@ -65,12 +66,20 @@ class SectionTablesScheme(QtWidgets.QWidget):
 
         # Scroll Widget Layout
         self.scroll_widget_layout = QtWidgets.QVBoxLayout()
+        self.scroll_widget_layout.setAlignment(
+            QtCore.Qt.AlignTop)  # type: ignore
         self.scroll_widget.setLayout(self.scroll_widget_layout)
 
         # Tables Widget
         self.tables_widgets_list = []
 
-    def update_tables(self, tables_schema_path: str) -> None:
+    def update_tables(
+            self,
+            table_schema_path: str,
+            tables_schema_filenames: list) -> None:
+
+        ls_command = os.listdir(table_schema_path)
+
         # Remove old widgets
         if self.tables_widgets_list:
             for w in self.tables_widgets_list:
@@ -78,10 +87,34 @@ class SectionTablesScheme(QtWidgets.QWidget):
             self.tables_widgets_list = []
 
         # Add new widgets
-        config_files_list = os.listdir(tables_schema_path)
-        if config_files_list:
-            for n, w in enumerate(config_files_list):
-                lbl = QtWidgets.QLabel(f'{n + 1} {w}')
-                self.tables_widgets_list.append(lbl)
-                self.scroll_widget_layout.addWidget(lbl)
+        if ls_command and tables_schema_filenames:
+            for filename in tables_schema_filenames:
+                with open(os.path.join(table_schema_path, filename), 'r') as f:
+                    file_schema = json.load(f)
 
+                table_preview = WidgetTablePreview(filename, file_schema)
+                self.tables_widgets_list.append(table_preview)
+                self.scroll_widget_layout.addWidget(table_preview)
+
+
+class WidgetTablePreview(QtWidgets.QWidget):
+    """..."""
+    def __init__(
+            self,
+            filename: str,
+            table_schema: dict,
+            *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.table_schema = table_schema
+        self.filename = filename
+
+        # ___ Container ___
+        self.layout = QtWidgets.QVBoxLayout()
+        self.setLayout(self.layout)
+
+        # Name
+        self.filename_id = QtWidgets.QLabel(self.table_schema['id'])
+        self.layout.addWidget(self.filename_id)
+
+        self.schema_label = QtWidgets.QLabel(self.table_schema['filename'])
+        self.layout.addWidget(self.schema_label)
