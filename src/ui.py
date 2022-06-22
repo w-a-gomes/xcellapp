@@ -57,7 +57,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # ___ Body ___
         self.body_layout = QtWidgets.QHBoxLayout()
-        # self.body_layout.setContentsMargins(10, 10, 10, 10)
+        self.body_layout.setContentsMargins(0, 0, 0, 0)
         self.top_level_layout.addLayout(self.body_layout)
         
         # Nav
@@ -69,8 +69,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.body_layout.addLayout(self.stack_pages_layout)
 
         self.stacked_layout = QtWidgets.QStackedLayout()
-        self.stacked_layout.setContentsMargins(0, 0, 0, 0)
-        self.stacked_layout.setSpacing(0)
         self.stack_pages_layout.addLayout(self.stacked_layout, 1)
 
         # Page 0

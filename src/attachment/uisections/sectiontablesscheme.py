@@ -4,7 +4,7 @@ import json
 
 from PySide6 import QtWidgets, QtGui, QtCore
 
-import attachment.uitools.qtcolor as qtcolor
+# import attachment.uitools.qtcolor as qtcolor
 
 
 class SectionTablesScheme(QtWidgets.QWidget):
@@ -68,6 +68,8 @@ class SectionTablesScheme(QtWidgets.QWidget):
 
         # Scroll Widget Layout
         self.scroll_widget_layout = QtWidgets.QVBoxLayout()
+        self.scroll_widget_layout.setContentsMargins(12, 12, 12, 12)
+        self.scroll_widget_layout.setSpacing(12)
         self.scroll_widget_layout.setAlignment(
             QtCore.Qt.AlignTop)  # type: ignore
         self.scroll_widget.setLayout(self.scroll_widget_layout)
@@ -113,25 +115,37 @@ class WidgetTablePreview(QtWidgets.QFrame):
         #     QtWidgets.QFrame.Plain)
 
         # Border
-        self.setObjectName('TablePreview')
+        # self.setObjectName('TablePreview')
+        # self.setStyleSheet('#TablePreview {border-radius: 10px;}')
 
-        color = qtcolor.QtGuiColor()
-        if color.widget_is_dark():
-            self.setStyleSheet("""
-                #TablePreview {
-                    border: 1px solid rgba(58, 127, 74, 0.2);
-                    border-radius: 10px;
-                    background: rgba(58, 127, 74, 0.1);
-                }""")
-        else:
-            self.setStyleSheet("""
-                #TablePreview {
-                    border: 1px solid rgba(127, 30, 56, 0.2);
-                    border-radius: 10px;
-                    background: rgba(127, 30, 56, 0.1);
-                }""")
-        # Background
-        #    '#Lol {border-radius: 10px; background: rgba(0, 255, 50, 20);}')
+        # Style
+        # color = qtcolor.QtGuiColor()
+        # if color.widget_is_dark():
+        #     self.setStyleSheet("""
+        #         #TablePreview {
+        #             border: 1px solid rgba(58, 127, 74, 0.2);
+        #             border-radius: 10px;
+        #             background: rgba(58, 127, 74, 0.1);
+        #         }""")
+        # else:
+        #     self.setStyleSheet("""
+        #         #TablePreview {
+        #             border: 1px solid rgba(0, 255, 50, 0.2);
+        #             border-radius: 10px;
+        #             background: rgba(0, 255, 50, 0.1);
+        #         }""")
+
+        # Background color
+        self.palette_color = QtGui.QColor(
+            QtGui.QPalette().color(  # Active, AlternateBase
+                QtGui.QPalette.Active, QtGui.QPalette.ToolTipBase))
+
+        self.color_palette = self.palette()
+        self.color_palette.setColor(
+            QtGui.QPalette.Window, self.palette_color)
+
+        self.setAutoFillBackground(True)
+        self.setPalette(self.color_palette)
 
         # Args
         self.table_schema = table_schema
@@ -142,12 +156,27 @@ class WidgetTablePreview(QtWidgets.QFrame):
         self.setLayout(self.layout)
 
         # __ info __
-        self.info_layout = QtWidgets.QVBoxLayout()
+        self.info_layout = QtWidgets.QHBoxLayout()
+        # self.info_layout.setAlignment(QtCore.Qt.AlignLeft)  # type: ignore
         self.layout.addLayout(self.info_layout)
 
-        # id
-        self.filename_id = QtWidgets.QLabel(self.table_schema['id'])
-        self.info_layout.addWidget(self.filename_id)
+        # ID
+        self.id_label = QtWidgets.QLabel(self.table_schema['id'])
+        self.info_layout.addWidget(self.id_label)
 
-        self.schema_label = QtWidgets.QLabel(self.table_schema['filename'])
-        self.layout.addWidget(self.schema_label)
+        # Filename
+        self.filename_label = QtWidgets.QLabel(self.table_schema['filename'])
+        self.filename_label.setEnabled(False)
+        self.filename_label.setAlignment(QtCore.Qt.AlignLeft)  # type: ignore
+        self.info_layout.addWidget(self.filename_label, 1)
+
+        # Date
+        self.date_label = QtWidgets.QLabel(self.table_schema['date'])
+        self.date_label.setEnabled(False)
+        self.date_label.setAlignment(QtCore.Qt.AlignRight)  # type: ignore
+        self.info_layout.addWidget(self.date_label)
+
+        for schema_item in self.table_schema['datas']:
+            name = (' ' * 5) + schema_item['table-name'].rstrip('.scv')
+            data = schema_item['table-data']
+            self.layout.addWidget(QtWidgets.QLabel(name))

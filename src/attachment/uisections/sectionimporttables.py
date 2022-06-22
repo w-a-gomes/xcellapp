@@ -41,6 +41,7 @@ class SectionImportTables(QtWidgets.QWidget):
 
         # ___ Add tables ___
         self.add_tables_page = QtWidgets.QWidget()
+        # self.add_tables_page.setContentsMargins(18, 0, 18, 0)
         self.stacked_layout.addWidget(self.add_tables_page)
 
         self.add_tables_layout = QtWidgets.QVBoxLayout()
@@ -58,6 +59,7 @@ class SectionImportTables(QtWidgets.QWidget):
 
         # ___ XLSX page ___
         self.xls_import_page = QtWidgets.QWidget()
+        # self.xls_import_page.setContentsMargins(18, 0, 18, 0)
         self.stacked_layout.addWidget(self.xls_import_page)
 
         self.xls_import_layout = QtWidgets.QVBoxLayout()

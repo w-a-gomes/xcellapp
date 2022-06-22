@@ -147,14 +147,19 @@ class Application(object):
             csv_schema['filename'] = schema_name
 
             # Set date
-            csv_schema['date'] = now.strftime('%d-%m-%Y %H:%M')
+            csv_schema['date'] = now.strftime('%d/%m/%Y %H:%M')
 
             # Set datas
             for csv_file_url in (
                     self.__ui.imp_tables.csv_get_filename.filenameUrlList()):
                 csv_obj = self.__model.csv_file_processing(csv_file_url)
                 csv_schema['datas'].append(
-                    {f'{csv_obj.filename}': csv_obj.csv_datas})
+                    {
+                        'table-name': f'{csv_obj.filename}',
+                        'edited': False,
+                        'edited-date': None,
+                        'table-data': csv_obj.csv_datas,
+                    })
 
             # Save CSV schema
             name_to_save = schema_id + '_' + schema_name + '.json'
@@ -237,11 +242,13 @@ class Application(object):
         if new_index != current_index:
             self.__anim_group = QtCore.QSequentialAnimationGroup()
             x = widget.x()
+            y = widget.y()
             h = widget.height()
-            y = h if new_index < current_index else -h
+            y_start = h if new_index < current_index else -h
+
             anim_p = QtCore.QPropertyAnimation(widget, b"pos")
-            anim_p.setStartValue(QtCore.QPoint(x, y))
-            anim_p.setEndValue(QtCore.QPoint(x, 0))
+            anim_p.setStartValue(QtCore.QPoint(x, y_start))
+            anim_p.setEndValue(QtCore.QPoint(x, y))
             anim_p.setDuration(self.__table_anim_duration)
             self.__anim_group.addAnimation(anim_p)
             self.__anim_group.start()
@@ -312,6 +319,9 @@ class Application(object):
     def main(self) -> None:
         """..."""
         self.__ui.showMaximized()
+        self.__ui.setWindowTitle(self.__app_name)
+        self.__ui.setMinimumHeight(500)
+        self.__ui.setMinimumWidth(1000)
         # self.__ui.resize(1000, 500)
 
         # UI Style
