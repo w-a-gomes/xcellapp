@@ -204,9 +204,13 @@ class Application(object):
 
     @QtCore.Slot()
     def on_table_edit_button(self):
-        print(
+        # Set Schema to edit
+        self.__ui.imp_tables.tables_schema_editor.setSchema(
             self.__ui.imp_tables.tables_schema_page.getEditButtonSender()
             .getSchema())
+
+        # Go to editor
+        self.__ui.imp_tables.table_stacked_layout.setCurrentIndex(1)
 
     # Menu pages
     @QtCore.Slot()

@@ -3,6 +3,7 @@ from PySide6 import QtCore, QtWidgets
 
 from attachment.uiwidgets.widgetgetfilename import WidgetGetFilename
 from attachment.uisections.sectiontablesscheme import SectionTablesScheme
+from attachment.uisections.sectiontableeditor import SectionTableEditor
 import attachment.uitools.qticons as qticons
 
 
@@ -31,8 +32,6 @@ class SectionImportTables(QtWidgets.QWidget):
         self.setLayout(self.layout)
 
         # ___ Stacked layout ___
-        # A importação será visualizada em slides de um QStackedLayout
-        # Cada slide/page é um widget com um layout para as visualizações
         self.stacked_layout = QtWidgets.QStackedLayout()
         self.stacked_layout.setContentsMargins(0, 0, 0, 0)
         self.stacked_layout.setSpacing(0)
@@ -135,7 +134,23 @@ class SectionImportTables(QtWidgets.QWidget):
         self.csv_import_button.setFixedWidth(200)
         self.csv_action_buttons_layout.addWidget(self.csv_import_button)
 
+        # ___ Tables ___
+        # Stack
+        self.table_stacked_layout = QtWidgets.QStackedLayout()
+        self.table_stacked_layout.setContentsMargins(0, 0, 0, 0)
+        self.table_stacked_layout.setSpacing(0)
+        # self.table_stacked_layout.setAlignment(
+        #    QtCore.Qt.AlignTop)  # type: ignore
+        self.layout.addLayout(self.table_stacked_layout, 9)
+
         # The tables
         self.tables_schema_page = SectionTablesScheme(self)
         self.tables_schema_page.setContentsMargins(0, 0, 0, 0)
-        self.layout.addWidget(self.tables_schema_page, 9)
+        # self.layout.addWidget(self.tables_schema_page, 9)
+        self.table_stacked_layout.addWidget(self.tables_schema_page)
+
+        # The tables
+        self.tables_schema_editor = SectionTableEditor()
+        self.tables_schema_page.setContentsMargins(0, 0, 0, 0)
+        # self.layout.addWidget(self.tables_schema_page, 9)
+        self.table_stacked_layout.addWidget(self.tables_schema_editor)
