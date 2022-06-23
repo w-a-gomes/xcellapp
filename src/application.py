@@ -41,6 +41,10 @@ class Application(object):
         self.__ui.imp_tables.csv_import_button.clicked.connect(
             self.on_csv_import_button)
 
+        # Edit
+        self.__ui.imp_tables.tables_schema_page.clicked.connect(
+            self.on_table_edit_button)
+
         # Menu buttons
         # icons_sender = (
         #     self.__ui.navigation_stack.vertical_nav.get_button_by_id(
@@ -197,6 +201,12 @@ class Application(object):
             anim_p.setDuration(self.__table_anim_duration)
             self.__anim_group.addAnimation(anim_p)
             self.__anim_group.start()
+
+    @QtCore.Slot()
+    def on_table_edit_button(self):
+        print(
+            self.__ui.imp_tables.tables_schema_page.getEditButtonSender()
+            .getSchema())
 
     # Menu pages
     @QtCore.Slot()

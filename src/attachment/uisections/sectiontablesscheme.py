@@ -5,10 +5,13 @@ import json
 from PySide6 import QtWidgets, QtGui, QtCore
 
 # import attachment.uitools.qtcolor as qtcolor
+import attachment.uitools.qticons as qticons
 
 
+# noinspection PyPep8Naming
 class SectionTablesScheme(QtWidgets.QWidget):
     """..."""
+    clicked = QtCore.Signal(QtGui.QMouseEvent)
 
     def __init__(self, *args, **kwargs):
         """..."""
@@ -37,6 +40,9 @@ class SectionTablesScheme(QtWidgets.QWidget):
 
         # self.setAutoFillBackground(True)
         # self.setPalette(self.color_palette)
+
+        # Property
+        self.__sender = None
 
         # ___ Container ___
         self.layout = QtWidgets.QVBoxLayout()
@@ -97,12 +103,25 @@ class SectionTablesScheme(QtWidgets.QWidget):
                     file_schema = json.load(f)
 
                 table_preview = WidgetTablePreview(filename, file_schema)
+                table_preview.clicked.connect(self.__on_table_preview)
                 self.tables_widgets_list.append(table_preview)
                 self.scroll_widget_layout.addWidget(table_preview)
 
+    @QtCore.Slot()
+    def __on_table_preview(self):
+        self.__sender = self.sender().getEditButtonSender()
+        self.clicked.emit(self)
 
+    @QtCore.Slot()
+    def getEditButtonSender(self):
+        return self.__sender
+
+
+# noinspection PyPep8Naming
 class WidgetTablePreview(QtWidgets.QFrame):
     """..."""
+    clicked = QtCore.Signal(QtGui.QMouseEvent)
+
     def __init__(
             self,
             filename: str,
@@ -151,6 +170,9 @@ class WidgetTablePreview(QtWidgets.QFrame):
         self.table_schema = table_schema
         self.filename = filename
 
+        # Property
+        self.__sender = None
+
         # ___ Container ___
         self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
@@ -176,7 +198,44 @@ class WidgetTablePreview(QtWidgets.QFrame):
         self.date_label.setAlignment(QtCore.Qt.AlignRight)  # type: ignore
         self.info_layout.addWidget(self.date_label)
 
+        # ___ Tables ___
+        # Icon
+        self.icons = qticons.QtGuiIcon()
+        self.icon_document_edit = self.icons.fromSystem('document-edit')
+
+        # Tables
         for schema_item in self.table_schema['datas']:
-            name = (' ' * 5) + schema_item['table-name'].rstrip('.scv')
-            data = schema_item['table-data']
-            self.layout.addWidget(QtWidgets.QLabel(name))
+            layout = QtWidgets.QHBoxLayout()
+            self.layout.addLayout(layout)
+
+            # Edit
+            edit_button = EditButton(
+                schema=schema_item, icon=self.icon_document_edit)
+            edit_button.setFlat(True)
+            edit_button.clicked.connect(self.__on_edit_button)  # type: ignore
+            layout.addWidget(edit_button)
+
+            # Name
+            name = schema_item['table-name'].rstrip('.scv')
+            # data = schema_item['table-data']
+            layout.addWidget(QtWidgets.QLabel(name), 1)
+
+    @QtCore.Slot()
+    def __on_edit_button(self):
+        self.__sender = self.sender()
+        self.clicked.emit(self)
+
+    @QtCore.Slot()
+    def getEditButtonSender(self):
+        return self.__sender
+
+
+# noinspection PyPep8Naming
+class EditButton(QtWidgets.QPushButton):
+    def __init__(self, schema, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.__schema = schema
+
+    def getSchema(self):
+        return self.__schema
