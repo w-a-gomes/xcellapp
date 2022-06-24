@@ -98,14 +98,27 @@ class SectionTablesScheme(QtWidgets.QWidget):
 
         # Add new widgets
         if ls_command and tables_schema_filenames:
+            hbox = QtWidgets.QHBoxLayout()
+            self.scroll_widget_layout.addLayout(hbox)
+            # self.tables_widgets_list.append(hbox)
+
+            hbox_widgets_num = 0
             for filename in tables_schema_filenames:
                 with open(os.path.join(table_schema_path, filename), 'r') as f:
                     file_schema = json.load(f)
 
+                # Grade
+                if hbox_widgets_num == 3:
+                    hbox_widgets_num = 0
+                    hbox = QtWidgets.QHBoxLayout()
+                    self.scroll_widget_layout.addLayout(hbox)
+                    # self.tables_widgets_list.append(hbox)
+
                 table_preview = WidgetTablePreview(filename, file_schema)
                 table_preview.clicked.connect(self.__on_table_preview)
+                hbox.addWidget(table_preview)
+                hbox_widgets_num += 1
                 self.tables_widgets_list.append(table_preview)
-                self.scroll_widget_layout.addWidget(table_preview)
 
     @QtCore.Slot()
     def __on_table_preview(self):
@@ -175,6 +188,7 @@ class WidgetTablePreview(QtWidgets.QFrame):
 
         # ___ Container ___
         self.layout = QtWidgets.QVBoxLayout()
+        self.layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.setLayout(self.layout)
 
         # __ info __
