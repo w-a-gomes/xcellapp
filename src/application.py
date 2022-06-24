@@ -212,6 +212,35 @@ class Application(object):
         # Go to editor
         self.__ui.imp_tables.table_stacked_layout.setCurrentIndex(1)
 
+        # Animation - position (center to top left)
+        self.__anim_group = QtCore.QParallelAnimationGroup()
+        x = self.__ui.imp_tables.tables_schema_editor.x()
+        y = self.__ui.imp_tables.tables_schema_editor.y()
+        h = self.__ui.imp_tables.tables_schema_editor.height()
+        w = self.__ui.imp_tables.tables_schema_editor.width()
+        y_start = int(h / 2)
+        x_start = int(w / 2)
+
+        anim_p = QtCore.QPropertyAnimation(
+            self.__ui.imp_tables.tables_schema_editor, b"pos")
+        anim_p.setStartValue(QtCore.QPoint(x_start, y_start))
+        anim_p.setEndValue(QtCore.QPoint(x, y))
+        anim_p.setDuration(self.__table_anim_duration)
+        self.__anim_group.addAnimation(anim_p)
+
+        # Animation - size (min to max)
+        h = self.__ui.imp_tables.tables_schema_editor.height()
+        w = self.__ui.imp_tables.tables_schema_editor.width()
+
+        anim_s = QtCore.QPropertyAnimation(
+            self.__ui.imp_tables.tables_schema_editor, b"size")
+        self.__ui.imp_tables.tables_schema_editor.resize(100, 100)
+        anim_s.setEndValue(QtCore.QSize(w, h))
+        anim_s.setDuration(self.__table_anim_duration)
+        self.__anim_group.addAnimation(anim_s)
+
+        self.__anim_group.start()
+
     # Menu pages
     @QtCore.Slot()
     def on_nav_button(self, sender, widget=None):
@@ -237,9 +266,27 @@ class Application(object):
 
             # Set stacked_layout index
             new_index = 1
+            # Go to: first Page
             self.__ui.stacked_layout.setCurrentIndex(new_index)
+            # Go to: Add table
             self.__ui.imp_tables.stacked_layout.setCurrentIndex(0)
+            # Reset: Add tables
             self.__ui.imp_tables.xls_get_filename.clear_filename()
+            # Go to: preview tables
+            if self.__ui.imp_tables.table_stacked_layout.currentIndex() != 0:
+                self.__ui.imp_tables.table_stacked_layout.setCurrentIndex(0)
+
+                self.__anim_group = QtCore.QSequentialAnimationGroup()
+                effect = QtWidgets.QGraphicsOpacityEffect(
+                    self.__ui.imp_tables.tables_schema_page)
+                self.__ui.imp_tables.tables_schema_page.setGraphicsEffect(
+                    effect)
+                anim_o = QtCore.QPropertyAnimation(effect, b"opacity")
+                anim_o.setStartValue(0)
+                anim_o.setEndValue(1)
+                anim_o.setDuration(self.__table_anim_duration * 2)
+                self.__anim_group.addAnimation(anim_o)
+                self.__anim_group.start()
 
             # Update tables
             if self.can_generate_first_tables:
