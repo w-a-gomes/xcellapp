@@ -191,35 +191,6 @@ class Application(object):
         # Go to editor
         self.__ui.imp_tables.table_stacked_layout.setCurrentIndex(1)
 
-        # Animation - position (center to top left)
-        # self.__anim_group = QtCore.QParallelAnimationGroup()
-        # x = self.__ui.imp_tables.tables_schema_editor.x()
-        # y = self.__ui.imp_tables.tables_schema_editor.y()
-        # h = self.__ui.imp_tables.tables_schema_editor.height()
-        # w = self.__ui.imp_tables.tables_schema_editor.width()
-        # y_start = int(h / 2)
-        # x_start = int(w / 2)
-        #
-        # anim_p = QtCore.QPropertyAnimation(
-        #     self.__ui.imp_tables.tables_schema_editor, b"pos")
-        # anim_p.setStartValue(QtCore.QPoint(x_start, y_start))
-        # anim_p.setEndValue(QtCore.QPoint(x, y))
-        # anim_p.setDuration(self.__table_anim_duration)
-        # self.__anim_group.addAnimation(anim_p)
-        #
-        # # Animation - size (min to max)
-        # h = self.__ui.imp_tables.tables_schema_editor.height()
-        # w = self.__ui.imp_tables.tables_schema_editor.width()
-        #
-        # anim_s = QtCore.QPropertyAnimation(
-        #     self.__ui.imp_tables.tables_schema_editor, b"size")
-        # self.__ui.imp_tables.tables_schema_editor.resize(100, 100)
-        # anim_s.setEndValue(QtCore.QSize(w, h))
-        # anim_s.setDuration(self.__table_anim_duration)
-        # self.__anim_group.addAnimation(anim_s)
-        #
-        # self.__anim_group.start()
-
         # Animation 'opacity-fade'
         self.animate_widget(
             widget=self.__ui.imp_tables.tables_schema_editor,
@@ -352,6 +323,16 @@ class Application(object):
             self.__anim_group.addAnimation(anim_s)
 
         self.__anim_group.start()
+
+    def enable_add_table_session(self, enable: bool) -> None:
+        if enable:
+            self.__ui.imp_tables.add_tables_page.setEnabled(True)
+            self.__ui.imp_tables.xls_import_page.setEnabled(True)
+            self.__ui.imp_tables.csv_import_page.setEnabled(True)
+        else:
+            self.__ui.imp_tables.add_tables_page.setEnabled(False)
+            self.__ui.imp_tables.xls_import_page.setEnabled(False)
+            self.__ui.imp_tables.csv_import_page.setEnabled(False)
     
     # Ui
     @QtCore.Slot()
@@ -376,16 +357,6 @@ class Application(object):
     def on_exit_button(self) -> None:
         """..."""
         self.__app.quit()
-
-    def enable_add_table_session(self, enable: bool) -> None:
-        if enable:
-            self.__ui.imp_tables.add_tables_page.setEnabled(True)
-            self.__ui.imp_tables.xls_import_page.setEnabled(True)
-            self.__ui.imp_tables.csv_import_page.setEnabled(True)
-        else:
-            self.__ui.imp_tables.add_tables_page.setEnabled(False)
-            self.__ui.imp_tables.xls_import_page.setEnabled(False)
-            self.__ui.imp_tables.csv_import_page.setEnabled(False)
     
     # Settings
     def __get_settings_path(self):
