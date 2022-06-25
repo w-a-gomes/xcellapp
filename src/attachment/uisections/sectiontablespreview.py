@@ -4,7 +4,7 @@ import json
 
 from PySide6 import QtWidgets, QtGui, QtCore
 
-import attachment.uitools.qtcolor as qtcolor
+# import attachment.uitools.qtcolor as qtcolor
 import attachment.uitools.qticons as qticons
 
 
@@ -148,40 +148,40 @@ class WidgetTablePreview(QtWidgets.QFrame):
             *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Frame border
-        # self.setFrameStyle(
-        #     QtWidgets.QFrame.StyledPanel |  # type: ignore
-        #     QtWidgets.QFrame.Plain)
+        self.setFrameStyle(
+            QtWidgets.QFrame.StyledPanel |  # type: ignore
+            QtWidgets.QFrame.Plain)
 
         # Style
-        self.setObjectName('TablePreview')
-        color = qtcolor.QtGuiColor()
-        if color.widget_is_dark():
-            #
-            self.setStyleSheet("""
-                #TablePreview {
-                    border: 1px solid rgba(58, 127, 74, 0.2);
-                    border-radius: 3px;
-                    background: rgba(58, 127, 74, 0.1);
-                }""")
-        else:
-            self.setStyleSheet("""
-                #TablePreview {
-                    border: 1px solid rgba(81, 243, 72, 0.3);
-                    border-radius: 3px;
-                    background: rgba(81, 243, 72, 0.2);
-                }""")
+        # self.setObjectName('TablePreview')
+        # color = qtcolor.QtGuiColor()
+        # if color.widget_is_dark():
+        #     #
+        #     self.setStyleSheet("""
+        #         #TablePreview {
+        #             border: 1px solid rgba(58, 127, 74, 0.2);
+        #             border-radius: 3px;
+        #             background: rgba(58, 127, 74, 0.1);
+        #         }""")
+        # else:
+        #     self.setStyleSheet("""
+        #         #TablePreview {
+        #             border: 1px solid rgba(81, 243, 72, 0.3);
+        #             border-radius: 3px;
+        #             background: rgba(81, 243, 72, 0.2);
+        #         }""")
 
         # Background color
-        # self.palette_color = QtGui.QColor(
-        #     QtGui.QPalette().color(  # Active, AlternateBase
-        #         QtGui.QPalette.Active, QtGui.QPalette.ToolTipBase))
-        #
-        # self.color_palette = self.palette()
-        # self.color_palette.setColor(
-        #     QtGui.QPalette.Window, self.palette_color)
-        #
-        # self.setAutoFillBackground(True)
-        # self.setPalette(self.color_palette)
+        self.palette_color = QtGui.QColor(
+            QtGui.QPalette().color(  # ToolTipBase Button Window AlternateBase
+                QtGui.QPalette.Active, QtGui.QPalette.Window))
+
+        self.color_palette = self.palette()
+        self.color_palette.setColor(
+            QtGui.QPalette.Window, self.palette_color)
+
+        self.setAutoFillBackground(True)
+        self.setPalette(self.color_palette)
 
         # Args
         self.table_schema = table_schema

@@ -9,7 +9,7 @@ from PySide6 import QtWidgets, QtGui, QtCore
 
 
 # noinspection PyPep8Naming
-class SectionTablesEditor(QtWidgets.QWidget):
+class SectionTablesEditor(QtWidgets.QFrame):
     """..."""
 
     def __init__(self, *args, **kwargs):
@@ -17,30 +17,27 @@ class SectionTablesEditor(QtWidgets.QWidget):
         super().__init__(*args, **kwargs)
         # Args
         self.__table_schema = None
-        # Frame border
-        # self.setFrameStyle(
-        #     QtWidgets.QFrame.StyledPanel |  # type: ignore
-        #     QtWidgets.QFrame.Plain)
 
-        # Border
-        # self.setObjectName('Lol')
-        # self.setStyleSheet(
-        # Border
-        #    '#Lol {border: 2px solid #2c633a; border-radius: 10px;}')
-        # Background
-        #    '#Lol {border-radius: 10px; background: rgba(0, 255, 50, 20);}')
+        # Frame border
+        self.setFrameStyle(
+            QtWidgets.QFrame.StyledPanel |  # type: ignore
+            QtWidgets.QFrame.Plain)
 
         # Background color
         self.background_color = QtGui.QColor(
             QtGui.QPalette().color(
-                QtGui.QPalette.Active, QtGui.QPalette.Midlight))
+                # ToolTipBase: Light
+                # Button: Light
+                # Window: Normal
+                # AlternateBase: Dark
+                QtGui.QPalette.Active, QtGui.QPalette.AlternateBase))
 
         self.color_palette = self.palette()
         self.color_palette.setColor(
             QtGui.QPalette.Window, self.background_color)
 
-        # self.setAutoFillBackground(True)
-        # self.setPalette(self.color_palette)
+        self.setAutoFillBackground(True)
+        self.setPalette(self.color_palette)
 
         # Property
         self.__sender = None
@@ -52,10 +49,6 @@ class SectionTablesEditor(QtWidgets.QWidget):
         # Scroll Area
         self.scroll_area = QtWidgets.QScrollArea()
         self.scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
-        # self.scroll_area.setMinimumHeight(400)
-        # self.scroll_area.setMaximumHeight(500)
-        # self.scroll_area.setFixedHeight(self.parent().height())
-        # self.scroll_area.setFixedWidth(500)
         self.scroll_area.setVerticalScrollBarPolicy(
             QtCore.Qt.ScrollBarAsNeeded)
         self.scroll_area.setHorizontalScrollBarPolicy(
