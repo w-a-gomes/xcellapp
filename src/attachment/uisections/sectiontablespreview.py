@@ -1,22 +1,21 @@
 #!/usr/bin env python3
-# import os
-# import json
+import os
+import json
 
 from PySide6 import QtWidgets, QtGui, QtCore
 
-# import attachment.uitools.qtcolor as qtcolor
+import attachment.uitools.qtcolor as qtcolor
 import attachment.uitools.qticons as qticons
 
 
 # noinspection PyPep8Naming
-class SectionTableEditor(QtWidgets.QWidget):
+class SectionTablesPreview(QtWidgets.QWidget):
     """..."""
+    edit_table_button_clicked = QtCore.Signal(QtGui.QMouseEvent)
 
     def __init__(self, *args, **kwargs):
         """..."""
         super().__init__(*args, **kwargs)
-        # Args
-        self.__table_schema = None
         # Frame border
         # self.setFrameStyle(
         #     QtWidgets.QFrame.StyledPanel |  # type: ignore
@@ -29,7 +28,7 @@ class SectionTableEditor(QtWidgets.QWidget):
         #    '#Lol {border: 2px solid #2c633a; border-radius: 10px;}')
         # Background
         #    '#Lol {border-radius: 10px; background: rgba(0, 255, 50, 20);}')
-
+        self.__anim_group = None
         # Background color
         self.background_color = QtGui.QColor(
             QtGui.QPalette().color(
@@ -76,22 +75,71 @@ class SectionTableEditor(QtWidgets.QWidget):
         # Scroll Widget Layout
         self.scroll_widget_layout = QtWidgets.QVBoxLayout()
         self.scroll_widget_layout.setContentsMargins(12, 12, 12, 12)
-        self.scroll_widget_layout.setSpacing(12)
+        self.scroll_widget_layout.setSpacing(6)
         self.scroll_widget_layout.setAlignment(
             QtCore.Qt.AlignTop)  # type: ignore
         self.scroll_widget.setLayout(self.scroll_widget_layout)
 
-        # self.scroll_widget_layout.addWidget(table_preview)
+        # Tables Widget
+        self.tables_widgets_list = []
+        self.tables_layout_list = []
 
-    def setSchema(self, schema):
-        self.__table_schema = schema
-        print(schema)
+    def update_tables(
+            self,
+            table_schema_path: str,
+            tables_schema_filenames: list) -> None:
+
+        ls_command = os.listdir(table_schema_path)
+
+        # Remove old widgets
+        if self.tables_widgets_list:
+            for w in self.tables_widgets_list:
+                w.deleteLater()
+            self.tables_widgets_list = []
+
+            for w in self.tables_layout_list:
+                w.deleteLater()
+            self.tables_layout_list = []
+
+        # Add new widgets
+        if ls_command and tables_schema_filenames:
+            hbox = QtWidgets.QHBoxLayout()
+            self.scroll_widget_layout.addLayout(hbox)
+            self.tables_layout_list.append(hbox)
+
+            hbox_widgets_num = 0
+            for filename in tables_schema_filenames:
+                with open(os.path.join(table_schema_path, filename), 'r') as f:
+                    file_schema = json.load(f)
+
+                # Grade
+                if hbox_widgets_num == 3:
+                    hbox_widgets_num = 0
+                    hbox = QtWidgets.QHBoxLayout()
+                    self.scroll_widget_layout.addLayout(hbox)
+                    self.tables_layout_list.append(hbox)
+
+                table_preview = WidgetTablePreview(filename, file_schema)
+                table_preview.edit_table_button_clicked.connect(
+                    self.__on_table_preview)
+                hbox.addWidget(table_preview)
+                hbox_widgets_num += 1
+                self.tables_widgets_list.append(table_preview)
+
+    @QtCore.Slot()
+    def __on_table_preview(self):
+        self.__sender = self.sender().getEditTableButtonClicked()
+        self.edit_table_button_clicked.emit(self)
+
+    @QtCore.Slot()
+    def getEditTableButtonClicked(self):
+        return self.__sender
 
 
 # noinspection PyPep8Naming
 class WidgetTablePreview(QtWidgets.QFrame):
     """..."""
-    clicked = QtCore.Signal(QtGui.QMouseEvent)
+    edit_table_button_clicked = QtCore.Signal(QtGui.QMouseEvent)
 
     def __init__(
             self,
@@ -104,38 +152,36 @@ class WidgetTablePreview(QtWidgets.QFrame):
         #     QtWidgets.QFrame.StyledPanel |  # type: ignore
         #     QtWidgets.QFrame.Plain)
 
-        # Border
-        # self.setObjectName('TablePreview')
-        # self.setStyleSheet('#TablePreview {border-radius: 10px;}')
-
         # Style
-        # color = qtcolor.QtGuiColor()
-        # if color.widget_is_dark():
-        #     self.setStyleSheet("""
-        #         #TablePreview {
-        #             border: 1px solid rgba(58, 127, 74, 0.2);
-        #             border-radius: 10px;
-        #             background: rgba(58, 127, 74, 0.1);
-        #         }""")
-        # else:
-        #     self.setStyleSheet("""
-        #         #TablePreview {
-        #             border: 1px solid rgba(0, 255, 50, 0.2);
-        #             border-radius: 10px;
-        #             background: rgba(0, 255, 50, 0.1);
-        #         }""")
+        self.setObjectName('TablePreview')
+        color = qtcolor.QtGuiColor()
+        if color.widget_is_dark():
+            #
+            self.setStyleSheet("""
+                #TablePreview {
+                    border: 1px solid rgba(58, 127, 74, 0.2);
+                    border-radius: 3px;
+                    background: rgba(58, 127, 74, 0.1);
+                }""")
+        else:
+            self.setStyleSheet("""
+                #TablePreview {
+                    border: 1px solid rgba(81, 243, 72, 0.3);
+                    border-radius: 3px;
+                    background: rgba(81, 243, 72, 0.2);
+                }""")
 
         # Background color
-        self.palette_color = QtGui.QColor(
-            QtGui.QPalette().color(  # Active, AlternateBase
-                QtGui.QPalette.Active, QtGui.QPalette.ToolTipBase))
-
-        self.color_palette = self.palette()
-        self.color_palette.setColor(
-            QtGui.QPalette.Window, self.palette_color)
-
-        self.setAutoFillBackground(True)
-        self.setPalette(self.color_palette)
+        # self.palette_color = QtGui.QColor(
+        #     QtGui.QPalette().color(  # Active, AlternateBase
+        #         QtGui.QPalette.Active, QtGui.QPalette.ToolTipBase))
+        #
+        # self.color_palette = self.palette()
+        # self.color_palette.setColor(
+        #     QtGui.QPalette.Window, self.palette_color)
+        #
+        # self.setAutoFillBackground(True)
+        # self.setPalette(self.color_palette)
 
         # Args
         self.table_schema = table_schema
@@ -146,6 +192,7 @@ class WidgetTablePreview(QtWidgets.QFrame):
 
         # ___ Container ___
         self.layout = QtWidgets.QVBoxLayout()
+        self.layout.setAlignment(QtCore.Qt.AlignTop)  # type: ignore
         self.setLayout(self.layout)
 
         # __ info __
@@ -194,10 +241,10 @@ class WidgetTablePreview(QtWidgets.QFrame):
     @QtCore.Slot()
     def __on_edit_button(self):
         self.__sender = self.sender()
-        self.clicked.emit(self)
+        self.edit_table_button_clicked.emit(self)
 
     @QtCore.Slot()
-    def getEditButtonSender(self):
+    def getEditTableButtonClicked(self):
         return self.__sender
 
 

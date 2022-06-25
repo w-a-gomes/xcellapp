@@ -42,8 +42,8 @@ class Application(object):
             self.on_csv_import_button)
 
         # Edit
-        self.__ui.imp_tables.tables_schema_page.clicked.connect(
-            self.on_table_edit_button)
+        (self.__ui.imp_tables.tables_schema_page.edit_table_button_clicked
+            .connect(self.on_table_edit_button))
 
         # Menu buttons
         # icons_sender = (
@@ -70,7 +70,7 @@ class Application(object):
         # 0: Tables, 1: XLS, 2: CSV
         self.__ui.imp_tables.stacked_layout.setCurrentIndex(1)
 
-        # Animation 'slide-to-left'
+        # xls_import_page 'slide-to-left'
         self.animate_widget(
             widget=self.__ui.imp_tables.xls_import_page,
             animation_type='slide-to-left')
@@ -99,7 +99,7 @@ class Application(object):
             # Switch to CSV page
             self.__ui.imp_tables.stacked_layout.setCurrentIndex(2)
 
-            # Animation 'slide-to-left'
+            # csv_import_page 'slide-to-left'
             self.animate_widget(
                 widget=self.__ui.imp_tables.csv_import_page,
                 animation_type='slide-to-left')
@@ -114,7 +114,6 @@ class Application(object):
             self.__settings['dialog-path'] = os.environ["DIALOG-PATH"]
 
             # CSV schema
-            now = datetime.datetime.now()  # '%H:%M:%S on %A, %B the %dth, %Y'
             csv_schema = {
                 'id': '',
                 'filename': '',
@@ -135,6 +134,7 @@ class Application(object):
             csv_schema['filename'] = schema_name
 
             # Set date
+            now = datetime.datetime.now()  # '%H:%M:%S on %A, %B the %dth, %Y'
             csv_schema['date'] = now.strftime('%d/%m/%Y %H:%M')
 
             # Set datas
@@ -173,7 +173,7 @@ class Application(object):
             self.__ui.imp_tables.stacked_layout.setCurrentIndex(0)
             self.__ui.imp_tables.xls_get_filename.clear_filename()
 
-            # Animation 'slide-to-right'
+            # add_tables_page 'slide-to-right'
             self.animate_widget(
                 widget=self.__ui.imp_tables.add_tables_page,
                 animation_type='slide-to-right')
@@ -182,8 +182,11 @@ class Application(object):
     def on_table_edit_button(self):
         # Set Schema to edit
         self.__ui.imp_tables.tables_schema_editor.setSchema(
-            self.__ui.imp_tables.tables_schema_page.getEditButtonSender()
+            self.__ui.imp_tables.tables_schema_page.getEditTableButtonClicked()
             .getSchema())
+
+        # Update Editor
+        self.__ui.imp_tables.tables_schema_editor.updateEditor()
 
         # Block 'add tables'
         self.enable_add_table_session(False)
@@ -191,7 +194,7 @@ class Application(object):
         # Go to editor
         self.__ui.imp_tables.table_stacked_layout.setCurrentIndex(1)
 
-        # Animation 'opacity-fade'
+        # tables_schema_editor 'opacity-fade'
         self.animate_widget(
             widget=self.__ui.imp_tables.tables_schema_editor,
             animation_type='open-from-center')
@@ -207,7 +210,7 @@ class Application(object):
             self.enable_add_table_session(True)
 
             if self.__ui.imp_tables.stacked_layout.currentIndex() != new_index:
-                # Animation 'slide-to-right'
+                # add_tables_page 'slide-to-right'
                 self.animate_widget(
                     widget=self.__ui.imp_tables.add_tables_page,
                     animation_type='slide-to-right')
@@ -224,12 +227,12 @@ class Application(object):
             # Reset: Add tables section
             self.__ui.imp_tables.xls_get_filename.clear_filename()
 
-            # Go to: preview tables
+            # Go to: tables preview
             if self.__ui.imp_tables.table_stacked_layout.currentIndex() != 0:
                 # Go to: tables section
                 self.__ui.imp_tables.table_stacked_layout.setCurrentIndex(0)
 
-                # Animation 'opacity-fade'
+                # tables_schema_page 'opacity-fade'
                 self.animate_widget(
                     widget=self.__ui.imp_tables.tables_schema_page,
                     animation_type='opacity-fade')
@@ -245,7 +248,7 @@ class Application(object):
         #     new_index = 2
         #     self.__ui.navigation_stack.stacked_layout.setCurrentIndex(new_index)
 
-        # Animation
+        # slide main pages
         if new_index != current_index:
             if new_index < current_index:
                 self.animate_widget(

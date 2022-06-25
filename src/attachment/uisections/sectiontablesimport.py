@@ -2,12 +2,12 @@
 from PySide6 import QtCore, QtWidgets
 
 from attachment.uiwidgets.widgetgetfilename import WidgetGetFilename
-from attachment.uisections.sectiontablesscheme import SectionTablesScheme
-from attachment.uisections.sectiontableeditor import SectionTableEditor
+from attachment.uisections.sectiontablespreview import SectionTablesPreview
+from attachment.uisections.sectiontableseditor import SectionTablesEditor
 import attachment.uitools.qticons as qticons
 
 
-class SectionImportTables(QtWidgets.QWidget):
+class SectionTablesImport(QtWidgets.QWidget):
     """..."""
     def __init__(self, *args, **kwargs):
         """..."""
@@ -144,13 +144,13 @@ class SectionImportTables(QtWidgets.QWidget):
         self.layout.addLayout(self.table_stacked_layout, 9)
 
         # The tables
-        self.tables_schema_page = SectionTablesScheme(self)
+        self.tables_schema_page = SectionTablesPreview(self)
         self.tables_schema_page.setContentsMargins(0, 0, 0, 0)
         # self.layout.addWidget(self.tables_schema_page, 9)
         self.table_stacked_layout.addWidget(self.tables_schema_page)
 
         # The tables editor
-        self.tables_schema_editor = SectionTableEditor()
+        self.tables_schema_editor = SectionTablesEditor()
         self.tables_schema_page.setContentsMargins(0, 0, 0, 0)
         # self.layout.addWidget(self.tables_schema_page, 9)
         self.table_stacked_layout.addWidget(self.tables_schema_editor)

@@ -5,7 +5,7 @@ import os
 from PySide6 import QtCore, QtWidgets
 
 from attachment.uisections.sectionverticalmenu import SectionVerticalMenu
-from attachment.uisections.sectionimporttables import SectionImportTables
+from attachment.uisections.sectiontablesimport import SectionTablesImport
 import attachment.uitools.qticons as qticons
 
 
@@ -76,7 +76,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stacked_layout.addWidget(self.home_page)
 
         # Page 1 xls
-        self.imp_tables = SectionImportTables()
+        self.imp_tables = SectionTablesImport()
         self.stacked_layout.addWidget(self.imp_tables)
 
         # Page 2 Icons
