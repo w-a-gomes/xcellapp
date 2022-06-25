@@ -4,7 +4,7 @@ import json
 
 from PySide6 import QtWidgets, QtGui, QtCore
 
-# import attachment.uitools.qtcolor as qtcolor
+import attachment.uitools.qtcolor as qtcolor
 import attachment.uitools.qticons as qticons
 
 
@@ -28,7 +28,7 @@ class SectionTablesScheme(QtWidgets.QWidget):
         #    '#Lol {border: 2px solid #2c633a; border-radius: 10px;}')
         # Background
         #    '#Lol {border-radius: 10px; background: rgba(0, 255, 50, 20);}')
-
+        self.__anim_group = None
         # Background color
         self.background_color = QtGui.QColor(
             QtGui.QPalette().color(
@@ -75,13 +75,14 @@ class SectionTablesScheme(QtWidgets.QWidget):
         # Scroll Widget Layout
         self.scroll_widget_layout = QtWidgets.QVBoxLayout()
         self.scroll_widget_layout.setContentsMargins(12, 12, 12, 12)
-        self.scroll_widget_layout.setSpacing(12)
+        self.scroll_widget_layout.setSpacing(6)
         self.scroll_widget_layout.setAlignment(
             QtCore.Qt.AlignTop)  # type: ignore
         self.scroll_widget.setLayout(self.scroll_widget_layout)
 
         # Tables Widget
         self.tables_widgets_list = []
+        self.tables_layout_list = []
 
     def update_tables(
             self,
@@ -96,11 +97,15 @@ class SectionTablesScheme(QtWidgets.QWidget):
                 w.deleteLater()
             self.tables_widgets_list = []
 
+            for w in self.tables_layout_list:
+                w.deleteLater()
+            self.tables_layout_list = []
+
         # Add new widgets
         if ls_command and tables_schema_filenames:
             hbox = QtWidgets.QHBoxLayout()
             self.scroll_widget_layout.addLayout(hbox)
-            # self.tables_widgets_list.append(hbox)
+            self.tables_layout_list.append(hbox)
 
             hbox_widgets_num = 0
             for filename in tables_schema_filenames:
@@ -112,7 +117,7 @@ class SectionTablesScheme(QtWidgets.QWidget):
                     hbox_widgets_num = 0
                     hbox = QtWidgets.QHBoxLayout()
                     self.scroll_widget_layout.addLayout(hbox)
-                    # self.tables_widgets_list.append(hbox)
+                    self.tables_layout_list.append(hbox)
 
                 table_preview = WidgetTablePreview(filename, file_schema)
                 table_preview.clicked.connect(self.__on_table_preview)
@@ -146,38 +151,36 @@ class WidgetTablePreview(QtWidgets.QFrame):
         #     QtWidgets.QFrame.StyledPanel |  # type: ignore
         #     QtWidgets.QFrame.Plain)
 
-        # Border
-        # self.setObjectName('TablePreview')
-        # self.setStyleSheet('#TablePreview {border-radius: 10px;}')
-
         # Style
-        # color = qtcolor.QtGuiColor()
-        # if color.widget_is_dark():
-        #     self.setStyleSheet("""
-        #         #TablePreview {
-        #             border: 1px solid rgba(58, 127, 74, 0.2);
-        #             border-radius: 10px;
-        #             background: rgba(58, 127, 74, 0.1);
-        #         }""")
-        # else:
-        #     self.setStyleSheet("""
-        #         #TablePreview {
-        #             border: 1px solid rgba(0, 255, 50, 0.2);
-        #             border-radius: 10px;
-        #             background: rgba(0, 255, 50, 0.1);
-        #         }""")
+        self.setObjectName('TablePreview')
+        color = qtcolor.QtGuiColor()
+        if color.widget_is_dark():
+            #
+            self.setStyleSheet("""
+                #TablePreview {
+                    border: 1px solid rgba(58, 127, 74, 0.2);
+                    border-radius: 3px;
+                    background: rgba(58, 127, 74, 0.1);
+                }""")
+        else:
+            self.setStyleSheet("""
+                #TablePreview {
+                    border: 1px solid rgba(81, 243, 72, 0.3);
+                    border-radius: 3px;
+                    background: rgba(81, 243, 72, 0.2);
+                }""")
 
         # Background color
-        self.palette_color = QtGui.QColor(
-            QtGui.QPalette().color(  # Active, AlternateBase
-                QtGui.QPalette.Active, QtGui.QPalette.ToolTipBase))
-
-        self.color_palette = self.palette()
-        self.color_palette.setColor(
-            QtGui.QPalette.Window, self.palette_color)
-
-        self.setAutoFillBackground(True)
-        self.setPalette(self.color_palette)
+        # self.palette_color = QtGui.QColor(
+        #     QtGui.QPalette().color(  # Active, AlternateBase
+        #         QtGui.QPalette.Active, QtGui.QPalette.ToolTipBase))
+        #
+        # self.color_palette = self.palette()
+        # self.color_palette.setColor(
+        #     QtGui.QPalette.Window, self.palette_color)
+        #
+        # self.setAutoFillBackground(True)
+        # self.setPalette(self.color_palette)
 
         # Args
         self.table_schema = table_schema

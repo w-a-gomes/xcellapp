@@ -70,18 +70,10 @@ class Application(object):
         # 0: Tables, 1: XLS, 2: CSV
         self.__ui.imp_tables.stacked_layout.setCurrentIndex(1)
 
-        self.__anim_group = QtCore.QSequentialAnimationGroup()
-        w = self.__ui.imp_tables.xls_import_page.width()
-        y = self.__ui.imp_tables.xls_import_page.y()
-        x = self.__ui.imp_tables.xls_import_page.x()
-
-        anim_p = QtCore.QPropertyAnimation(
-            self.__ui.imp_tables.xls_import_page, b"pos")
-        anim_p.setStartValue(QtCore.QPoint(w, y))
-        anim_p.setEndValue(QtCore.QPoint(x, y))
-        anim_p.setDuration(self.__table_anim_duration)
-        self.__anim_group.addAnimation(anim_p)
-        self.__anim_group.start()
+        # Animation 'slide-to-left'
+        self.animate_widget(
+            widget=self.__ui.imp_tables.xls_import_page,
+            animation_type='slide-to-left')
 
     @QtCore.Slot()
     def on_xlsx_import_button(self) -> None:
@@ -107,18 +99,10 @@ class Application(object):
             # Switch to CSV page
             self.__ui.imp_tables.stacked_layout.setCurrentIndex(2)
 
-            # Animation
-            self.__anim_group = QtCore.QSequentialAnimationGroup()
-            y = self.__ui.imp_tables.csv_import_page.y()
-            x = self.__ui.imp_tables.csv_import_page.x()
-            w = self.__ui.imp_tables.csv_import_page.width()
-            anim_p = QtCore.QPropertyAnimation(
-                self.__ui.imp_tables.csv_import_page, b"pos")
-            anim_p.setStartValue(QtCore.QPoint(w, y))
-            anim_p.setEndValue(QtCore.QPoint(x, y))
-            anim_p.setDuration(self.__table_anim_duration)
-            self.__anim_group.addAnimation(anim_p)
-            self.__anim_group.start()
+            # Animation 'slide-to-left'
+            self.animate_widget(
+                widget=self.__ui.imp_tables.csv_import_page,
+                animation_type='slide-to-left')
 
     @QtCore.Slot()
     def on_csv_import_button(self):
@@ -189,18 +173,10 @@ class Application(object):
             self.__ui.imp_tables.stacked_layout.setCurrentIndex(0)
             self.__ui.imp_tables.xls_get_filename.clear_filename()
 
-            # Go back animation
-            self.__anim_group = QtCore.QSequentialAnimationGroup()
-            w = -self.__ui.imp_tables.add_tables_page.width()
-            y = self.__ui.imp_tables.add_tables_page.y()
-            x = self.__ui.imp_tables.add_tables_page.x()
-            anim_p = QtCore.QPropertyAnimation(
-                self.__ui.imp_tables.add_tables_page, b"pos")
-            anim_p.setStartValue(QtCore.QPoint(w, y))
-            anim_p.setEndValue(QtCore.QPoint(x, y))
-            anim_p.setDuration(self.__table_anim_duration)
-            self.__anim_group.addAnimation(anim_p)
-            self.__anim_group.start()
+            # Animation 'slide-to-right'
+            self.animate_widget(
+                widget=self.__ui.imp_tables.add_tables_page,
+                animation_type='slide-to-right')
 
     @QtCore.Slot()
     def on_table_edit_button(self):
@@ -208,6 +184,9 @@ class Application(object):
         self.__ui.imp_tables.tables_schema_editor.setSchema(
             self.__ui.imp_tables.tables_schema_page.getEditButtonSender()
             .getSchema())
+
+        # Block 'add tables'
+        self.enable_add_table_session(False)
 
         # Go to editor
         self.__ui.imp_tables.table_stacked_layout.setCurrentIndex(1)
@@ -249,44 +228,35 @@ class Application(object):
 
         if sender.button_id == 'cfg_imp_tabelas':
             # Go back to first table page
-            if (self.__ui.imp_tables.stacked_layout
-                    .currentIndex()) != new_index:
-                self.__anim_group = QtCore.QSequentialAnimationGroup()
-                w = -self.__ui.imp_tables.add_tables_page.width()
-                y = self.__ui.imp_tables.add_tables_page.y()
-                x = self.__ui.imp_tables.add_tables_page.x()
+            self.enable_add_table_session(True)
 
-                anim_p = QtCore.QPropertyAnimation(
-                    self.__ui.imp_tables.add_tables_page, b"pos")
-                anim_p.setStartValue(QtCore.QPoint(w, y))
-                anim_p.setEndValue(QtCore.QPoint(x, y))
-                anim_p.setDuration(self.__table_anim_duration)
-                self.__anim_group.addAnimation(anim_p)
-                self.__anim_group.start()
+            if self.__ui.imp_tables.stacked_layout.currentIndex() != new_index:
+                # Animation 'slide-to-right'
+                self.animate_widget(
+                    widget=self.__ui.imp_tables.add_tables_page,
+                    animation_type='slide-to-right')
 
             # Set stacked_layout index
             new_index = 1
-            # Go to: first Page
+
+            # Go to: First main page
             self.__ui.stacked_layout.setCurrentIndex(new_index)
-            # Go to: Add table
+
+            # Go to: Add table section
             self.__ui.imp_tables.stacked_layout.setCurrentIndex(0)
-            # Reset: Add tables
+
+            # Reset: Add tables section
             self.__ui.imp_tables.xls_get_filename.clear_filename()
+
             # Go to: preview tables
             if self.__ui.imp_tables.table_stacked_layout.currentIndex() != 0:
+                # Go to: tables section
                 self.__ui.imp_tables.table_stacked_layout.setCurrentIndex(0)
 
-                self.__anim_group = QtCore.QSequentialAnimationGroup()
-                effect = QtWidgets.QGraphicsOpacityEffect(
-                    self.__ui.imp_tables.tables_schema_page)
-                self.__ui.imp_tables.tables_schema_page.setGraphicsEffect(
-                    effect)
-                anim_o = QtCore.QPropertyAnimation(effect, b"opacity")
-                anim_o.setStartValue(0)
-                anim_o.setEndValue(1)
-                anim_o.setDuration(self.__table_anim_duration * 2)
-                self.__anim_group.addAnimation(anim_o)
-                self.__anim_group.start()
+                # Animation 'opacity-fade'
+                self.animate_widget(
+                    widget=self.__ui.imp_tables.tables_schema_page,
+                    animation_type='opacity-fade')
 
             # Update tables
             if self.can_generate_first_tables:
@@ -301,18 +271,62 @@ class Application(object):
 
         # Animation
         if new_index != current_index:
-            self.__anim_group = QtCore.QSequentialAnimationGroup()
-            x = widget.x()
-            y = widget.y()
-            h = widget.height()
-            y_start = h if new_index < current_index else -h
+            if new_index < current_index:
+                self.animate_widget(
+                    widget=widget, animation_type='slide-to-top')
+            else:
+                self.animate_widget(
+                    widget=widget, animation_type='slide-to-bottom')
 
+    def animate_widget(
+            self,
+            widget,
+            animation_type='slide-to-left',
+            animation_duration=200):
+
+        if animation_type == 'slide-to-left':
+            self.__anim_group = QtCore.QSequentialAnimationGroup()
             anim_p = QtCore.QPropertyAnimation(widget, b"pos")
-            anim_p.setStartValue(QtCore.QPoint(x, y_start))
-            anim_p.setEndValue(QtCore.QPoint(x, y))
-            anim_p.setDuration(self.__table_anim_duration)
+            anim_p.setStartValue(QtCore.QPoint(widget.width(), widget.y()))
+            anim_p.setEndValue(QtCore.QPoint(widget.x(), widget.y()))
+            anim_p.setDuration(animation_duration)
             self.__anim_group.addAnimation(anim_p)
-            self.__anim_group.start()
+
+        elif animation_type == 'slide-to-right':
+            self.__anim_group = QtCore.QSequentialAnimationGroup()
+            anim_p = QtCore.QPropertyAnimation(widget, b"pos")
+            anim_p.setStartValue(QtCore.QPoint(-widget.width(), widget.y()))
+            anim_p.setEndValue(QtCore.QPoint(widget.x(), widget.y()))
+            anim_p.setDuration(animation_duration)
+            self.__anim_group.addAnimation(anim_p)
+
+        elif animation_type == 'slide-to-top':
+            self.__anim_group = QtCore.QSequentialAnimationGroup()
+            anim_p = QtCore.QPropertyAnimation(widget, b"pos")
+            anim_p.setStartValue(QtCore.QPoint(widget.x(), widget.height()))
+            anim_p.setEndValue(QtCore.QPoint(widget.x(), widget.y()))
+            anim_p.setDuration(animation_duration)
+            self.__anim_group.addAnimation(anim_p)
+
+        elif animation_type == 'slide-to-bottom':
+            self.__anim_group = QtCore.QSequentialAnimationGroup()
+            anim_p = QtCore.QPropertyAnimation(widget, b"pos")
+            anim_p.setStartValue(QtCore.QPoint(widget.x(), -widget.height()))
+            anim_p.setEndValue(QtCore.QPoint(widget.x(), widget.y()))
+            anim_p.setDuration(animation_duration)
+            self.__anim_group.addAnimation(anim_p)
+
+        elif animation_type == 'opacity-fade':
+            self.__anim_group = QtCore.QSequentialAnimationGroup()
+            effect = QtWidgets.QGraphicsOpacityEffect(widget)
+            widget.setGraphicsEffect(effect)
+            anim_o = QtCore.QPropertyAnimation(effect, b"opacity")
+            anim_o.setStartValue(0)
+            anim_o.setEndValue(1)
+            anim_o.setDuration(animation_duration * 2)
+            self.__anim_group.addAnimation(anim_o)
+
+        self.__anim_group.start()
     
     # Ui
     @QtCore.Slot()
@@ -337,6 +351,16 @@ class Application(object):
     def on_exit_button(self) -> None:
         """..."""
         self.__app.quit()
+
+    def enable_add_table_session(self, enable: bool) -> None:
+        if enable:
+            self.__ui.imp_tables.add_tables_page.setEnabled(True)
+            self.__ui.imp_tables.xls_import_page.setEnabled(True)
+            self.__ui.imp_tables.csv_import_page.setEnabled(True)
+        else:
+            self.__ui.imp_tables.add_tables_page.setEnabled(False)
+            self.__ui.imp_tables.xls_import_page.setEnabled(False)
+            self.__ui.imp_tables.csv_import_page.setEnabled(False)
     
     # Settings
     def __get_settings_path(self):

@@ -149,7 +149,7 @@ class SectionImportTables(QtWidgets.QWidget):
         # self.layout.addWidget(self.tables_schema_page, 9)
         self.table_stacked_layout.addWidget(self.tables_schema_page)
 
-        # The tables
+        # The tables editor
         self.tables_schema_editor = SectionTableEditor()
         self.tables_schema_page.setContentsMargins(0, 0, 0, 0)
         # self.layout.addWidget(self.tables_schema_page, 9)
