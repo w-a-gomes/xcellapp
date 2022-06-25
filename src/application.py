@@ -192,33 +192,38 @@ class Application(object):
         self.__ui.imp_tables.table_stacked_layout.setCurrentIndex(1)
 
         # Animation - position (center to top left)
-        self.__anim_group = QtCore.QParallelAnimationGroup()
-        x = self.__ui.imp_tables.tables_schema_editor.x()
-        y = self.__ui.imp_tables.tables_schema_editor.y()
-        h = self.__ui.imp_tables.tables_schema_editor.height()
-        w = self.__ui.imp_tables.tables_schema_editor.width()
-        y_start = int(h / 2)
-        x_start = int(w / 2)
+        # self.__anim_group = QtCore.QParallelAnimationGroup()
+        # x = self.__ui.imp_tables.tables_schema_editor.x()
+        # y = self.__ui.imp_tables.tables_schema_editor.y()
+        # h = self.__ui.imp_tables.tables_schema_editor.height()
+        # w = self.__ui.imp_tables.tables_schema_editor.width()
+        # y_start = int(h / 2)
+        # x_start = int(w / 2)
+        #
+        # anim_p = QtCore.QPropertyAnimation(
+        #     self.__ui.imp_tables.tables_schema_editor, b"pos")
+        # anim_p.setStartValue(QtCore.QPoint(x_start, y_start))
+        # anim_p.setEndValue(QtCore.QPoint(x, y))
+        # anim_p.setDuration(self.__table_anim_duration)
+        # self.__anim_group.addAnimation(anim_p)
+        #
+        # # Animation - size (min to max)
+        # h = self.__ui.imp_tables.tables_schema_editor.height()
+        # w = self.__ui.imp_tables.tables_schema_editor.width()
+        #
+        # anim_s = QtCore.QPropertyAnimation(
+        #     self.__ui.imp_tables.tables_schema_editor, b"size")
+        # self.__ui.imp_tables.tables_schema_editor.resize(100, 100)
+        # anim_s.setEndValue(QtCore.QSize(w, h))
+        # anim_s.setDuration(self.__table_anim_duration)
+        # self.__anim_group.addAnimation(anim_s)
+        #
+        # self.__anim_group.start()
 
-        anim_p = QtCore.QPropertyAnimation(
-            self.__ui.imp_tables.tables_schema_editor, b"pos")
-        anim_p.setStartValue(QtCore.QPoint(x_start, y_start))
-        anim_p.setEndValue(QtCore.QPoint(x, y))
-        anim_p.setDuration(self.__table_anim_duration)
-        self.__anim_group.addAnimation(anim_p)
-
-        # Animation - size (min to max)
-        h = self.__ui.imp_tables.tables_schema_editor.height()
-        w = self.__ui.imp_tables.tables_schema_editor.width()
-
-        anim_s = QtCore.QPropertyAnimation(
-            self.__ui.imp_tables.tables_schema_editor, b"size")
-        self.__ui.imp_tables.tables_schema_editor.resize(100, 100)
-        anim_s.setEndValue(QtCore.QSize(w, h))
-        anim_s.setDuration(self.__table_anim_duration)
-        self.__anim_group.addAnimation(anim_s)
-
-        self.__anim_group.start()
+        # Animation 'opacity-fade'
+        self.animate_widget(
+            widget=self.__ui.imp_tables.tables_schema_editor,
+            animation_type='open-from-center')
 
     # Menu pages
     @QtCore.Slot()
@@ -325,6 +330,26 @@ class Application(object):
             anim_o.setEndValue(1)
             anim_o.setDuration(animation_duration * 2)
             self.__anim_group.addAnimation(anim_o)
+
+        elif animation_type == 'open-from-center':
+            self.__anim_group = QtCore.QParallelAnimationGroup()
+
+            # Center to top left
+            anim_p = QtCore.QPropertyAnimation(widget, b"pos")
+            anim_p.setStartValue(QtCore.QPoint(
+                int(widget.width() / 2), int(widget.height() / 2)))
+            anim_p.setEndValue(QtCore.QPoint(widget.x(), widget.y()))
+            anim_p.setDuration(animation_duration)
+            self.__anim_group.addAnimation(anim_p)
+
+            # Animation - size (min to max)
+            anim_s = QtCore.QPropertyAnimation(widget, b"size")
+            h = widget.height()
+            w = widget.width()
+            widget.resize(100, 100)
+            anim_s.setEndValue(QtCore.QSize(w, h))
+            anim_s.setDuration(animation_duration)
+            self.__anim_group.addAnimation(anim_s)
 
         self.__anim_group.start()
     
