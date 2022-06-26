@@ -64,7 +64,7 @@ class SectionTablesEditor(QtWidgets.QFrame):
         self.scroll_area.setVerticalScrollBarPolicy(
             QtCore.Qt.ScrollBarAsNeeded)
         self.scroll_area.setHorizontalScrollBarPolicy(
-            QtCore.Qt.ScrollBarAlwaysOff)
+            QtCore.Qt.ScrollBarAsNeeded)
         self.scroll_area.setWidgetResizable(True)
 
         self.layout.addWidget(self.scroll_area)
