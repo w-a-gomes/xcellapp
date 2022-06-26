@@ -6,7 +6,7 @@ from PySide6.QtCore import Qt
 
 class TableModel(QtCore.QAbstractTableModel):
     def __init__(self, data):
-        super(TableModel, self).__init__()
+        super().__init__()
         self._data = data
 
     def data(self, index, role):
