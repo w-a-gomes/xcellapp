@@ -96,7 +96,8 @@ class WolCsv(object):
         self.__file_url = file_url
         self.__filename = file_url.replace(os.path.dirname(file_url) + '/', '')
         self.__csv_datas = self.__load_data()
-        self.__header_found = False
+        self.__header = []
+        self.__header_index = 0
 
     @property
     def file_url(self) -> str:
@@ -112,10 +113,14 @@ class WolCsv(object):
     def csv_datas(self) -> list:
         """csv_datas"""
         return self.__csv_datas
-    
+
     @property
-    def header_found(self) -> bool:
-        return self.__header_found
+    def header(self) -> list:
+        return self.__header
+
+    @property
+    def header_index(self) -> int:
+        return self.__header_index
 
     def __load_data(self) -> list:
         # ...
@@ -124,41 +129,54 @@ class WolCsv(object):
         with open(self.__file_url, encoding='utf-8') as csv_file:
             # worksheet = csv.DictReader(csv_file) newline=''
             worksheet = csv.reader(csv_file, delimiter=',')
-            
-            header = None
-            header_found = False
-            for line_num, row in enumerate(worksheet):
+
+            # Header
+            header = []
+            header_index = 0
+            for row in worksheet:
+                if not self.__row_is_empty(row):
+                    for item in row:
+                        header.append(item)
+                    break
+                header_index += 1
+
+            if header:
+                self.__header = header
+                self.__header_index = header_index
+            else:
+                for row in worksheet:
+                    for _ in row:
+                        self.__header.append('')
+                    break
+
+            for row_index, row in enumerate(worksheet):
                 # if not self.__row_is_empty(row):
-                if not header_found:
-                    header = row
-                    header_found = True
 
-                else:
-                    items = []
-                    for column, original_value in zip(header, row):
-                        new_value = self.__item_type(original_value)
-                        value_type = 'str'
+                items = []
+                col_index = 0
+                for col_name, raw_value in zip(header, row):
+                    new_value = self.__item_type(raw_value)
 
-                        if isinstance(new_value, int):
-                            value_type = 'int'
-                        elif isinstance(new_value, float):
-                            value_type = 'float'
+                    value_type = 'str'
+                    if isinstance(new_value, int):
+                        value_type = 'int'
+                    elif isinstance(new_value, float):
+                        value_type = 'float'
+                    elif isinstance(new_value, bool):
+                        value_type = 'bool'
 
-                        # 0 column
-                        # 1 line-num
-                        # 2 original-value
-                        # 3 new-value
-                        # 4 value-type
-                        items.append(
-                            (
-                                column,
-                                line_num,
-                                original_value,
-                                new_value,
-                                value_type,
-                            ),
-                        )
-                    csv_datas.append(items)
+                    items.append(
+                        {
+                            'col-name': col_name,
+                            'col-index': col_index,
+                            'row-index': row_index,
+                            'raw-value': raw_value,
+                            'value': new_value,
+                            'value-type': value_type,
+                        },
+                    )
+                    col_index += 1
+                csv_datas.append(items)
         
         return csv_datas
     

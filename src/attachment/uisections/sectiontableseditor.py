@@ -105,7 +105,7 @@ class SectionTablesEditor(QtWidgets.QFrame):
 
         # Item
         for item in self.__table_schema['table-data'][self.line_counter]:
-            print(item[0], item[1], item[2], item[3], item[4])
+            # print(item[0], item[1], item[2], item[3], item[4])
             item_widget = QtWidgets.QLabel(f'{item}')
             line_layout.addWidget(item_widget)
             self.__widgets_to_remove.append(item_widget)
@@ -120,18 +120,21 @@ class SectionTablesEditor(QtWidgets.QFrame):
 
     def updateEditor(self):
         """
+        self.__table_schema =
         {
             'table-name': 'cadastro.csv',
             'edited': False,
             'edited-date': None,
+            'table-header: ['first', 'last']
+            'table-header-index: 3'
             'table-data': [
                 [
-                    (column, line-num, original-value, new-value, value-type),
-                    ('Café', 2, '10,99', 10.99, 'float'),
+                    (col-name, col-index, row-index, data, value, value-type),
+                    ('Café',   0,         0,        '1,9', 1.90, 'float'),
                 ],
                 [
-                    (column, line-num, original-value, new-value, value-type),
-                    ('mouse', 3, '30,00', 30.0, 'float'),
+                    ('code', 1, 0, '8,00', 8.0, 'float'),
+                    ('mouse', 1, 1, '30,00', 30.0, 'float'),
                 ]
             ]
         }
@@ -141,6 +144,72 @@ class SectionTablesEditor(QtWidgets.QFrame):
                 w.deleteLater()
             self.__widgets_to_remove = []
 
-        self.timer.setInterval(10)
+        self.timer.setInterval(1)
         self.timer.timeout.connect(self.__add_line)  # type: ignore
         self.timer.start()
+
+
+class TableModel(QtCore.QAbstractTableModel):
+    def __init__(self, data):
+        super().__init__()
+        self.data = data
+
+    def data(self, index, role=QtCore.Qt.DisplayRole):
+        if role == QtCore.Qt.DisplayRole:
+            value = self.data[index.row()][index.column()]
+            if isinstance(value, str):
+                return f"'{value}'"
+            return value
+
+        if role == QtCore.Qt.ForegroundRole:
+            value = self.data[index.row()][index.column()]
+
+            if isinstance(value, int):
+                return QtGui.QColor('purple')
+
+            if isinstance(value, float):
+                return QtGui.QColor('blue')
+
+            return value
+
+        if role == QtCore.Qt.BackgroundRole:
+            value = self.data[index.row()][index.column()]
+
+            if isinstance(value, str):
+                if 'field: ' in value:
+                    return QtGui.QColor('blue')
+
+            return value
+
+    def rowCount(self, parent=QtCore.QModelIndex()):
+        return len(self.data)
+
+    def columnCount(self, parent=QtCore.QModelIndex()):
+        return len(self.data[0])
+
+# def updateEditorbkp(self):
+#     """
+#     {
+#         'table-name': 'cadastro.csv',
+#         'edited': False,
+#         'edited-date': None,
+#         'table-data': [
+#             [
+#                 (column, line-num, original-value, new-value, value-type),
+#                 ('Café', 2, '10,99', 10.99, 'float'),
+#             ],
+#             [
+#                 (column, line-num, original-value, new-value, value-type),
+#                 ('mouse', 3, '30,00', 30.0, 'float'),
+#             ]
+#         ]
+#     }
+#     """
+#     if self.__widgets_to_remove:
+#         for w in self.__widgets_to_remove:
+#             w.deleteLater()
+#         self.__widgets_to_remove = []
+#
+#     self.timer.setInterval(1)
+#     self.timer.timeout.connect(self.__add_line)  # type: ignore
+#     self.timer.start()
