@@ -127,7 +127,7 @@ class WolCsv(object):
             
             header = None
             header_found = False
-            for row in worksheet:
+            for line_num, row in enumerate(worksheet):
                 # if not self.__row_is_empty(row):
                 if not header_found:
                     header = row
@@ -135,12 +135,28 @@ class WolCsv(object):
 
                 else:
                     items = []
-                    for field, item in zip(header, row):
+                    for column, original_value in zip(header, row):
+                        new_value = self.__item_type(original_value)
+                        value_type = 'str'
+
+                        if isinstance(new_value, int):
+                            value_type = 'int'
+                        elif isinstance(new_value, float):
+                            value_type = 'float'
+
+                        # 0 column
+                        # 1 line-num
+                        # 2 original-value
+                        # 3 new-value
+                        # 4 value-type
                         items.append(
-                            {
-                                'field': field,
-                                'value': {item: self.__item_type(item)}
-                            },
+                            (
+                                column,
+                                line_num,
+                                original_value,
+                                new_value,
+                                value_type,
+                            ),
                         )
                     csv_datas.append(items)
         
@@ -187,7 +203,9 @@ if __name__ == '__main__':
         '+---------------------------------------+'
     )
     print(s)
-    url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-geral.csv'
+    url = (
+        '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/'
+        '1-db-atualizado-geral.csv')
     csv_obj = WolCsv(file_url=url)
     for x in csv_obj.csv_datas[0]:
         print(x)
@@ -214,7 +232,9 @@ if __name__ == '__main__':
         '+---------------------------------------+'
     )
     print(s)
-    url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-material.csv'
+    url = (
+        '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/'
+        '1-db-atualizado-material.csv')
     csv_obj = WolCsv(file_url=url)
     for x in csv_obj.csv_datas[0]:
         print(x)
@@ -235,7 +255,9 @@ if __name__ == '__main__':
         '+---------------------------------------+'
     )
     print(s)
-    url = '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/1-db-atualizado-cadastro.csv'
+    url = (
+        '/home/alien/Scripts/Git/GitHub/xcellapp/src/tests/tdata/csv/'
+        '1-db-atualizado-cadastro.csv')
     csv_obj = WolCsv(file_url=url)
     for x in csv_obj.csv_datas[0]:
         print(x)

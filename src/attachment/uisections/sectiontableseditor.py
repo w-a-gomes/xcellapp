@@ -40,11 +40,23 @@ class SectionTablesEditor(QtWidgets.QFrame):
         self.setPalette(self.color_palette)
 
         # Property
-        self.__sender = None
+        self.__widgets_to_remove = []
 
         # ___ Container ___
         self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
+
+        # Lines info
+        self.lines_info_layout = QtWidgets.QHBoxLayout()
+        self.lines_info_layout.setAlignment(
+            QtCore.Qt.AlignCenter)  # type: ignore
+        self.layout.addLayout(self.lines_info_layout)
+
+        self.lines_info_current = QtWidgets.QLabel()
+        self.lines_info_layout.addWidget(self.lines_info_current)
+
+        self.lines_info_total = QtWidgets.QLabel()
+        self.lines_info_layout.addWidget(self.lines_info_total)
 
         # Scroll Area
         self.scroll_area = QtWidgets.QScrollArea()
@@ -74,10 +86,37 @@ class SectionTablesEditor(QtWidgets.QFrame):
             QtCore.Qt.AlignTop)  # type: ignore
         self.scroll_widget.setLayout(self.scroll_widget_layout)
 
-        # self.scroll_widget_layout.addWidget(table_preview)
+        # Timer
+        self.timer = QtCore.QTimer()
+        self.line_counter = 0
+        self.total = 0
 
     def setSchema(self, schema):
         self.__table_schema = schema
+        self.total = len(self.__table_schema['table-data'])
+        self.lines_info_total.setText(str(self.total))
+        self.line_counter = 0
+
+    def __add_line(self):
+        # Item layout
+        line_layout = QtWidgets.QHBoxLayout()
+        self.scroll_widget_layout.addLayout(line_layout)
+        self.__widgets_to_remove.append(line_layout)
+
+        # Item
+        for item in self.__table_schema['table-data'][self.line_counter]:
+            print(item[0], item[1], item[2], item[3], item[4])
+            item_widget = QtWidgets.QLabel(f'{item}')
+            line_layout.addWidget(item_widget)
+            self.__widgets_to_remove.append(item_widget)
+
+        # Lines
+        self.lines_info_current.setText(str(self.line_counter + 1))
+
+        if self.line_counter + 1 == self.total:
+            self.timer.stop()
+
+        self.line_counter += 1
 
     def updateEditor(self):
         """
@@ -87,15 +126,21 @@ class SectionTablesEditor(QtWidgets.QFrame):
             'edited-date': None,
             'table-data': [
                 [
-                    {'field': '', 'value': {'': ''}},
-                    {'field': '', 'value': {'': ''}},
+                    (column, line-num, original-value, new-value, value-type),
+                    ('Café', 2, '10,99', 10.99, 'float'),
                 ],
                 [
-                    {'field': '', 'value': {'Funcionário': 'Funcionário'}},
-                    {'field': '', 'value': {'Cargo': 'Cargo'}},
+                    (column, line-num, original-value, new-value, value-type),
+                    ('mouse', 3, '30,00', 30.0, 'float'),
                 ]
             ]
         }
         """
-        print(self.__table_schema)
-        print('Update Editor...')
+        if self.__widgets_to_remove:
+            for w in self.__widgets_to_remove:
+                w.deleteLater()
+            self.__widgets_to_remove = []
+
+        self.timer.setInterval(10)
+        self.timer.timeout.connect(self.__add_line)  # type: ignore
+        self.timer.start()
