@@ -1,11 +1,5 @@
 #!/usr/bin env python3
-# import os
-# import json
-
 from PySide6 import QtWidgets, QtGui, QtCore
-
-# import attachment.uitools.qtcolor as qtcolor
-# import attachment.uitools.qticons as qticons
 
 
 # noinspection PyPep8Naming
@@ -82,8 +76,8 @@ class SectionTablesEditor(QtWidgets.QFrame):
             ]
         }
         """
-        print(self.__table_schema['table-header'])
         model = TableModel(self.__data_model())
+
         self.table.setModel(model)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
@@ -102,13 +96,13 @@ class TableModel(QtCore.QAbstractTableModel):
             value = self._data[index.row()][index.column()]
 
             if isinstance(value, int):
-                return QtGui.QColor('#aa557f')
+                return QtGui.QColor('#00557f')
 
             if isinstance(value, float):
-                return QtGui.QColor('#7053aa')
+                return QtGui.QColor('#aa557f')
 
             if isinstance(value, bool):
-                return QtGui.QColor('#aa621a')
+                return QtGui.QColor('#ffaf3e')
 
             return value
 
@@ -126,3 +120,13 @@ class TableModel(QtCore.QAbstractTableModel):
 
     def columnCount(self, parent=QtCore.QModelIndex()):
         return len(self._data[0])
+
+# def headerData(self, section, orientation, role=QtCore.Qt.DisplayRole):
+#     # section, orientation[, role=Qt.DisplayRole
+#     # section is the index of the column/row.
+#     if role == QtCore.Qt.DisplayRole:
+#         if orientation == QtCore.Qt.Horizontal:
+#             return str(self._data.columns[section])
+#
+#         if orientation == QtCore.Qt.Vertical:
+#             return str(self._data.index[section])

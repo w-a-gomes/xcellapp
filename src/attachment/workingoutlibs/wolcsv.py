@@ -176,6 +176,7 @@ class WolCsv(object):
     
     @staticmethod
     def __item_type(item):
+        item = item.replace('%', '')
         item_clean = (
             item.lower().replace('r$', '')
             .replace('.', '').replace(',', '.')

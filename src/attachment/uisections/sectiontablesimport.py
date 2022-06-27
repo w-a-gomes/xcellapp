@@ -58,7 +58,7 @@ class SectionTablesImport(QtWidgets.QWidget):
 
         # ___ XLSX page ___
         self.xls_import_page = QtWidgets.QWidget()
-        # self.xls_import_page.setContentsMargins(18, 0, 18, 0)
+        self.xls_import_page.setContentsMargins(18, 0, 18, 0)
         self.stacked_layout.addWidget(self.xls_import_page)
 
         self.xls_import_layout = QtWidgets.QVBoxLayout()
@@ -89,15 +89,16 @@ class SectionTablesImport(QtWidgets.QWidget):
 
         self.xls_action_buttons_layout = QtWidgets.QHBoxLayout()
         self.xls_action_buttons_layout.setAlignment(
-            QtCore.Qt.AlignCenter)  # type: ignore
+            QtCore.Qt.AlignRight)  # type: ignore
         self.xls_import_layout.addLayout(self.xls_action_buttons_layout)
 
         self.xls_import_button = QtWidgets.QPushButton('Importar')
-        self.xls_import_button.setFixedWidth(200)
+        # self.xls_import_button.setFixedWidth(200)
         self.xls_action_buttons_layout.addWidget(self.xls_import_button)
 
         # ___ CSV page ___
         self.csv_import_page = QtWidgets.QWidget()
+        self.csv_import_page.setContentsMargins(18, 0, 18, 0)
         self.stacked_layout.addWidget(self.csv_import_page)
 
         self.csv_import_layout = QtWidgets.QVBoxLayout()
@@ -126,12 +127,12 @@ class SectionTablesImport(QtWidgets.QWidget):
 
         self.csv_action_buttons_layout = QtWidgets.QHBoxLayout()
         self.csv_action_buttons_layout.setAlignment(
-            QtCore.Qt.AlignCenter)  # type: ignore
+            QtCore.Qt.AlignRight)  # type: ignore
         self.csv_import_layout.addLayout(self.csv_action_buttons_layout)
 
         self.csv_import_button = QtWidgets.QPushButton('Importar')
         # self.csv_import_button.setContentsMargins(0, 0, 0, 0)
-        self.csv_import_button.setFixedWidth(200)
+        # self.csv_import_button.setFixedWidth(200)
         self.csv_action_buttons_layout.addWidget(self.csv_import_button)
 
         # ___ Tables ___
