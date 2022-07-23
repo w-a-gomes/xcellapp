@@ -120,13 +120,3 @@ class TableModel(QtCore.QAbstractTableModel):
 
     def columnCount(self, parent=QtCore.QModelIndex()):
         return len(self._data[0])
-
-# def headerData(self, section, orientation, role=QtCore.Qt.DisplayRole):
-#     # section, orientation[, role=Qt.DisplayRole
-#     # section is the index of the column/row.
-#     if role == QtCore.Qt.DisplayRole:
-#         if orientation == QtCore.Qt.Horizontal:
-#             return str(self._data.columns[section])
-#
-#         if orientation == QtCore.Qt.Vertical:
-#             return str(self._data.index[section])

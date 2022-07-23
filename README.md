@@ -1,6 +1,6 @@
 ## xcellapp
 
-[X-Cell App](https://github.com/w-a-gomes/xcellapp.git)
+[X-Cell App](https://github.com/ali55on/xcellapp.git)
 
 Dependencies: git, python3
 
@@ -11,7 +11,7 @@ sudo apt install git python3
 Download:
 
 ```console
-git clone https://github.com/w-a-gomes/xcellapp.git
+git clone https://github.com/ali55on/xcellapp.git
 ```
 
 Install:

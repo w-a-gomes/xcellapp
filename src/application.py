@@ -307,7 +307,7 @@ class Application(object):
         # tables_schema_editor 'opacity-fade'
         self.animate_widget(
             widget=self.__ui.imp_tables.tables_schema_editor,
-            animation_type='open-from-center')
+            animation_type='slide-to-top')
 
     def tables__enable_section_tables_import(self, enable: bool) -> None:
         if enable:
